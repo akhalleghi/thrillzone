@@ -7,7 +7,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use App\Models\User;
 use App\Helpers\SmsHelper;
-use Carbon\Carbon;
 
 class AuthController extends Controller
 {
@@ -16,10 +15,11 @@ class AuthController extends Controller
      */
     public function showLoginForm()
     {
-        // فقط اگر در مرحله OTP نیستیم، سشن‌های قبلی را پاک کن
-        if (!session('otp_sent')) {
-            session()->forget(['otp', 'otp_expires', 'otp_sent', 'last_otp_time', 'phone']);
+        // فقط اگر در حالت ورود موبایل/OTP نیستیم، سشن‌ها را پاک کن
+        if (!session('otp_sent') && !session('need_name')) {
+            session()->forget(['otp', 'otp_expires', 'otp_sent', 'last_otp_time', 'phone', 'otp_verified']);
         }
+
         return view('auth.login');
     }
 
@@ -34,14 +34,11 @@ class AuthController extends Controller
 
         $phone = $request->phone;
 
-        // ریت‌لیمیت: هر 60 ثانیه
-        if (session('last_otp_time')) {
-            $last = Carbon::parse(session('last_otp_time'));
-            $elapsed = now()->diffInSeconds($last);
-            if ($elapsed < 60) {
-                $left = 60 - $elapsed;
-                return back()->with('error', "لطفاً {$left} ثانیه دیگر صبر کنید تا بتوانید مجدداً درخواست دهید.");
-            }
+        // محدودیت زمانی 60 ثانیه برای ارسال مجدد
+        $lastTs = session('last_otp_time');
+        if ($lastTs && (int)now()->timestamp - (int)$lastTs < 60) {
+            $left = 60 - ((int)now()->timestamp - (int)$lastTs);
+            return back()->with('error', "لطفاً {$left} ثانیه دیگر صبر کنید.");
         }
 
         $otp = random_int(100000, 999999);
@@ -51,29 +48,30 @@ class AuthController extends Controller
             'otp'          => (string)$otp,
             'otp_expires'  => now()->addMinutes(3),
             'otp_sent'     => true,
-            'last_otp_time'=> now()->toDateTimeString(), // به صورت متن استاندارد
+            'otp_verified' => false,
+            'need_name'    => false,
+            'last_otp_time'=> now()->timestamp, // به‌صورت timestamp عددی
         ]);
 
         // ارسال پیامک
         $response = SmsHelper::sendOtp($phone, $otp);
         Log::info("SMS Response for {$phone}: " . $response);
 
-        // پاسخ عددی ابتدای رشته
         if (preg_match('/^\s*([+-]?\d+)/', $response, $m)) {
             $code = (int)$m[1];
             if ($code === 0) {
-                return redirect()->route('auth.login')->with('success', 'کد تایید با موفقیت ارسال شد.');
+                return back()->with('success', 'کد تایید با موفقیت ارسال شد');
             }
-            // خطای سرور پیامکی
+            session()->forget('otp_sent');
             return back()->with('error', "خطا در ارسال پیامک (کد پاسخ: {$code})");
         }
 
         // پاسخ غیرمعمول
-        return redirect()->route('auth.login')->with('success', 'پیامک ارسال شد.');
+        return back()->with('success', 'پیامک ارسال شد (پاسخ سرور غیرمعمول بود)');
     }
 
     /**
-     * تأیید OTP
+     * بررسی OTP
      */
     public function verifyOtp(Request $request)
     {
@@ -102,7 +100,6 @@ class AuthController extends Controller
         }
 
         $otpInput = $this->normalizeDigits($request->otp);
-
         if ($otpInput !== $otpSession) {
             return back()
                 ->withErrors(['otp' => 'کد تایید اشتباه است.'])
@@ -110,70 +107,89 @@ class AuthController extends Controller
                 ->with('phone', $phoneForm);
         }
 
-        // موفق
-        session()->forget(['otp', 'otp_expires', 'otp_sent', 'last_otp_time']);
+        // ✅ کد صحیح است
+        $existing = User::where('phone', $phoneSession)->first();
 
-        $user = User::firstOrCreate(
-            ['phone' => $phoneSession],
-            [
-                'name'     => null,
-                'email'    => null,
-                'password' => bcrypt('000000'),
-            ]
-        );
+        if ($existing) {
+            // کاربر قدیمی → ورود مستقیم
+            session()->forget(['otp', 'otp_expires', 'otp_sent', 'last_otp_time', 'otp_verified', 'need_name']);
+            Auth::login($existing);
+            return redirect()->route('dashboard')->with('success', 'خوش آمدید!');
+        }
 
-        Auth::login($user);
-        return redirect()->route('dashboard')->with('success', 'خوش آمدید!');
+        // کاربر جدید → مرحله سوم: گرفتن نام
+        session([
+            'otp_verified' => true,
+            'need_name'    => true,
+        ]);
+
+        // برگرد به صفحه لاگین تا فرم نام نمایش داده شود
+        return redirect()->route('login')->with('success', 'کد تایید شد، لطفاً نام و نام خانوادگی را وارد کنید.');
     }
 
     /**
-     * ارسال مجدد OTP
+     * تکمیل پروفایل برای کاربر جدید پس از تایید OTP
+     */
+    public function completeProfile(Request $request)
+    {
+        if (!session('otp_verified') || !session('phone')) {
+            return redirect()->route('login')->with('error', 'ابتدا شماره موبایل را تأیید کنید.');
+        }
+
+        $request->validate([
+            'name' => ['required', 'string', 'min:3', 'max:100'],
+            // در صورت نیاز:
+            // 'email' => ['nullable', 'email', 'max:150', 'unique:users,email'],
+        ], [
+            'name.required' => 'لطفاً نام و نام خانوادگی را وارد کنید.',
+        ]);
+
+        $phone = session('phone');
+
+        $user = User::create([
+            'name'     => $request->name,
+            'phone'    => $phone,
+            'email'    => null,              // اگر ایمیل گرفتی، مقدار بده
+            'password' => bcrypt('000000'),  // placeholder برای سازگاری
+        ]);
+
+        session()->forget(['otp', 'otp_expires', 'otp_sent', 'last_otp_time', 'otp_verified', 'need_name']);
+
+        Auth::login($user);
+        return redirect()->route('dashboard')->with('success', 'ثبت نام با موفقیت انجام شد. خوش آمدید!');
+    }
+
+    /**
+     * ارسال مجدد OTP با محدودیت 60 ثانیه
      */
     public function resendOtp()
     {
         $phone = session('phone');
-
-        // اگر شماره ذخیره نیست، برگرد به لاگین
         if (!$phone) {
-            session()->forget(['otp', 'otp_expires', 'otp_sent', 'last_otp_time']);
-            return redirect()->route('auth.login');
+            session()->forget(['otp', 'otp_expires', 'otp_sent', 'last_otp_time', 'otp_verified', 'need_name']);
+            return redirect()->route('login');
         }
 
-        // جلوگیری از ارسال زودتر از ۶۰ ثانیه
-        if (session('last_otp_time')) {
-            try {
-                $last = \Carbon\Carbon::parse(session('last_otp_time'));
-            } catch (\Exception $e) {
-                // اگر پارس با خطا مواجه شد، بازنویسی کن
-                $last = now()->subMinutes(2);
-            }
-
-            // اختلاف دقیق ثانیه‌ها با عدد صحیح
-            $elapsed = (int) abs(now()->diffInSeconds($last));
-
-            if ($elapsed < 60) {
-                $left = max(0, 60 - $elapsed);
-                return back()->with('error', "لطفاً {$left} ثانیه دیگر صبر کنید.");
-            }
+        $lastTs = session('last_otp_time');
+        if ($lastTs && (int)now()->timestamp - (int)$lastTs < 60) {
+            $left = 60 - ((int)now()->timestamp - (int)$lastTs);
+            return back()->with('error', "لطفاً {$left} ثانیه دیگر صبر کنید.");
         }
 
-        // ✅ تولید کد جدید
         $otp = random_int(100000, 999999);
 
-        // ذخیره سشن با زمان به‌صورت timestamp عددی (بهتر از رشته)
         session([
-            'otp' => (string) $otp,
-            'otp_expires' => now()->addMinutes(3),
-            'otp_sent' => true,
-            'last_otp_time' => now()->timestamp, // فقط timestamp ذخیره می‌کنیم
+            'otp'           => (string)$otp,
+            'otp_expires'   => now()->addMinutes(3),
+            'otp_sent'      => true,
+            'last_otp_time' => now()->timestamp,
         ]);
 
-        // ارسال پیامک
-        $response = \App\Helpers\SmsHelper::sendOtp($phone, $otp);
-        \Log::info("SMS Response (resend) for {$phone}: " . $response);
+        $response = SmsHelper::sendOtp($phone, $otp);
+        Log::info("SMS Response (resend) for {$phone}: " . $response);
 
         if (preg_match('/^\s*([+-]?\d+)/', $response, $m)) {
-            $code = (int) $m[1];
+            $code = (int)$m[1];
             if ($code === 0) {
                 return back()->with('success', 'کد تایید جدید با موفقیت ارسال شد.');
             }
@@ -183,14 +199,13 @@ class AuthController extends Controller
         return back()->with('success', 'کد تایید جدید ارسال شد.');
     }
 
-
     /**
-     * ریست مرحله (تغییر شماره)
+     * ریست سشن برای دکمه "تغییر شماره"
      */
     public function resetOtp()
     {
-        session()->forget(['otp', 'otp_expires', 'otp_sent', 'phone', 'last_otp_time']);
-        return redirect()->route('auth.login');
+        session()->forget(['otp', 'otp_expires', 'otp_sent', 'phone', 'last_otp_time', 'otp_verified', 'need_name']);
+        return redirect()->route('login');
     }
 
     /**

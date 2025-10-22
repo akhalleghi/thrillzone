@@ -32,6 +32,8 @@ Route::get('/resend-otp', [AuthController::class, 'resendOtp'])->name('auth.rese
 // دکمه "تغییر شماره" → ریست سشن
 Route::get('/reset-otp', [AuthController::class, 'resetOtp'])->name('auth.reset');
 
+Route::post('/complete-profile', [AuthController::class, 'completeProfile'])->name('auth.complete_profile');
+
 
 /*
 |--------------------------------------------------------------------------
@@ -45,10 +47,10 @@ Route::middleware(['auth'])->group(function () {
         return view('dashboard');
     })->name('dashboard');
 
-    // صفحه سوالات متداول
-    Route::get('/faq', function () {
-        return view('faq');
-    })->name('faq');
+//    // صفحه سوالات متداول
+//    Route::get('/faq', function () {
+//        return view('faq');
+//    })->name('faq');
 
     // خروج از حساب
     Route::post('/logout', function () {
@@ -69,3 +71,7 @@ Route::get('/', function () {
     // فقط صفحه index.blade.php را نمایش بده
     return view('index');
 })->name('home');
+
+Route::get('/tutorial', function () {return view('video');})->name('tutorial');
+Route::get('/faq', function () {return view('faq');})->name('faq');
+Route::get('/about', function () {return view('about');})->name('about');

@@ -26,12 +26,10 @@
             position: relative;
         }
 
-        /* ذرات درخشان پس‌زمینه */
         .particles { position: absolute; width: 100%; height: 100%; overflow: hidden; z-index: 0; }
         .particle { position: absolute; width: 3px; height: 3px; border-radius: 50%; background: rgba(0, 255, 255, 0.6); animation: float 15s infinite ease-in-out; }
         @keyframes float { 0%, 100% { transform: translateY(0); opacity: 0; } 10%, 90% { opacity: 1; } 50% { transform: translateY(-100px); } }
 
-        /* کارت لاگین */
         .login-card { position: relative; z-index: 10; width: 100%; max-width: 420px; background: linear-gradient(135deg, rgba(15, 25, 50, 0.95), rgba(30, 20, 60, 0.9)); border-radius: 25px; padding: 3rem 2.5rem; border: 2px solid rgba(0, 255, 255, 0.25); box-shadow: 0 0 40px rgba(0, 255, 255, 0.2); backdrop-filter: blur(20px); transition: all 0.4s; }
         .login-card:hover { transform: translateY(-6px); box-shadow: 0 0 60px rgba(255, 0, 255, 0.4); }
 
@@ -40,30 +38,21 @@
         @keyframes pulse { 0%, 100% { transform: scale(1); box-shadow: 0 0 20px rgba(0,255,255,0.3); } 50% { transform: scale(1.1); box-shadow: 0 0 40px rgba(255,0,255,0.6); } }
         .logo-text { font-size: 1.8rem; font-weight: bold; background: linear-gradient(90deg, #00ffff, #ff00ff, #00ffaa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 
-        /* فیلدها */
         .form-control { background: rgba(255, 255, 255, 0.05); border: 2px solid rgba(0, 255, 255, 0.3); border-radius: 15px; padding: 1rem; color: #fff; font-size: 1.1rem; text-align: center; transition: all 0.3s; }
         .form-control:focus { border-color: #ff00ff; box-shadow: 0 0 25px rgba(255, 0, 255, 0.3); background: rgba(255,255,255,0.1); }
         .form-control::placeholder { color: #706f6c; }
 
-        /* دکمه نئون */
         .btn-neon { background: linear-gradient(135deg, #00ffff, #ff00ff); border: none; color: white; font-weight: bold; font-size: 1.2rem; padding: 1rem; border-radius: 15px; width: 100%; box-shadow: 0 0 20px rgba(0, 255, 255, 0.4); transition: all 0.3s; }
         .btn-neon:hover { transform: translateY(-3px); box-shadow: 0 0 40px rgba(255, 0, 255, 0.6); }
         .btn-secondary { background: rgba(255,255,255,0.05); border: 2px solid rgba(0,255,255,0.3); color: #00ffff; }
         .btn-secondary:hover { background: rgba(255,255,255,0.1); color: #ff00ff; border-color: #ff00ff; }
 
-        /* پیغام‌ها */
         .alert-custom { background: rgba(255, 0, 255, 0.1); border: 2px solid rgba(255, 0, 255, 0.3); color: #ff00ff; border-radius: 12px; padding: 1rem; margin-bottom: 1rem; }
 
-        /* فوتر */
         .footer { text-align: center; font-size: 0.85rem; color: rgba(255, 255, 255, 0.5); margin-top: 2rem; }
         .footer a { color: #00ffff; text-decoration: none; }
         .footer a:hover { color: #ff00ff; }
-
-        @media (max-width: 576px) {
-            .login-card { padding: 2rem 1.5rem; }
-            .logo-icon { width: 65px; height: 65px; font-size: 2rem; }
-            .logo-text { font-size: 1.6rem; }
-        }
+        @media (max-width: 576px) { .login-card { padding: 2rem 1.5rem; } .logo-icon { width: 65px; height: 65px; font-size: 2rem; } .logo-text { font-size: 1.6rem; } }
     </style>
 </head>
 <body>
@@ -89,16 +78,20 @@
     @error('otp')
     <div class="alert-custom"><i class="bi bi-exclamation-circle"></i> {{ $message }}</div>
     @enderror
+    @error('name')
+    <div class="alert-custom"><i class="bi bi-exclamation-circle"></i> {{ $message }}</div>
+    @enderror
 
     {{-- مرحله ۱: شماره موبایل --}}
-    @if (!session('otp_sent'))
+    @if (!session('otp_sent') && !session('need_name'))
         <form method="POST" action="{{ route('auth.send_otp') }}">
             @csrf
             <input type="tel" name="phone" class="form-control mb-3" placeholder="شماره موبایل (مثلاً 09123456789)" required maxlength="11">
             <button class="btn-neon">ارسال کد تایید</button>
         </form>
-    @else
+
         {{-- مرحله ۲: کد تایید --}}
+    @elseif (session('otp_sent') && !session('need_name'))
         <form method="POST" action="{{ route('auth.verify_otp') }}">
             @csrf
             <input type="hidden" name="phone" value="{{ session('phone') }}">
@@ -106,9 +99,20 @@
             <button type="submit" class="btn-neon">تایید و ورود</button>
 
             {{-- ارسال مجدد با تایمر --}}
-            <a href="#" id="resendBtn" class="btn btn-secondary w-100 mt-2 disabled">ارسال مجدد (60)</a>
+            <a href="#" id="resendBtn" class="btn btn-secondary w-100 mt-2 disabled" data-url="{{ route('auth.resend_otp') }}">ارسال مجدد (60)</a>
 
             {{-- تغییر شماره --}}
+            <a href="{{ route('auth.reset') }}" class="btn btn-secondary w-100 mt-2">تغییر شماره</a>
+        </form>
+
+        {{-- مرحله ۳: تکمیل نام برای کاربر جدید --}}
+    @elseif (session('need_name'))
+        <form method="POST" action="{{ route('auth.complete_profile') }}">
+            @csrf
+            <input type="text" name="name" class="form-control mb-3" placeholder="نام و نام خانوادگی" required minlength="3" maxlength="100">
+            <button type="submit" class="btn-neon">تکمیل ثبت‌نام و ورود</button>
+
+            {{-- اگر بخواد شماره را عوض کند --}}
             <a href="{{ route('auth.reset') }}" class="btn btn-secondary w-100 mt-2">تغییر شماره</a>
         </form>
     @endif
@@ -122,6 +126,7 @@
     // افکت ذرات
     (function createParticles(){
         const container = document.getElementById('particles');
+        if (!container) return;
         for (let i = 0; i < 50; i++) {
             const p = document.createElement('div');
             p.classList.add('particle');
@@ -132,27 +137,30 @@
         }
     })();
 
-    // تایمر "ارسال مجدد": بعد از 60 ثانیه لینک فعال و کلیک، واقعاً درخواست می‌فرستد
-    (function handleResend(){
-        const resendBtn = document.getElementById('resendBtn');
-        if (!resendBtn) return;
+    // تایمر ارسال مجدد (فقط وقتی فرم OTP نمایش داده می‌شود)
+    (function handleResendTimer(){
+        const btn = document.getElementById('resendBtn');
+        if (!btn) return;
 
-        let timeLeft = 60;
-        resendBtn.classList.add('disabled');
-        resendBtn.style.pointerEvents = 'none';
-        resendBtn.textContent = `ارسال مجدد (${timeLeft})`;
+        // 60 ثانیه
+        let left = 60;
+        btn.classList.add('disabled');
+        btn.setAttribute('aria-disabled', 'true');
 
-        const t = setInterval(() => {
-            timeLeft--;
-            resendBtn.textContent = `ارسال مجدد (${timeLeft})`;
-            if (timeLeft <= 0) {
-                clearInterval(t);
-                resendBtn.classList.remove('disabled');
-                resendBtn.style.pointerEvents = 'auto';
-                resendBtn.textContent = 'ارسال مجدد';
-                resendBtn.addEventListener('click', function (e) {
+        const timer = setInterval(() => {
+            left--;
+            btn.textContent = 'ارسال مجدد (' + left + ')';
+
+            if (left <= 0) {
+                clearInterval(timer);
+                btn.textContent = 'ارسال مجدد';
+                btn.classList.remove('disabled');
+                btn.removeAttribute('aria-disabled');
+
+                // کلیک فعال بعد از تایمر
+                btn.addEventListener('click', function(e){
                     e.preventDefault();
-                    window.location.href = "{{ route('auth.resend_otp') }}";
+                    window.location.href = btn.getAttribute('data-url');
                 }, { once: true });
             }
         }, 1000);

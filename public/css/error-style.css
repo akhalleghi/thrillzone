@@ -1,0 +1,195 @@
+/* =======================
+   🌌 منطقه هیجان - Neon Error Pages
+   نسخه حرفه‌ای با افکت سه‌بعدی و انیمیشن نئون
+   ======================= */
+
+@import url('https://cdn.jsdelivr.net/npm/vazir-font@30.1.0/dist/font-face.css');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Vazir', sans-serif;
+}
+
+body {
+    background: radial-gradient(circle at 50% 20%, #0a0e27, #141433 40%, #080820 100%);
+    color: #fff;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    overflow: hidden;
+    position: relative;
+}
+
+/* ===== افکت نورهای پس‌زمینه ===== */
+.glow-orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(120px);
+    opacity: 0.4;
+    animation: floatGlow 10s infinite ease-in-out alternate;
+    z-index: 0;
+}
+
+.orb-1 {
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, #00ffff55, transparent);
+    top: -100px; right: -100px;
+}
+
+.orb-2 {
+    width: 350px; height: 350px;
+    background: radial-gradient(circle, #ff00ff55, transparent);
+    bottom: -120px; left: -80px;
+}
+
+.orb-3 {
+    width: 300px; height: 300px;
+    background: radial-gradient(circle, #00ffaa55, transparent);
+    top: 40%; left: 40%;
+    transform: translate(-50%, -50%);
+}
+
+@keyframes floatGlow {
+    from { transform: translateY(0) scale(1); opacity: 0.3; }
+    to { transform: translateY(-20px) scale(1.1); opacity: 0.6; }
+}
+
+/* ===== افکت ذرات نئون ===== */
+.particles {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    z-index: 1;
+}
+
+.particle {
+    position: absolute;
+    width: 3px;
+    height: 3px;
+    border-radius: 50%;
+    background: rgba(0, 255, 255, 0.6);
+    animation: float 15s infinite ease-in-out;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0); opacity: 0; }
+    10%, 90% { opacity: 1; }
+    50% { transform: translateY(-100px); }
+}
+
+/* ===== کارت مرکزی ===== */
+.error-card {
+    z-index: 5;
+    text-align: center;
+    background: linear-gradient(135deg, rgba(20, 25, 50, 0.9), rgba(40, 20, 70, 0.8));
+    border: 2px solid rgba(0, 255, 255, 0.3);
+    border-radius: 30px;
+    padding: 3rem 2.5rem;
+    width: 90%;
+    max-width: 460px;
+    box-shadow: 0 0 40px rgba(0, 255, 255, 0.2), inset 0 0 20px rgba(255, 0, 255, 0.1);
+    backdrop-filter: blur(20px);
+    transition: all 0.5s;
+}
+
+.error-card:hover {
+    transform: translateY(-6px) scale(1.02);
+    box-shadow: 0 0 80px rgba(255, 0, 255, 0.4), 0 0 30px rgba(0, 255, 255, 0.4);
+}
+
+/* ===== شماره خطا ===== */
+.error-code {
+    font-size: 6rem;
+    font-weight: 900;
+    letter-spacing: 2px;
+    background: linear-gradient(135deg, #00ffff, #ff00ff, #00ffaa);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0 0 40px rgba(255, 0, 255, 0.3);
+    animation: pulseCode 2.5s infinite ease-in-out;
+}
+
+@keyframes pulseCode {
+    0%, 100% { text-shadow: 0 0 20px rgba(0, 255, 255, 0.4); }
+    50% { text-shadow: 0 0 60px rgba(255, 0, 255, 0.6); }
+}
+
+/* ===== پیام خطا ===== */
+.error-message {
+    font-size: 1.3rem;
+    color: #ddd;
+    margin: 1.5rem 0 2rem;
+    line-height: 1.8;
+}
+
+/* ===== دکمه ===== */
+.btn-home {
+    background: linear-gradient(135deg, #00ffff, #ff00ff);
+    color: #fff;
+    text-decoration: none;
+    padding: 1rem 2.5rem;
+    border-radius: 15px;
+    font-weight: bold;
+    font-size: 1.1rem;
+    transition: all 0.4s;
+    box-shadow: 0 0 25px rgba(0, 255, 255, 0.4);
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-home::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+    transform: translateX(-100%);
+    transition: all .7s;
+}
+
+.btn-home:hover::before {
+    transform: translateX(100%);
+}
+
+.btn-home:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 0 50px rgba(255, 0, 255, 0.6);
+}
+
+/* ===== فوتر ===== */
+.footer {
+    position: absolute;
+    bottom: 20px;
+    font-size: 0.9rem;
+    color: rgba(255,255,255,0.6);
+    z-index: 5;
+}
+
+.footer a {
+    color: #00ffff;
+    text-decoration: none;
+    transition: .3s;
+}
+.footer a:hover {
+    color: #ff00ff;
+    text-shadow: 0 0 10px rgba(255, 0, 255, 0.7);
+}
+
+/* ===== واکنش‌گرا ===== */
+@media (max-width: 576px) {
+    .error-card {
+        padding: 2.5rem 1.5rem;
+    }
+    .error-code {
+        font-size: 4.2rem;
+    }
+    .error-message {
+        font-size: 1.1rem;
+    }
+    .btn-home {
+        padding: 0.9rem 2rem;
+    }
+}
