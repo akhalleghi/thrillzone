@@ -209,11 +209,20 @@
                         تنظیمات
                     </a>
                 </li>
-                <li class="sidebar-item">
-                    <a href="#" class="sidebar-link">
-                        <i class="bi bi-box-arrow-left"></i>
-                        خروج
-                    </a>
+{{--                <li class="sidebar-item">--}}
+{{--                    <a href="#" class="sidebar-link">--}}
+{{--                        <i class="bi bi-box-arrow-left"></i>--}}
+{{--                        خروج--}}
+{{--                    </a>--}}
+{{--                </li>--}}
+                <li class="sidebar-item mt-3">
+                    <form action="{{ route('logout') }}" method="POST">
+                        @csrf
+                        <button type="submit" class="sidebar-link w-100 text-start border-0 bg-transparent text-danger">
+                            <i class="bi bi-box-arrow-left"></i>
+                            خروج
+                        </button>
+                    </form>
                 </li>
             </ul>
         </nav>

@@ -35,4 +35,12 @@ return [
         ],
     ],
 
+    'sms' => [
+        'username' => env('SMS_USERNAME'),
+        'password' => env('SMS_PASSWORD'),
+        'sender'   => env('SMS_SENDER'),
+        'url'      => env('SMS_URL', 'https://www.0098sms.com/sendsmslink.aspx'),
+    ],
+
+
 ];
