@@ -116,7 +116,7 @@ class AuthController extends Controller
         $user = User::firstOrCreate(
             ['phone' => $phoneSession],
             [
-                'name'     => 'کاربر جدید',
+                'name'     => null,
                 'email'    => null,
                 'password' => bcrypt('000000'),
             ]

@@ -12,12 +12,11 @@ class Authenticate
      */
     public function handle($request, Closure $next)
     {
-        // اگر کاربر وارد نشده
         if (!Auth::check()) {
+            // 👇 اینجا نام صحیح روت لاگین در پروژه‌ات است
             return redirect()->route('auth.login');
         }
 
-        // در غیر این صورت ادامه درخواست
         return $next($request);
     }
 }
