@@ -16,1314 +16,855 @@
 
     <style>
         * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Vazir', sans-serif;
+            margin: 0; padding: 0; box-sizing: border-box; font-family: 'Vazir', sans-serif;
         }
-
-        html, body {
-            height: 100%;
-            width: 100%;
-            overflow-x: hidden;
-        }
-
         body {
             background: linear-gradient(135deg, #0a0e27 0%, #1a1a2e 50%, #16213e 100%);
-            color: #fff;
-            position: relative;
-            display: flex;
-            flex-direction: column;
-        }
-
-        /* Animated Background Particles */
-        .particles {
-            position: fixed;
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-            top: 0;
-            left: 0;
-            z-index: 0;
-            pointer-events: none;
-        }
-
-        .particle {
-            position: absolute;
-            width: 3px;
-            height: 3px;
-            background: rgba(0, 255, 255, 0.5);
-            border-radius: 50%;
-            animation: float 15s infinite ease-in-out;
-        }
-
-        @keyframes float {
-            0%, 100% {
-                transform: translate(0, 0) scale(1);
-                opacity: 0;
-            }
-            10% {
-                opacity: 1;
-            }
-            90% {
-                opacity: 1;
-            }
-            100% {
-                transform: translate(var(--tx), var(--ty)) scale(0);
-                opacity: 0;
-            }
-        }
-
-        /* Glowing Background Orbs */
-        .glow-orb {
-            position: fixed;
-            border-radius: 50%;
-            filter: blur(100px);
-            opacity: 0.4;
-            animation: pulse 10s infinite ease-in-out;
-            pointer-events: none;
-        }
-
-        .orb-1 {
-            width: 500px;
-            height: 500px;
-            background: radial-gradient(circle, #00ffff, transparent);
-            top: -150px;
-            right: -150px;
-            animation-delay: 0s;
-        }
-
-        .orb-2 {
-            width: 450px;
-            height: 450px;
-            background: radial-gradient(circle, #ff00ff, transparent);
-            bottom: -100px;
-            left: -100px;
-            animation-delay: 2s;
-        }
-
-        @keyframes pulse {
-            0%, 100% {
-                transform: scale(1);
-                opacity: 0.4;
-            }
-            50% {
-                transform: scale(1.1);
-                opacity: 0.6;
-            }
+            color: #fff; min-height: 100vh; position: relative;
         }
 
         /* Dashboard Layout */
-        .dashboard-wrapper {
-            display: flex;
-            flex: 1;
-            min-height: 100vh;
-            width: 100%;
-            position: relative;
-            z-index: 1;
-            padding-top: 80px; /* Increased to prevent content overlap */
-        }
+        .dashboard-container { display: flex; min-height: 100vh; }
 
-        /* Header Styles - New Admin Panel Style */
+        /* Sidebar Styles */
+        .sidebar {
+            width: 280px;
+            background: linear-gradient(135deg, rgba(10, 14, 39, 0.95), rgba(26, 26, 46, 0.95));
+            backdrop-filter: blur(30px);
+            border-left: 2px solid transparent;
+            border-image: linear-gradient(180deg, #00ffff, #ff00ff) 1;
+            padding: 1.5rem 1rem; box-shadow: 10px 0 40px rgba(0, 255, 255, 0.1);
+            position: fixed; height: 100vh; transition: all 0.4s; z-index: 1000;
+        }
+        .sidebar-header { padding-bottom: 1.5rem; border-bottom: 1px solid rgba(0, 255, 255, 0.2); margin-bottom: 1.5rem; }
+        .sidebar-title {
+            font-size: 1.5rem; font-weight: bold;
+            background: linear-gradient(135deg, #00ffff, #ff00ff);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; text-align: center;
+        }
+        .sidebar-menu { list-style: none; padding: 0; }
+        .sidebar-item { margin-bottom: 0.8rem; }
+        .sidebar-link {
+            display: flex; align-items: center; padding: 0.8rem 1rem;
+            color: #00ffff; text-decoration: none; border-radius: 10px; transition: all 0.3s; position: relative; overflow: hidden;
+        }
+        .sidebar-link:hover { background: linear-gradient(135deg, rgba(0, 255, 255, 0.15), rgba(255, 0, 255, 0.15)); color: #ff00ff; transform: translateX(-5px); }
+        .sidebar-link.active { background: linear-gradient(135deg, rgba(0, 255, 255, 0.25), rgba(255, 0, 255, 0.25)); color: #fff; }
+        .sidebar-link i { margin-left: 0.8rem; font-size: 1.2rem; }
+
+        /* Main Content Area */
+        .main-content { flex: 1; margin-right: 280px; padding: 2rem; position: relative; z-index: 1; }
+
+        /* Dashboard Header */
         .dashboard-header {
-            height: 80px;
-            background: linear-gradient(90deg, rgba(10, 14, 39, 0.95), rgba(30, 20, 60, 0.95));
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid rgba(0, 255, 255, 0.2);
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 1000;
-            display: flex;
-            align-items: center;
-            padding: 0 1.5rem;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
-            justify-content: space-between;
-            flex-wrap: nowrap;
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 2rem; padding-bottom: 1rem; border-bottom: 1px solid rgba(0, 255, 255, 0.2);
         }
-
-        .header-brand {
-            display: flex;
-            align-items: center;
-        }
-
-        .logo-icon {
-            width: 40px;
-            height: 40px;
-            background: linear-gradient(135deg, #00ffff, #ff00ff);
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-            margin-left: 1rem;
-            box-shadow: 0 0 20px rgba(0, 255, 255, 0.7);
-        }
-
-        .logo {
-            font-size: 1.5rem;
-            font-weight: bold;
-            background: linear-gradient(135deg, #00ffff, #ff00ff);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
-        }
-
-        .header-actions {
-            margin-right: auto;
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        .header-search {
-            position: relative;
-            width: 300px;
-        }
-
-        .header-search input {
-            width: 100%;
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(0, 255, 255, 0.2);
-            border-radius: 30px;
-            padding: 0.5rem 1rem 0.5rem 2.5rem;
-            color: #fff;
-            font-size: 0.9rem;
-            transition: all 0.3s;
-        }
-
-        .header-search input:focus {
-            background: rgba(255, 255, 255, 0.15);
-            border-color: rgba(0, 255, 255, 0.5);
-            box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
-            outline: none;
-        }
-
-        .header-search i {
-            position: absolute;
-            left: 1rem;
-            top: 50%;
-            transform: translateY(-50%);
-            color: rgba(255, 255, 255, 0.7);
-        }
-
-        .header-icon {
-            width: 45px;
-            height: 45px;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: rgba(255, 255, 255, 0.1);
-            color: #fff;
-            font-size: 1.3rem;
-            cursor: pointer;
-            transition: all 0.3s;
-            position: relative;
-            margin: 0 10px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-            border: 1px solid rgba(0, 255, 255, 0.1);
-        }
-
-        .header-icon:hover {
-            background: rgba(0, 255, 255, 0.2);
-            transform: translateY(-3px);
-            box-shadow: 0 6px 15px rgba(0, 255, 255, 0.3);
-            border-color: rgba(0, 255, 255, 0.3);
-        }
-
-        .header-icon .badge {
-            position: absolute;
-            top: -8px;
-            right: -8px;
-            background: linear-gradient(135deg, #ff00ff, #00ffff);
-            border-radius: 50%;
-            width: 22px;
-            height: 22px;
-            font-size: 0.8rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
-            border: 2px solid rgba(10, 14, 39, 0.8);
-        }
-
-        .user-profile {
-            display: flex;
-            align-items: center;
-            cursor: pointer;
-            padding: 0.5rem;
-            border-radius: 30px;
-            transition: all 0.3s;
-        }
-
-        .user-profile:hover {
-            background: rgba(255, 255, 255, 0.1);
-        }
-
+        .user-profile { display: flex; align-items: center; gap: 1rem; }
         .user-avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
+            width: 50px; height: 50px; border-radius: 50%;
             background: linear-gradient(135deg, #00ffff, #ff00ff);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.2rem;
-            margin-left: 0.5rem;
-            box-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+            display: flex; align-items: center; justify-content: center; font-size: 1.5rem;
+            box-shadow: 0 5px 20px rgba(0, 255, 255, 0.4);
         }
-
-        .user-info {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .user-name {
-            font-weight: bold;
-            font-size: 0.9rem;
-        }
-
-        .user-role {
-            font-size: 0.75rem;
-            color: rgba(255, 255, 255, 0.7);
-        }
-
-        .nav-link {
-            color: #fff;
-            margin: 0 1rem;
-            font-weight: 500;
-            position: relative;
-            transition: all 0.3s;
-        }
-
-        .nav-link:hover {
-            color: #00ffff;
-        }
-
-        .nav-link::after {
-            content: '';
-            position: absolute;
-            bottom: -5px;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background: linear-gradient(90deg, #00ffff, #ff00ff);
-            transition: width 0.3s;
-        }
-
-        .nav-link:hover::after {
-            width: 100%;
-        }
+        .user-info h3 { margin-bottom: 0.2rem; font-size: 1.2rem; }
+        .user-info small { color: rgba(255, 255, 255, 0.6); font-size: 0.9rem; }
 
         .btn-neon {
             background: linear-gradient(135deg, #00ffff, #ff00ff);
-            border: none;
-            border-radius: 30px;
-            padding: 0.5rem 1.5rem;
-            color: #fff;
-            font-weight: bold;
-            position: relative;
-            overflow: hidden;
-            z-index: 1;
-            transition: all 0.3s;
-            text-decoration: none;
-            display: inline-block;
+            color: #0b0f2b; border: none; border-radius: 12px; padding: .6rem 1rem; font-weight: 700;
+            box-shadow: 0 8px 24px rgba(0, 255, 255, 0.25); transition: all .25s;
+        }
+        .btn-neon:hover { transform: translateY(-2px); filter: brightness(1.05); }
+
+        /* Stats Cards */
+        .stats-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem; margin-bottom: 2rem;
+        }
+        .stat-card {
+            background: linear-gradient(135deg, rgba(15, 25, 50, 0.95), rgba(30, 20, 60, 0.95));
+            border-radius: 15px; padding: 1.5rem; border: 2px solid rgba(0, 255, 255, 0.3);
+            transition: all 0.3s; position: relative; overflow: hidden;
+        }
+        .stat-card:hover { transform: translateY(-5px); border-color: rgba(255, 0, 255, 0.5); box-shadow: 0 10px 30px rgba(255, 0, 255, 0.3); }
+        .stat-card::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(135deg, rgba(0, 255, 255, 0.1), rgba(255, 0, 255, 0.1)); opacity: 0; transition: opacity 0.3s;
+        }
+        .stat-card:hover::before { opacity: 1; }
+        .stat-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+        .stat-icon {
+            width: 50px; height: 50px; border-radius: 12px; background: linear-gradient(135deg, #00ffff, #ff00ff);
+            display: flex; align-items: center; justify-content: center; font-size: 1.5rem;
+        }
+        .stat-title { font-size: 1.1rem; color: rgba(255, 255, 255, 0.8); }
+        .stat-value {
+            font-size: 2rem; font-weight: bold; background: linear-gradient(135deg, #00ffff, #ff00ff);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 0.5rem;
+        }
+        .stat-sub { font-size: .9rem; color: rgba(255,255,255,.75); }
+
+        /* Cards / Sections */
+        .card-soft {
+            background: linear-gradient(135deg, rgba(15, 25, 50, 0.95), rgba(30, 20, 60, 0.95));
+            border-radius: 15px; padding: 1.25rem; border: 2px solid rgba(0, 255, 255, 0.2);
+            margin-bottom: 1.5rem;
+        }
+        .section-title {
+            font-size: 1.1rem; font-weight: 800;
+            background: linear-gradient(135deg, #00ffff, #ff00ff);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+        }
+        .badge-soft {
+            background: rgba(0,255,255,.15); border: 1px solid rgba(0,255,255,.35); color: #aef; border-radius: 999px;
         }
 
-        .btn-neon::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, #ff00ff, #00ffff);
-            z-index: -1;
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
-
-        .btn-neon:hover::before {
-            opacity: 1;
-        }
+        /* Recent Activity */
+        .activity-card { background: linear-gradient(135deg, rgba(15, 25, 50, 0.95), rgba(30, 20, 60, 0.95)); border-radius: 15px; padding: 1.5rem; border: 2px solid rgba(0, 255, 255, 0.3); }
+        .activity-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+        .activity-title { font-size: 1.2rem; font-weight: bold; background: linear-gradient(135deg, #00ffff, #ff00ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .activity-list { list-style: none; padding: 0; }
+        .activity-item { display: flex; gap: 1rem; padding: 1rem 0; border-bottom: 1px solid rgba(255, 255, 255, 0.1); }
+        .activity-item:last-child { border-bottom: none; }
+        .activity-icon { width: 40px; height: 40px; border-radius: 10px; background: linear-gradient(135deg, #00ffff, #ff00ff); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+        .activity-content h4 { font-size: 1rem; margin-bottom: 0.3rem; }
+        .activity-content p { color: rgba(255, 255, 255, 0.7); font-size: 0.9rem; margin-bottom: 0; }
+        .activity-time { color: #00ffaa; font-size: 0.8rem; }
 
         /* Mobile Menu */
-        .mobile-menu {
-            position: fixed;
-            top: 0;
-            right: -100%;
-            width: 80%;
-            max-width: 300px;
-            height: 100vh;
-            background: rgba(10, 14, 39, 0.95);
-            backdrop-filter: blur(10px);
-            z-index: 1000;
-            padding: 2rem;
-            transition: right 0.3s ease;
-            border-left: 1px solid rgba(0, 255, 255, 0.2);
-            overflow-y: auto;
-        }
-
-        .mobile-menu.active {
-            right: 0;
-            box-shadow: -5px 0 25px rgba(0, 0, 0, 0.5);
-        }
-
-        .mobile-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.7);
-            z-index: 999;
-            display: none;
-            backdrop-filter: blur(3px);
-        }
-
-        .mobile-overlay.active {
-            display: block;
-        }
-        
-        .mobile-menu-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 2rem;
-            padding-bottom: 1rem;
-            border-bottom: 1px solid rgba(0, 255, 255, 0.2);
-        }
-        
-        .mobile-menu-close {
-            background: none;
-            border: none;
-            color: #fff;
-            font-size: 1.5rem;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        
-        .mobile-menu-close:hover {
-            color: #00ffff;
-            transform: rotate(90deg);
-        }
-        
-        .mobile-menu-items {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-        }
-        
-        .mobile-menu-item {
-            display: flex;
-            align-items: center;
-            padding: 0.75rem 1rem;
-            border-radius: 10px;
-            color: #fff;
-            text-decoration: none;
-            transition: all 0.3s;
-        }
-        
-        .mobile-menu-item:hover {
-            background: rgba(0, 255, 255, 0.1);
-            transform: translateX(-5px);
-        }
-        
-        .mobile-menu-item i {
-            margin-left: 1rem;
-            font-size: 1.2rem;
-            color: rgba(0, 255, 255, 0.8);
-        }
-
-        /* Dashboard Styles */
-        .dashboard-content {
-            position: relative;
-            z-index: 10;
-            padding: 2rem 0;
-        }
-
-        .dashboard-title {
-            font-size: 2.5rem;
-            font-weight: bold;
-            margin-bottom: 2rem;
-            text-align: center;
-            background: linear-gradient(135deg, #00ffff, #ff00ff);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
-        }
-
-        .dashboard-card {
-            background: linear-gradient(135deg, rgba(15, 25, 50, 0.95), rgba(30, 20, 60, 0.95));
-            border-radius: 20px;
-            border: 2px solid rgba(0, 255, 255, 0.3);
-            backdrop-filter: blur(15px);
-            padding: 1.5rem;
-            margin-bottom: 1.5rem;
-            transition: all 0.3s ease;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-            height: 100%;
-            height: 100%;
-            transition: all 0.4s ease;
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
-            margin-bottom: 30px;
-            overflow: hidden;
-            position: relative;
-        }
-
-        .dashboard-card:hover {
-            transform: translateY(-10px);
-            border-color: rgba(255, 0, 255, 0.7);
-            box-shadow: 0 20px 50px rgba(255, 0, 255, 0.4);
-        }
-
-        .dashboard-card::after {
-            content: '';
-            position: absolute;
-            top: -100%;
-            left: -100%;
-            width: 200%;
-            height: 200%;
-            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-            transform: rotate(45deg);
-            animation: shine 8s infinite;
-        }
-
-        @keyframes shine {
-            0% {
-                top: -100%;
-                left: -100%;
-            }
-            100% {
-                top: 100%;
-                left: 100%;
-            }
-        }
-
-        .card-header {
-            display: flex;
-            align-items: center;
-            margin-bottom: 1.5rem;
-        }
-
-        .card-icon {
-            width: 50px;
-            height: 50px;
-            background: linear-gradient(135deg, #00ffff, #ff00ff);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-            margin-left: 1rem;
-            box-shadow: 0 0 20px rgba(0, 255, 255, 0.7);
-        }
-
-        .card-title {
-            font-size: 1.5rem;
-            font-weight: bold;
-            margin: 0;
-            background: linear-gradient(135deg, #00ffff, #ff00ff);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .subscription-info {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 1rem;
-        }
-
-        .info-label {
-            color: rgba(255, 255, 255, 0.7);
-            font-size: 0.9rem;
-        }
-
-        .info-value {
-            font-weight: bold;
-            font-size: 1.1rem;
-            color: #00ffff;
-        }
-
-        .progress-container {
-            margin: 1.5rem 0;
-        }
-
-        .progress {
-            height: 10px;
-            background-color: rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-            overflow: hidden;
-        }
-
-        .progress-bar {
-            background: linear-gradient(90deg, #00ffff, #ff00ff);
-            border-radius: 10px;
-        }
-
-        .game-item {
-            display: flex;
-            align-items: center;
-            padding: 1rem;
-            border-radius: 10px;
-            background: rgba(255, 255, 255, 0.05);
-            margin-bottom: 1rem;
-            transition: all 0.3s;
-        }
-
-        .game-item:hover {
-            background: rgba(255, 255, 255, 0.1);
-            transform: translateX(-5px);
-        }
-
-        .game-icon {
-            width: 60px;
-            height: 60px;
-            border-radius: 10px;
-            margin-left: 1rem;
-            object-fit: cover;
-            border: 2px solid rgba(0, 255, 255, 0.5);
-        }
-
-        .game-info {
-            flex-grow: 1;
-        }
-
-        .game-title {
-            font-weight: bold;
-            font-size: 1.1rem;
-            margin-bottom: 0.3rem;
-        }
-
-        .game-meta {
-            display: flex;
-            font-size: 0.8rem;
-            color: rgba(255, 255, 255, 0.7);
-        }
-
-        .game-meta span {
-            margin-left: 1rem;
-            display: flex;
-            align-items: center;
-        }
-
-        .game-meta i {
-            margin-left: 0.3rem;
-            color: #00ffff;
-        }
-
-        .game-action {
-            background: linear-gradient(135deg, #00ffff, #ff00ff);
-            border: none;
-            border-radius: 5px;
-            padding: 0.5rem 1rem;
-            color: #fff;
-            font-weight: bold;
-            transition: all 0.3s;
-        }
-
-        .game-action:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 15px rgba(0, 255, 255, 0.7);
-        }
-
-        .history-item {
-            padding: 1rem;
-            border-radius: 10px;
-            background: rgba(255, 255, 255, 0.05);
-            margin-bottom: 1rem;
-            border-right: 3px solid #00ffff;
-        }
-
-        .history-date {
-            font-size: 0.8rem;
-            color: rgba(255, 255, 255, 0.7);
-            margin-bottom: 0.5rem;
-        }
-
-        .history-title {
-            font-weight: bold;
-            margin-bottom: 0.5rem;
-        }
-
-        .history-details {
-            display: flex;
-            justify-content: space-between;
-            font-size: 0.9rem;
-        }
-
-        .history-price {
-            color: #00ffff;
-            font-weight: bold;
-        }
-
-        .sidebar-nav {
-            background: linear-gradient(135deg, rgba(15, 25, 50, 0.95), rgba(30, 20, 60, 0.95));
-            border-radius: 20px;
-            border: 2px solid rgba(0, 255, 255, 0.3);
-            backdrop-filter: blur(15px);
-            padding: 1.5rem;
-            height: 100%;
-            transition: all 0.4s ease;
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
-            margin-bottom: 30px;
-        }
-
-        .user-profile {
-            display: flex;
-            align-items: center;
-            padding-bottom: 1.5rem;
-            margin-bottom: 1.5rem;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .user-avatar {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #00ffff, #ff00ff);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.8rem;
-            margin-left: 1rem;
-            box-shadow: 0 0 20px rgba(0, 255, 255, 0.7);
-        }
-
-        .user-name {
-            font-weight: bold;
-            font-size: 1.2rem;
-            margin-bottom: 0.2rem;
-        }
-
-        .user-plan {
-            font-size: 0.8rem;
-            padding: 0.2rem 0.5rem;
-            background: linear-gradient(135deg, #00ffff, #ff00ff);
-            border-radius: 20px;
-            color: #fff;
-            display: inline-block;
-        }
-
-        .nav-menu {
-            list-style: none;
-            padding: 0;
-        }
-
-        .nav-item {
-            margin-bottom: 0.5rem;
-        }
-
-        .nav-item a {
-            display: flex;
-            align-items: center;
-            padding: 0.8rem 1rem;
-            border-radius: 10px;
-            color: #fff;
-            text-decoration: none;
-            transition: all 0.3s;
-        }
-
-        .nav-item a:hover, .nav-item a.active {
-            background: rgba(0, 255, 255, 0.1);
-            color: #00ffff;
-        }
-
-        .nav-item i {
-            margin-left: 0.8rem;
-            font-size: 1.2rem;
-        }
-
-        /* Footer */
-        .footer {
-            text-align: center;
-            padding: 2rem 0;
-            color: rgba(255, 255, 255, 0.7);
-            position: relative;
-            z-index: 10;
-            border-top: 1px solid rgba(0, 255, 255, 0.2);
-            margin-top: 2rem;
-        }
-
-        .footer a {
-            color: #00ffff;
-            text-decoration: none;
-            transition: color 0.3s;
-        }
-
-        .footer a:hover {
-            color: #ff00ff;
+        .mobile-menu-btn {
+            display: none; background: linear-gradient(135deg, #00ffff, #ff00ff); border: none;
+            width: 50px; height: 50px; border-radius: 12px; color: #fff; font-size: 1.5rem;
+            position: fixed; bottom: 1rem; right: 1rem; z-index: 1000; box-shadow: 0 5px 20px rgba(0, 255, 255, 0.4);
         }
 
         /* Responsive */
         @media (max-width: 992px) {
-            .dashboard-card {
-                padding: 1.5rem;
-            }
+            .sidebar { width: 240px; }
+            .main-content { margin-right: 240px; }
         }
-        
         @media (max-width: 768px) {
-            .dashboard-card {
-                padding: 1.25rem;
-            }
-            
-            .dashboard-title {
-                font-size: 2rem;
-            }
-            
-            .card-title {
-                font-size: 1.3rem;
-            }
+            .sidebar { transform: translateX(100%); }
+            .sidebar.active { transform: translateX(0); }
+            .main-content { margin-right: 0; padding: 1rem; }
+            .mobile-menu-btn { display: flex; align-items: center; justify-content: center; }
+            .dashboard-header { flex-direction: column; align-items: flex-start; gap: 1rem; }
         }
-        
         @media (max-width: 576px) {
-            .dashboard-card {
-                padding: 1rem;
-            }
-            
-            .dashboard-title {
-                font-size: 1.8rem;
-            }
-            
-            .card-title {
-                font-size: 1.2rem;
-            }
-            
-            .game-item {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-            
-            .game-icon {
-                margin-bottom: 1rem;
-                margin-left: 0;
-            }
-            
-            .game-action {
-                margin-top: 1rem;
-                width: 100%;
-            }
+            .stats-grid { grid-template-columns: 1fr; }
+            .user-profile { flex-direction: column; align-items: flex-start; }
         }
 
-        /* Mobile Responsive Styles */
-        @media (max-width: 768px) {
-            .dashboard-header {
-                height: 70px;
-                padding: 0 1rem;
-                flex-wrap: nowrap;
-            }
-            
-            .dashboard-wrapper {
-                padding-top: 70px;
-            }
-            
-            .header-brand {
-                flex-shrink: 0;
-            }
-            
-            .logo {
-                font-size: 1.2rem;
-            }
-            
-            .logo-icon {
-                width: 35px;
-                height: 35px;
-                font-size: 1.2rem;
-            }
-            
-            .header-actions {
-                margin-right: 0;
-                flex: 1;
-                justify-content: center;
-                max-width: 200px;
-            }
-            
-            .header-search {
-                width: 100%;
-                max-width: 180px;
-            }
-            
-            .header-search input {
-                font-size: 0.8rem;
-                padding: 0.4rem 0.8rem 0.4rem 2rem;
-            }
-            
-            .header-icon {
-                width: 40px;
-                height: 40px;
-                font-size: 1.1rem;
-                margin: 0 5px;
-            }
-            
-            .user-profile {
-                padding: 0.3rem;
-            }
-            
-            .user-avatar {
-                width: 35px;
-                height: 35px;
-                font-size: 1rem;
-            }
-            
-            .menu-toggle {
-                background: none;
-                border: none;
-                color: #fff;
-                font-size: 1.5rem;
-                padding: 0.5rem;
-                cursor: pointer;
-                transition: all 0.3s;
-            }
-            
-            .menu-toggle:hover {
-                color: #00ffff;
-            }
-            
-            .dashboard-title {
-                font-size: 2rem;
-                margin-bottom: 1.5rem;
-            }
-        }
-
-        @media (max-width: 576px) {
-            .dashboard-header {
-                height: 65px;
-                padding: 0 0.5rem;
-            }
-            
-            .dashboard-wrapper {
-                padding-top: 65px;
-            }
-            
-            .logo {
-                font-size: 1rem;
-            }
-            
-            .logo-icon {
-                width: 30px;
-                height: 30px;
-                font-size: 1rem;
-                margin-left: 0.5rem;
-            }
-            
-            .header-search {
-                max-width: 150px;
-            }
-            
-            .header-search input {
-                font-size: 0.75rem;
-                padding: 0.3rem 0.6rem 0.3rem 1.8rem;
-            }
-            
-            .header-icon {
-                width: 35px;
-                height: 35px;
-                font-size: 1rem;
-                margin: 0 3px;
-            }
-            
-            .user-avatar {
-                width: 30px;
-                height: 30px;
-                font-size: 0.9rem;
-            }
-            
-            .dashboard-title {
-                font-size: 1.5rem;
-            }
+        /* Forms in modals */
+        .form-help { font-size: .85rem; color: #a7f3d0; }
+        .divider {
+            height: 1px; background: linear-gradient(90deg, rgba(0,255,255,.15), rgba(255,0,255,.15)); margin: 1rem 0;
         }
     </style>
 </head>
 <body>
-    <!-- Background Elements -->
-    <div class="particles" id="particles"></div>
-    <div class="glow-orb orb-1"></div>
-    <div class="glow-orb orb-2"></div>
-
-    <!-- Mobile Overlay -->
-    <div class="mobile-overlay" id="mobileOverlay"></div>
-
-    <!-- Header -->
-    <header class="dashboard-header">
-        <div class="header-brand">
-            <div class="logo-icon">
-                <i class="bi bi-lightning-charge-fill"></i>
-            </div>
-            <div class="logo">منطقه هیجان</div>
+<!-- Dashboard Container -->
+<div class="dashboard-container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <h2 class="sidebar-title">منطقه هیجان</h2>
         </div>
-        <div class="header-actions">
-            <div class="header-search">
-                <input type="text" placeholder="جستجو...">
-                <i class="bi bi-search"></i>
-            </div>
-            <div class="d-none d-md-flex">
-                <a href="#" class="nav-link">داشبورد</a>
-                <a href="#" class="nav-link">بازی‌ها</a>
-                <a href="#" class="nav-link">پشتیبانی</a>
-            </div>
-        </div>
-        <div class="d-flex align-items-center">
-            <div class="header-icon" data-bs-toggle="tooltip" data-bs-placement="bottom" title="اعلان‌ها">
-                <i class="bi bi-bell-fill"></i>
-                <span class="badge">3</span>
-            </div>
-            <div class="header-icon" data-bs-toggle="tooltip" data-bs-placement="bottom" title="پیام‌ها">
-                <i class="bi bi-envelope-fill"></i>
-                <span class="badge">5</span>
-            </div>
-            <div class="header-icon d-none d-md-flex" data-bs-toggle="tooltip" data-bs-placement="bottom" title="تنظیمات">
-                <i class="bi bi-gear-fill"></i>
-            </div>
-            <div class="header-icon d-none d-md-flex" data-bs-toggle="tooltip" data-bs-placement="bottom" title="راهنما">
-                <i class="bi bi-question-circle-fill"></i>
-            </div>
-            <!-- <div class="user-profile">
-                <div class="user-avatar">
-                    ک
-                </div>
-                <div class="user-info d-none d-md-block">
-                    <div class="user-name">کاربر تریل‌زون</div>
-                    <div class="user-role">کاربر ویژه</div>
-                </div>
-            </div> -->
-            <button class="menu-toggle d-md-none ms-2" id="menuToggle">
-                <i class="bi bi-list"></i>
-            </button>
-        </div>
-    </header>
-
-    <!-- Mobile Menu -->
-    <div class="mobile-menu" id="mobileMenu">
-        <div class="d-flex justify-content-between align-items-center mb-5">
-            <div class="logo-container">
-                <div class="logo-icon" style="width: 45px; height: 45px; font-size: 1.5rem;">🎮</div>
-                <div class="logo" style="font-size: 1.7rem;">منطقه هیجان</div>
-            </div>
-            <button class="btn btn-link text-light p-0" id="menuClose" style="font-size: 2rem;">
-                <i class="bi bi-x"></i>
-            </button>
-        </div>
-        <nav class="d-flex flex-column gap-4">
-            <a href="/" class="nav-link" style="margin: 0; font-size: 1.2rem;">صفحه اصلی</a>
-            <a href="/about" class="nav-link" style="margin: 0; font-size: 1.2rem;">درباره ما</a>
-            <a href="/faq" class="nav-link" style="margin: 0; font-size: 1.2rem;">سوالات متداول</a>
-            <a href="/tutorial" class="nav-link" style="margin: 0; font-size: 1.2rem;">آموزش</a>
-            <a href="/logout" class="btn-neon mt-3" role="button">خروج</a>
+        <nav>
+            <ul class="sidebar-menu">
+                <li class="sidebar-item">
+                    <a href="#" class="sidebar-link active" data-section="dashboard">
+                        <i class="bi bi-speedometer2"></i>
+                        داشبورد
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a href="#" class="sidebar-link" data-section="my-games">
+                        <i class="bi bi-controller"></i>
+                        بازی‌های من
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a href="#" class="sidebar-link" data-section="wallet">
+                        <i class="bi bi-wallet2"></i>
+                        کیف پول
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a href="#" class="sidebar-link" data-section="transactions">
+                        <i class="bi bi-clock-history"></i>
+                        تاریخچه تراکنش‌ها
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a href="#" class="sidebar-link" data-section="profile">
+                        <i class="bi bi-person"></i>
+                        پروفایل کاربری
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a href="#" class="sidebar-link" data-section="settings">
+                        <i class="bi bi-gear"></i>
+                        تنظیمات
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a href="#" class="sidebar-link">
+                        <i class="bi bi-box-arrow-left"></i>
+                        خروج
+                    </a>
+                </li>
+            </ul>
         </nav>
-    </div>
+    </aside>
 
-    <!-- Dashboard Content -->
-    <div class="dashboard-content">
-        <div class="container">
-            <h1 class="dashboard-title">داشبورد کاربری</h1>
-            
-            <div class="row">
-                <!-- Sidebar -->
-                <div class="col-lg-3 col-md-4 mb-4">
-                    <div class="sidebar-nav">
-                        <div class="user-profile">
-                            <div class="user-avatar">👤</div>
-                            <div>
-                                <div class="user-name">کاربر هیجانی</div>
-                                <div class="user-plan">پکیج طلایی</div>
-                            </div>
-                        </div>
-                        
-                        <ul class="nav-menu">
-                            <li class="nav-item">
-                                <a href="#" class="active">
-                                    <i class="bi bi-speedometer2"></i>
-                                    داشبورد
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="#">
-                                    <i class="bi bi-controller"></i>
-                                    بازی‌های من
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="#">
-                                    <i class="bi bi-clock-history"></i>
-                                    تاریخچه
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="#">
-                                    <i class="bi bi-credit-card"></i>
-                                    اشتراک‌ها
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="#">
-                                    <i class="bi bi-gear"></i>
-                                    تنظیمات
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="#">
-                                    <i class="bi bi-question-circle"></i>
-                                    راهنما
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Dashboard Header -->
+        <header class="dashboard-header">
+            <div class="user-profile">
+                <div class="user-avatar">
+                    <i class="bi bi-person"></i>
                 </div>
-                
-                <!-- Main Content -->
-                <div class="col-lg-9 col-md-8">
-                    <div class="row">
-                        <!-- Subscription Status -->
-                        <div class="col-lg-6 col-md-12">
-                            <div class="dashboard-card">
-                                <div class="card-header">
-                                    <div class="card-icon">
-                                        <i class="bi bi-hourglass-split"></i>
-                                    </div>
-                                    <h3 class="card-title">وضعیت اشتراک</h3>
-                                </div>
-                                
-                                <div class="subscription-info">
-                                    <div>
-                                        <div class="info-label">نوع اشتراک</div>
-                                        <div class="info-value">پکیج طلایی</div>
-                                    </div>
-                                    <div>
-                                        <div class="info-label">تاریخ شروع</div>
-                                        <div class="info-value">۱۴۰۲/۰۶/۱۵</div>
-                                    </div>
-                                    <div>
-                                        <div class="info-label">تاریخ پایان</div>
-                                        <div class="info-value">۱۴۰۲/۱۰/۱۵</div>
-                                    </div>
-                                </div>
-                                
-                                <div class="progress-container">
-                                    <div class="d-flex justify-content-between mb-2">
-                                        <span>زمان باقی‌مانده</span>
-                                        <span>۶۵ روز از ۱۲۰ روز</span>
-                                    </div>
-                                    <div class="progress">
-                                        <div class="progress-bar" role="progressbar" style="width: 55%"></div>
-                                    </div>
-                                </div>
-                                
-                                <div class="text-center mt-4">
-                                    <a href="#" class="btn-neon">تمدید اشتراک</a>
-                                </div>
-                            </div>
+                <div class="user-info">
+                    <h3 id="userFullName">امین احمدی</h3>
+                    <small>سطح کاربری: <span class="badge badge-soft px-3 py-1">طلایی</span></small>
+                </div>
+            </div>
+            <div class="header-actions d-flex gap-2">
+                <button class="btn btn-neon" data-bs-toggle="modal" data-bs-target="#purchaseModal">
+                    <i class="bi bi-cart-plus"></i>
+                    خرید/تمدید اشتراک
+                </button>
+                <button class="btn btn-outline-info border-0" id="swapRequestBtnHeader" data-bs-toggle="modal" data-bs-target="#swapModal" disabled>
+                    <i class="bi bi-arrow-repeat"></i>
+                    ثبت درخواست تعویض
+                </button>
+            </div>
+        </header>
+
+        <!-- Profile completion alert -->
+        <div id="profileAlert" class="alert alert-warning border-0 text-dark d-none" role="alert" style="background: #fff7d6;">
+            <strong>تکمیل پروفایل:</strong> لطفاً اطلاعات پروفایل خود را کامل کنید تا روند خرید و پشتیبانی سریع‌تر انجام شود.
+            <a href="#" class="alert-link" data-section="profile" id="gotoProfileLink">رفتن به پروفایل</a>
+        </div>
+
+        <!-- Stats Grid -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-header">
+                    <h3 class="stat-title">پلن فعال</h3>
+                    <div class="stat-icon"><i class="bi bi-box-seam"></i></div>
+                </div>
+                <div class="stat-value" id="activePlanName">—</div>
+                <div class="stat-sub">
+                    تعویض مجاز هر <span id="swapIntervalText">—</span> روز • مجاز به انتخاب
+                    <span id="maxGamesText">—</span> بازی
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-header">
+                    <h3 class="stat-title">زمان تا تعویض بعدی</h3>
+                    <div class="stat-icon"><i class="bi bi-arrow-repeat"></i></div>
+                </div>
+                <div class="stat-value" id="swapCountdown">—</div>
+                <div class="stat-sub">در تاریخ <span id="nextSwapDateText">—</span> قابل ثبت است</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-header">
+                    <h3 class="stat-title">زمان تا پایان اشتراک</h3>
+                    <div class="stat-icon"><i class="bi bi-hourglass-split"></i></div>
+                </div>
+                <div class="stat-value" id="expireCountdown">—</div>
+                <div class="stat-sub">تاریخ پایان: <span id="endDateText">—</span></div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-header">
+                    <h3 class="stat-title">اعتبار کیف پول</h3>
+                    <div class="stat-icon"><i class="bi bi-wallet2"></i></div>
+                </div>
+                <div class="stat-value" id="walletBalance">۲۵۰,۰۰۰ تومان</div>
+                <div class="stat-sub">آخرین تغییر: ۱۰۰,۰۰۰ تومان افزایش</div>
+            </div>
+        </div>
+
+        <!-- Sections -->
+        <section id="section-dashboard">
+            <!-- Subscription Summary -->
+            <div class="card-soft">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h3 class="section-title m-0">خلاصه اشتراک</h3>
+                    <span class="badge badge-soft px-3 py-1" id="durationBadge">—</span>
+                </div>
+
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <div class="p-3 rounded-3" style="background: rgba(0,255,255,.07); border: 1px solid rgba(0,255,255,.2)">
+                            <div class="mb-1 text-info">بازی‌های انتخابی</div>
+                            <ul class="mb-0" id="selectedGamesList"></ul>
                         </div>
-                        
-                        <!-- Game Switch -->
-                        <div class="col-lg-6 col-md-12">
-                            <div class="dashboard-card">
-                                <div class="card-header">
-                                    <div class="card-icon">
-                                        <i class="bi bi-arrow-repeat"></i>
-                                    </div>
-                                    <h3 class="card-title">تعویض بازی</h3>
-                                </div>
-                                
-                                <div class="subscription-info">
-                                    <div>
-                                        <div class="info-label">تعویض‌های باقی‌مانده</div>
-                                        <div class="info-value">۲ از ۳</div>
-                                    </div>
-                                    <div>
-                                        <div class="info-label">تاریخ آخرین تعویض</div>
-                                        <div class="info-value">۱۴۰۲/۰۷/۲۰</div>
-                                    </div>
-                                </div>
-                                
-                                <div class="progress-container">
-                                    <div class="d-flex justify-content-between mb-2">
-                                        <span>زمان تا تعویض بعدی</span>
-                                        <span>۵ روز</span>
-                                    </div>
-                                    <div class="progress">
-                                        <div class="progress-bar" role="progressbar" style="width: 80%"></div>
-                                    </div>
-                                </div>
-                                
-                                <div class="text-center mt-4">
-                                    <a href="#" class="btn-neon">انتخاب بازی جدید</a>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- Active Games -->
-                        <div class="col-12 mt-4">
-                            <div class="dashboard-card">
-                                <div class="card-header">
-                                    <div class="card-icon">
-                                        <i class="bi bi-controller"></i>
-                                    </div>
-                                    <h3 class="card-title">بازی‌های فعال</h3>
-                                </div>
-                                
-                                <div class="game-list">
-                                    <div class="game-item">
-                                        <img src="https://via.placeholder.com/60x60" alt="بازی" class="game-icon">
-                                        <div class="game-info">
-                                            <div class="game-title">Call of Duty: Modern Warfare III</div>
-                                            <div class="game-meta">
-                                                <span><i class="bi bi-calendar-check"></i> فعال از: ۱۴۰۲/۰۶/۱۵</span>
-                                                <span><i class="bi bi-clock"></i> ۴۵ ساعت بازی</span>
-                                            </div>
-                                        </div>
-                                        <button class="game-action">اجرای بازی</button>
-                                    </div>
-                                    
-                                    <div class="game-item">
-                                        <img src="https://via.placeholder.com/60x60" alt="بازی" class="game-icon">
-                                        <div class="game-info">
-                                            <div class="game-title">FIFA 24</div>
-                                            <div class="game-meta">
-                                                <span><i class="bi bi-calendar-check"></i> فعال از: ۱۴۰۲/۰۷/۰۵</span>
-                                                <span><i class="bi bi-clock"></i> ۲۸ ساعت بازی</span>
-                                            </div>
-                                        </div>
-                                        <button class="game-action">اجرای بازی</button>
-                                    </div>
-                                    
-                                    <div class="game-item">
-                                        <img src="https://via.placeholder.com/60x60" alt="بازی" class="game-icon">
-                                        <div class="game-info">
-                                            <div class="game-title">Assassin's Creed Mirage</div>
-                                            <div class="game-meta">
-                                                <span><i class="bi bi-calendar-check"></i> فعال از: ۱۴۰۲/۰۷/۲۰</span>
-                                                <span><i class="bi bi-clock"></i> ۱۲ ساعت بازی</span>
-                                            </div>
-                                        </div>
-                                        <button class="game-action">اجرای بازی</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- Subscription History -->
-                        <div class="col-12 mt-4">
-                            <div class="dashboard-card">
-                                <div class="card-header">
-                                    <div class="card-icon">
-                                        <i class="bi bi-clock-history"></i>
-                                    </div>
-                                    <h3 class="card-title">تاریخچه اشتراک‌ها</h3>
-                                </div>
-                                
-                                <div class="history-list">
-                                    <div class="history-item">
-                                        <div class="history-date">۱۴۰۲/۰۶/۱۵</div>
-                                        <div class="history-title">خرید اشتراک پکیج طلایی (۴ ماهه)</div>
-                                        <div class="history-details">
-                                            <span>شماره سفارش: #TZ-45678</span>
-                                            <span class="history-price">۴۵۰,۰۰۰ تومان</span>
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="history-item">
-                                        <div class="history-date">۱۴۰۲/۰۲/۱۰</div>
-                                        <div class="history-title">خرید اشتراک پکیج نقره‌ای (۲ ماهه)</div>
-                                        <div class="history-details">
-                                            <span>شماره سفارش: #TZ-34567</span>
-                                            <span class="history-price">۲۵۰,۰۰۰ تومان</span>
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="history-item">
-                                        <div class="history-date">۱۴۰۱/۱۱/۲۵</div>
-                                        <div class="history-title">خرید اشتراک پکیج برنزی (۱ ماهه)</div>
-                                        <div class="history-details">
-                                            <span>شماره سفارش: #TZ-23456</span>
-                                            <span class="history-price">۱۵۰,۰۰۰ تومان</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="p-3 rounded-3" style="background: rgba(255,0,255,.07); border: 1px solid rgba(255,0,255,.2)">
+                            <div class="mb-1 text-info">تاریخ‌ها</div>
+                            <div>تاریخ شروع: <span id="startDateText">—</span></div>
+                            <div>آخرین تعویض: <span id="lastSwapDateText">—</span></div>
+                            <div>تعویض بعدی: <span id="nextSwapDateText2">—</span></div>
                         </div>
                     </div>
                 </div>
+
+                <div class="divider"></div>
+                <div class="d-flex gap-2">
+                    <button class="btn btn-neon" data-bs-toggle="modal" data-bs-target="#swapModal" id="swapRequestBtn" disabled>
+                        <i class="bi bi-arrow-repeat"></i> ثبت درخواست تعویض
+                    </button>
+                    <button class="btn btn-outline-info border-0" data-bs-toggle="modal" data-bs-target="#purchaseModal">
+                        <i class="bi bi-cart-plus"></i> تمدید یا ارتقا
+                    </button>
+                </div>
+            </div>
+
+            <!-- Recent Activity -->
+            <div class="activity-card">
+                <div class="activity-header">
+                    <h3 class="activity-title">فعالیت‌های اخیر</h3>
+                    <a href="#" class="text-light">مشاهده همه</a>
+                </div>
+                <ul class="activity-list" id="activityList">
+                    <!-- نمونه‌های اولیه — می‌تونی با API پر کنی -->
+                    <li class="activity-item">
+                        <div class="activity-icon"><i class="bi bi-controller"></i></div>
+                        <div class="activity-content">
+                            <h4>شروع بازی Call of Duty</h4>
+                            <p>شما بازی Call of Duty را شروع کردید</p>
+                            <div class="activity-time">۲ ساعت پیش</div>
+                        </div>
+                    </li>
+                    <li class="activity-item">
+                        <div class="activity-icon"><i class="bi bi-wallet2"></i></div>
+                        <div class="activity-content">
+                            <h4>افزایش اعتبار کیف پول</h4>
+                            <p>مبلغ ۱۰۰,۰۰۰ تومان به کیف پول شما اضافه شد</p>
+                            <div class="activity-time">۱ روز پیش</div>
+                        </div>
+                    </li>
+                    <li class="activity-item">
+                        <div class="activity-icon"><i class="bi bi-trophy"></i></div>
+                        <div class="activity-content">
+                            <h4>کسب امتیاز جدید</h4>
+                            <p>۵۰ امتیاز برای تکمیل چالش دریافت کردید</p>
+                            <div class="activity-time">۲ روز پیش</div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- My Games Section -->
+        <section id="section-my-games" class="d-none">
+            <div class="card-soft">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h3 class="section-title m-0">بازی‌های من</h3>
+                    <button class="btn btn-neon" data-bs-toggle="modal" data-bs-target="#swapModal" id="swapRequestBtn2" disabled>
+                        <i class="bi bi-arrow-repeat"></i> تعویض بازی
+                    </button>
+                </div>
+                <div id="gamesCards" class="row g-3"></div>
+            </div>
+        </section>
+
+        <!-- Wallet Section (placeholder) -->
+        <section id="section-wallet" class="d-none">
+            <div class="card-soft">
+                <h3 class="section-title mb-3">کیف پول</h3>
+                <p class="mb-0">این بخش به درگاه پرداخت و API متصل می‌شود.</p>
+            </div>
+        </section>
+
+        <!-- Transactions Section (placeholder) -->
+        <section id="section-transactions" class="d-none">
+            <div class="card-soft">
+                <h3 class="section-title mb-3">تاریخچه تراکنش‌ها</h3>
+                <p class="mb-0">در اینجا لیست تراکنش‌ها نمایش داده می‌شود.</p>
+            </div>
+        </section>
+
+        <!-- Profile Section (placeholder) -->
+        <section id="section-profile" class="d-none">
+            <div class="card-soft">
+                <h3 class="section-title mb-3">پروفایل کاربری</h3>
+                <form class="row g-3" id="profileForm">
+                    <div class="col-md-6">
+                        <label class="form-label">نام و نام خانوادگی</label>
+                        <input type="text" class="form-control" id="profileName" placeholder="مثلاً: امین احمدی">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">شماره موبایل</label>
+                        <input type="tel" class="form-control" id="profilePhone" placeholder="09xxxxxxxxx" inputmode="numeric">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">ایمیل</label>
+                        <input type="email" class="form-control" id="profileEmail" placeholder="you@example.com">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">آی‌دی پلی‌استیشن (اختیاری)</label>
+                        <input type="text" class="form-control" id="profilePSN" placeholder="PSN ID">
+                    </div>
+                    <div class="col-12">
+                        <button class="btn btn-neon" type="button" id="saveProfileBtn"><i class="bi bi-check2-circle"></i> ذخیره</button>
+                    </div>
+                </form>
+            </div>
+        </section>
+
+        <!-- Settings Section (placeholder) -->
+        <section id="section-settings" class="d-none">
+            <div class="card-soft">
+                <h3 class="section-title mb-3">تنظیمات</h3>
+                <p class="mb-0">تنظیمات اعلان‌ها، تم و …</p>
+            </div>
+        </section>
+    </main>
+
+    <!-- Mobile Menu Button -->
+    <button class="mobile-menu-btn" id="sidebarToggle">
+        <i class="bi bi-list"></i>
+    </button>
+</div>
+
+<!-- Purchase / Renew Modal -->
+<div class="modal fade" id="purchaseModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+        <div class="modal-content bg-dark text-white border-0" style="background: #0e1333;">
+            <div class="modal-header border-0">
+                <h5 class="modal-title">خرید/تمدید اشتراک</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Plan selection -->
+                <div class="mb-3">
+                    <label class="form-label">انتخاب پلن</label>
+                    <div class="row g-2" id="planRadios">
+                        <!-- رادیوها با JS تولید می‌شوند -->
+                    </div>
+                    <div class="form-help mt-1">پلن‌ها و محدودیت‌ها از کانفیگ خوانده می‌شوند.</div>
+                </div>
+                <!-- Duration -->
+                <div class="mb-3">
+                    <label class="form-label">مدت زمان</label>
+                    <select id="durationSelect" class="form-select"></select>
+                </div>
+                <!-- Game Inputs -->
+                <div class="mb-3">
+                    <label class="form-label">بازی‌های انتخابی</label>
+                    <div id="gameInputs" class="row g-2">
+                        <!-- فیلدها بر اساس پلن/تعداد بازی پویا ایجاد می‌شوند -->
+                    </div>
+                    <div class="form-help mt-1">بر اساس پلن، تعداد فیلدها به‌صورت خودکار ایجاد می‌شود.</div>
+                </div>
+            </div>
+            <div class="modal-footer border-0">
+                <button class="btn btn-secondary" data-bs-dismiss="modal">انصراف</button>
+                <button class="btn btn-neon" id="confirmPurchaseBtn"><i class="bi bi-check2-circle"></i> تایید خرید/تمدید</button>
             </div>
         </div>
     </div>
+</div>
 
-    <!-- Footer -->
-    <footer class="footer">
-        <span>© تمامی حقوق برای </span>
-        <a href="https://thrillstore.ir" target="_blank">فروشگاه هیجان</a>
-        <span> محفوظ است. طراحی و توسعه توسط </span>
-        <a href="https://wa.me/989137640338" target="_blank">امین</a>
-    </footer>
+<!-- Swap Modal -->
+<div class="modal fade" id="swapModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+        <div class="modal-content bg-dark text-white border-0" style="background: #0e1333;">
+            <div class="modal-header border-0">
+                <h5 class="modal-title">ثبت درخواست تعویض بازی</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-info text-dark" id="swapInfoAlert">
+                    می‌توانید تا <strong id="swapMaxGamesText">—</strong> بازی در این پلن داشته باشید. نام بازی‌های جدید را وارد کنید.
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">بازی‌های فعلی</label>
+                    <div id="currentGamesBadges"></div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">لیست جدید بازی‌ها (حداکثر به تعداد مجاز پلن)</label>
+                    <div id="swapGameInputs" class="row g-2"></div>
+                    <div class="form-help">برای حذف یک بازی، فیلد مربوطه را خالی بگذارید.</div>
+                </div>
+            </div>
+            <div class="modal-footer border-0">
+                <button class="btn btn-secondary" data-bs-dismiss="modal">بستن</button>
+                <button class="btn btn-neon" id="confirmSwapBtn"><i class="bi bi-arrow-repeat"></i> ثبت درخواست</button>
+            </div>
+        </div>
+    </div>
+</div>
 
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
-    <script>
-        // Mobile Menu
-        const menuToggle = document.getElementById('menuToggle');
-        const menuClose = document.getElementById('menuClose');
-        const mobileMenu = document.getElementById('mobileMenu');
-        const mobileOverlay = document.getElementById('mobileOverlay');
+<script>
+    /* =========================
+       CONFIG & MOCKED STATE
+       ========================= */
+    // پیکربندی پلن‌ها (قابل تغییر)
+    const PLANS = {
+        lite:   { key:'lite',   label:'Thrill Lite',   maxGames:2, durations:[3,6,12], swapIntervalDays:30 },
+        silver: { key:'silver', label:'Thrill Silver', maxGames:3, durations:[3,6,12], swapIntervalDays:30 },
+        pro:    { key:'pro',    label:'Thrill Pro',    maxGames:5, durations:[3,6,12], swapIntervalDays:30 },
+        max:    { key:'max',    label:'Thrill Max',    maxGames:7, durations:[6,12],   swapIntervalDays:15 } // ← تعداد بازی مجاز را اینجا تغییر بده
+    };
 
-        menuToggle.addEventListener('click', () => {
-            mobileMenu.classList.add('active');
-            mobileOverlay.classList.add('active');
-            document.body.style.overflow = 'hidden';
+    // وضعیت نمونه (در عمل از API بگیر)
+    let profileCompleted = false; // اگر پروفایل ناقص باشد، هشدار نشان داده می‌شود
+    const user = {
+        fullName: 'امین احمدی',
+        wallet: 250000
+    };
+
+    // اشتراک فعال نمونه
+    let activeSubscription = {
+        planKey: 'silver',            // lite | silver | pro | max
+        durationMonths: 6,            // 3 | 6 | 12 (برای max فقط 6 یا 12)
+        startDate: '2025-08-20',      // YYYY-MM-DD
+        lastSwapDate: '2025-09-20',   // تاریخ آخرین تعویض (اگر null باشد از startDate محاسبه می‌شود)
+        games: ['Call of Duty', 'FIFA 24', 'The Last of Us'] // باید ≤ maxGames پلن باشد
+    };
+
+    /* =========================
+       HELPERS
+       ========================= */
+    const toFa = (n) => (typeof n === 'number' ? n.toLocaleString('fa-IR') : n);
+    const fmtDateFa = (d) => new Date(d).toLocaleDateString('fa-IR', { year:'numeric', month:'long', day:'numeric' });
+    const addDays = (dateStr, days) => {
+        const d = new Date(dateStr + 'T00:00:00');
+        d.setDate(d.getDate() + days);
+        return d.toISOString().slice(0,10);
+    };
+    const addMonths = (dateStr, months) => {
+        const d = new Date(dateStr + 'T00:00:00');
+        d.setMonth(d.getMonth() + months);
+        return d.toISOString().slice(0,10);
+    };
+    const diffMs = (a, b) => (new Date(a) - new Date(b));
+    const nowISO = () => {
+        // زمان کاربر اروپا/برلین — برای فرانت، زمان محلی مرورگر استفاده می‌شود
+        const d = new Date();
+        return new Date(d.getTime() - d.getMilliseconds()).toISOString();
+    };
+
+    const getPlan = (key) => PLANS[key];
+    const clamp = (val, min, max) => Math.max(min, Math.min(max, val));
+
+    /* =========================
+       RENDER DASHBOARD
+       ========================= */
+    function renderAll() {
+        // پروفایل
+        document.getElementById('userFullName').textContent = user.fullName;
+        document.getElementById('walletBalance').textContent = toFa(user.wallet) + ' تومان';
+        document.getElementById('profileAlert').classList.toggle('d-none', profileCompleted);
+
+        // اشتراک
+        const plan = getPlan(activeSubscription.planKey);
+        document.getElementById('activePlanName').textContent = plan ? plan.label : '—';
+        document.getElementById('swapIntervalText').textContent = plan ? toFa(plan.swapIntervalDays) : '—';
+        document.getElementById('maxGamesText').textContent = plan ? toFa(plan.maxGames) : '—';
+        document.getElementById('durationBadge').textContent = `مدت ${toFa(activeSubscription.durationMonths)} ماهه`;
+
+        // تاریخ‌ها
+        const start = activeSubscription.startDate;
+        const end = addMonths(start, activeSubscription.durationMonths);
+        const lastSwap = activeSubscription.lastSwapDate || start;
+        const nextSwap = addDays(lastSwap, plan.swapIntervalDays);
+
+        document.getElementById('startDateText').textContent = fmtDateFa(start);
+        document.getElementById('endDateText').textContent   = fmtDateFa(end);
+        document.getElementById('lastSwapDateText').textContent = fmtDateFa(lastSwap);
+        document.getElementById('nextSwapDateText').textContent  = fmtDateFa(nextSwap);
+        document.getElementById('nextSwapDateText2').textContent = fmtDateFa(nextSwap);
+
+        // بازی‌ها
+        const listEl = document.getElementById('selectedGamesList');
+        listEl.innerHTML = '';
+        activeSubscription.games.forEach(g => {
+            const li = document.createElement('li');
+            li.textContent = g;
+            listEl.appendChild(li);
         });
 
-        menuClose.addEventListener('click', () => {
-            mobileMenu.classList.remove('active');
-            mobileOverlay.classList.remove('active');
-            document.body.style.overflow = '';
+        // کارت‌های بازی در تب «بازی‌های من»
+        renderGameCards();
+
+        // دکمه‌های تعویض
+        const eligible = new Date() >= new Date(nextSwap);
+        ['swapRequestBtn', 'swapRequestBtn2', 'swapRequestBtnHeader'].forEach(id => {
+            const btn = document.getElementById(id);
+            if (btn) btn.disabled = !eligible;
         });
 
-        mobileOverlay.addEventListener('click', () => {
-            mobileMenu.classList.remove('active');
-            mobileOverlay.classList.remove('active');
-            document.body.style.overflow = '';
-        });
+        // شمارنده‌ها
+        startCountdowns(nextSwap, end);
+    }
 
-        // Particles
-        function createParticles() {
-            const particlesContainer = document.getElementById('particles');
-            for (let i = 0; i < 80; i++) {
-                const particle = document.createElement('div');
-                particle.className = 'particle';
-                particle.style.left = Math.random() * 100 + '%';
-                particle.style.top = Math.random() * 100 + '%';
-                particle.style.setProperty('--tx', (Math.random() - 0.5) * 300 + 'px');
-                particle.style.setProperty('--ty', (Math.random() - 0.5) * 300 + 'px');
-                particle.style.animationDelay = Math.random() * 15 + 's';
-                particlesContainer.appendChild(particle);
-            }
+    function renderGameCards() {
+        const container = document.getElementById('gamesCards');
+        container.innerHTML = '';
+        activeSubscription.games.forEach((g, idx) => {
+            const col = document.createElement('div');
+            col.className = 'col-sm-6 col-lg-4';
+            col.innerHTML = `
+                    <div class="p-3 rounded-3 h-100" style="background: rgba(255,255,255,.03); border: 1px solid rgba(255,255,255,.1)">
+                        <div class="d-flex align-items-center justify-content-between">
+                            <div class="fw-bold">${g}</div>
+                            <span class="badge badge-soft px-2">بازی #${toFa(idx+1)}</span>
+                        </div>
+                        <div class="mt-2 small text-white-50">عضو پلن فعلی</div>
+                    </div>
+                `;
+            container.appendChild(col);
+        });
+    }
+
+    function startCountdowns(nextSwapISO, endISO) {
+        const swapEl = document.getElementById('swapCountdown');
+        const expEl  = document.getElementById('expireCountdown');
+
+        function renderTimer(targetISO, el) {
+            const ms = new Date(targetISO) - new Date();
+            if (ms <= 0) { el.textContent = 'اکنون مجاز'; return; }
+            const s = Math.floor(ms / 1000);
+            const d = Math.floor(s / 86400);
+            const h = Math.floor((s % 86400) / 3600);
+            const m = Math.floor((s % 3600) / 60);
+            const ss = s % 60;
+            el.textContent = `${toFa(d)} روز و ${toFa(h)}:${toFa(m.toString().padStart(2,'0'))}:${toFa(ss.toString().padStart(2,'0'))}`;
         }
 
-        // Add card hover effects
-        function addCardHoverEffects() {
-            const cards = document.querySelectorAll('.dashboard-card');
-            
-            cards.forEach(card => {
-                card.addEventListener('mouseenter', function() {
-                    this.style.transform = 'translateY(-10px)';
-                    this.style.boxShadow = '0 20px 50px rgba(255, 0, 255, 0.4)';
-                    this.style.borderColor = 'rgba(255, 0, 255, 0.7)';
-                });
-                
-                card.addEventListener('mouseleave', function() {
-                    this.style.transform = '';
-                    this.style.boxShadow = '';
-                    this.style.borderColor = '';
-                });
+        renderTimer(nextSwapISO, swapEl);
+        renderTimer(endISO, expEl);
+        // تکرار
+        if (window._countdownInterval) clearInterval(window._countdownInterval);
+        window._countdownInterval = setInterval(() => {
+            renderTimer(nextSwapISO, swapEl);
+            renderTimer(endISO, expEl);
+        }, 1000);
+    }
+
+    /* =========================
+       NAV / TOGGLE SECTIONS
+       ========================= */
+    const sections = ['dashboard','my-games','wallet','transactions','profile','settings'];
+    document.querySelectorAll('.sidebar-link[data-section]').forEach(a => {
+        a.addEventListener('click', (e) => {
+            e.preventDefault();
+            const target = a.getAttribute('data-section');
+            sections.forEach(sec => {
+                document.getElementById('section-' + sec).classList.toggle('d-none', sec !== target);
             });
+            document.querySelectorAll('.sidebar-link').forEach(x => x.classList.remove('active'));
+            a.classList.add('active');
+            if (target === 'profile') document.getElementById('profileName').focus();
+        });
+    });
+    document.getElementById('gotoProfileLink').addEventListener('click', (e)=>{
+        e.preventDefault();
+        document.querySelector('.sidebar-link[data-section="profile"]').click();
+    });
+
+    /* =========================
+       MOBILE SIDEBAR
+       ========================= */
+    const sidebarToggle = document.getElementById('sidebarToggle');
+    const sidebar = document.querySelector('.sidebar');
+    sidebarToggle.addEventListener('click', () => sidebar.classList.toggle('active'));
+    document.addEventListener('click', (e) => {
+        if (!sidebar.contains(e.target) && !sidebarToggle.contains(e.target)) sidebar.classList.remove('active');
+    });
+
+    /* =========================
+       PURCHASE FLOW (DYNAMIC FORM)
+       ========================= */
+    const planRadiosContainer = document.getElementById('planRadios');
+    const durationSelect = document.getElementById('durationSelect');
+    const gameInputs = document.getElementById('gameInputs');
+    const confirmPurchaseBtn = document.getElementById('confirmPurchaseBtn');
+
+    function buildPlanRadios(selectedKey = activeSubscription.planKey) {
+        planRadiosContainer.innerHTML = '';
+        Object.values(PLANS).forEach(pl => {
+            const col = document.createElement('div');
+            col.className = 'col-12 col-md-6';
+            col.innerHTML = `
+                    <label class="w-100 p-3 rounded-3" style="cursor:pointer; background: rgba(255,255,255,.03); border: 1px solid rgba(255,255,255,.1)">
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="planRadio" value="${pl.key}" ${pl.key===selectedKey?'checked':''}>
+                            <span class="fw-bold ms-2">${pl.label}</span>
+                        </div>
+                        <div class="small mt-2 text-white-50">
+                            تعویض هر ${toFa(pl.swapIntervalDays)} روز • حداکثر ${toFa(pl.maxGames)} بازی
+                        </div>
+                        <div class="small mt-1 text-info">مدت‌های مجاز: ${pl.durations.map(d=>toFa(d)).join(' / ')} ماهه</div>
+                    </label>
+                `;
+            planRadiosContainer.appendChild(col);
+        });
+    }
+
+    function buildDurationOptions(planKey, selected = activeSubscription.durationMonths) {
+        const pl = getPlan(planKey);
+        durationSelect.innerHTML = '';
+        pl.durations.forEach(d => {
+            const opt = document.createElement('option');
+            opt.value = d; opt.textContent = toFa(d) + ' ماهه';
+            if (d === selected) opt.selected = true;
+            durationSelect.appendChild(opt);
+        });
+    }
+
+    function buildGameFields(count, preset = []) {
+        gameInputs.innerHTML = '';
+        for (let i=0; i<count; i++) {
+            const col = document.createElement('div');
+            col.className = 'col-12 col-md-6';
+            col.innerHTML = `
+                    <input type="text" class="form-control" placeholder="نام بازی ${toFa(i+1)}" value="${preset[i] ? preset[i] : ''}">
+                `;
+            gameInputs.appendChild(col);
+        }
+    }
+
+    // init modal on show
+    const purchaseModal = document.getElementById('purchaseModal');
+    purchaseModal.addEventListener('show.bs.modal', () => {
+        buildPlanRadios();
+        const selectedPlanKey = document.querySelector('input[name="planRadio"]:checked').value;
+        buildDurationOptions(selectedPlanKey);
+        const maxGames = getPlan(selectedPlanKey).maxGames;
+        // پیش‌فرض: اگر خرید جدید است، از بازی‌های فعلی پر می‌کنیم (تا حد مجاز)
+        buildGameFields(maxGames, activeSubscription.games.slice(0, maxGames));
+    });
+
+    // plan change handlers
+    planRadiosContainer.addEventListener('change', (e) => {
+        if (e.target.name === 'planRadio') {
+            const k = e.target.value;
+            buildDurationOptions(k);
+            buildGameFields(getPlan(k).maxGames, []);
+        }
+    });
+
+    confirmPurchaseBtn.addEventListener('click', () => {
+        const selectedPlanKey = document.querySelector('input[name="planRadio"]:checked').value;
+        const newDuration = parseInt(durationSelect.value, 10);
+        const maxGames = getPlan(selectedPlanKey).maxGames;
+
+        const newGames = Array.from(gameInputs.querySelectorAll('input'))
+            .map(x => x.value.trim()).filter(Boolean).slice(0, maxGames);
+
+        if (newGames.length === 0) {
+            alert('حداقل نام یک بازی را وارد کنید.');
+            return;
         }
 
-        // Initialize
-        document.addEventListener('DOMContentLoaded', function() {
-            createParticles();
-            addCardHoverEffects();
+        // به صورت نمونه: اشتراک فعال را به روز می‌کنیم (در عمل باید API صدا بزنید)
+        activeSubscription = {
+            planKey: selectedPlanKey,
+            durationMonths: newDuration,
+            startDate: new Date().toISOString().slice(0,10),
+            lastSwapDate: null,
+            games: newGames
+        };
+
+        renderAll();
+        const modal = bootstrap.Modal.getInstance(purchaseModal);
+        modal.hide();
+    });
+
+    /* =========================
+       SWAP FLOW
+       ========================= */
+    const swapModal = document.getElementById('swapModal');
+    const currentGamesBadges = document.getElementById('currentGamesBadges');
+    const swapGameInputs = document.getElementById('swapGameInputs');
+    const confirmSwapBtn = document.getElementById('confirmSwapBtn');
+    const swapMaxGamesText = document.getElementById('swapMaxGamesText');
+
+    swapModal.addEventListener('show.bs.modal', () => {
+        const plan = getPlan(activeSubscription.planKey);
+        swapMaxGamesText.textContent = toFa(plan.maxGames);
+
+        // نشان دادن بازی‌های فعلی
+        currentGamesBadges.innerHTML = '';
+        activeSubscription.games.forEach(g => {
+            const span = document.createElement('span');
+            span.className = 'badge badge-soft me-1 mb-1 px-3 py-2';
+            span.textContent = g;
+            currentGamesBadges.appendChild(span);
         });
-    </script>
+
+        // فیلدهای جدید (حداکثر به تعداد مجاز پلن)
+        swapGameInputs.innerHTML = '';
+        for (let i=0; i<plan.maxGames; i++) {
+            const col = document.createElement('div');
+            col.className = 'col-12 col-md-6';
+            const preset = activeSubscription.games[i] || '';
+            col.innerHTML = `<input type="text" class="form-control" value="${preset}" placeholder="نام بازی ${toFa(i+1)}">`;
+            swapGameInputs.appendChild(col);
+        }
+
+        // بررسی مجاز بودن — اگر هنوز زمانش نرسیده، دکمه غیرفعال بماند
+        const nextSwap = addDays(activeSubscription.lastSwapDate || activeSubscription.startDate, plan.swapIntervalDays);
+        const eligible = new Date() >= new Date(nextSwap);
+        confirmSwapBtn.disabled = !eligible;
+        document.getElementById('swapInfoAlert').classList.toggle('alert-danger', !eligible);
+        document.getElementById('swapInfoAlert').innerHTML = eligible
+            ? 'الان مجاز به ثبت درخواست تعویض هستید. لطفاً لیست جدید بازی‌ها را تایید کنید.'
+            : `در حال حاضر مجاز به تعویض نیستید. تاریخ مجاز بعدی: <strong>${fmtDateFa(nextSwap)}</strong>`;
+    });
+
+    confirmSwapBtn.addEventListener('click', () => {
+        const plan = getPlan(activeSubscription.planKey);
+        const newGames = Array.from(swapGameInputs.querySelectorAll('input'))
+            .map(i => i.value.trim()).filter(Boolean).slice(0, plan.maxGames);
+
+        if (newGames.length === 0) {
+            alert('حداقل نام یک بازی را برای لیست جدید وارد کنید.');
+            return;
+        }
+
+        // به‌روزرسانی محلی (در عمل: ایجاد رکورد Request و تایید ادمین)
+        activeSubscription.games = newGames;
+        activeSubscription.lastSwapDate = new Date().toISOString().slice(0,10);
+
+        renderAll();
+        const modal = bootstrap.Modal.getInstance(swapModal);
+        modal.hide();
+    });
+
+    /* =========================
+       PROFILE SAVE (MOCK)
+       ========================= */
+    document.getElementById('saveProfileBtn').addEventListener('click', () => {
+        const name = document.getElementById('profileName').value.trim();
+        if (name) user.fullName = name;
+        profileCompleted = true;
+        renderAll();
+        alert('پروفایل با موفقیت ذخیره شد.');
+    });
+
+    /* =========================
+       INIT
+       ========================= */
+    window.addEventListener('DOMContentLoaded', () => {
+        renderAll();
+    });
+</script>
 </body>
 </html>

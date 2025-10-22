@@ -21,6 +21,7 @@ Route::get('/faq', [PageController::class, 'faq']);
 Route::get('/login', [PageController::class, 'login']);
 Route::get('/video', [PageController::class, 'video']);
 Route::get('/packages', [PageController::class, 'packages']);
+Route::get('/admindashboard', [PageController::class, 'admindashboard']);
 
 
 Route::get('/login', function () {

@@ -53,4 +53,9 @@ class PageController extends Controller
     {
         return view('index2');
     }
+
+    public function admindashboard()
+    {
+        return view('admin-dashboard');
+    }
 }
