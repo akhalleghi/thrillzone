@@ -5,6 +5,7 @@ use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Admin\AdminAuthController;
 use App\Http\Controllers\Admin\AdminDashboardController;
+use App\Http\Controllers\Admin\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -79,27 +80,77 @@ Route::get('/faq', function () {return view('faq');})->name('faq');
 Route::get('/about', function () {return view('about');})->name('about');
 
 
+///*
+//|--------------------------------------------------------------------------
+//| مسیرهای پنل ادمین
+//|--------------------------------------------------------------------------
+//*/
+//
+//// گروه روت‌های پنل مدیریت
+//Route::prefix('admin')->name('admin.')->group(function () {
+//
+//    // ورود ادمین (موقتی بدون alias)
+//    Route::middleware(\App\Http\Middleware\RedirectIfAuthenticatedAdmin::class)->group(function () {
+//        Route::get('login', [App\Http\Controllers\Admin\AdminAuthController::class, 'showLoginForm'])->name('login');
+//        Route::post('login', [App\Http\Controllers\Admin\AdminAuthController::class, 'login'])
+//            ->middleware('throttle:6,1')
+//            ->name('login.submit');
+//    });
+//
+//    // صفحات محافظت‌شده (فقط وقتی لاگین است)
+//    Route::middleware('auth:admin')->group(function () {
+//        Route::get('/', [App\Http\Controllers\Admin\AdminDashboardController::class, 'index'])->name('dashboard');
+//        Route::post('logout', [App\Http\Controllers\Admin\AdminAuthController::class, 'logout'])->name('logout');
+//    });
+//});
+
 /*
 |--------------------------------------------------------------------------
-| مسیرهای پنل ادمین
+| مسیرهای پنل مدیریت (Admin Panel)
 |--------------------------------------------------------------------------
 */
 
-// گروه روت‌های پنل مدیریت
+
+
 Route::prefix('admin')->name('admin.')->group(function () {
 
-    // ورود ادمین (موقتی بدون alias)
+    /*
+    |--------------------------------------------------------------------------
+    | مسیرهای ورود مدیر
+    |--------------------------------------------------------------------------
+    */
     Route::middleware(\App\Http\Middleware\RedirectIfAuthenticatedAdmin::class)->group(function () {
-        Route::get('login', [App\Http\Controllers\Admin\AdminAuthController::class, 'showLoginForm'])->name('login');
-        Route::post('login', [App\Http\Controllers\Admin\AdminAuthController::class, 'login'])
+        // فرم ورود
+        Route::get('login', [AdminAuthController::class, 'showLoginForm'])->name('login');
+
+        // ارسال اطلاعات ورود
+        Route::post('login', [AdminAuthController::class, 'login'])
             ->middleware('throttle:6,1')
             ->name('login.submit');
     });
 
-    // صفحات محافظت‌شده (فقط وقتی لاگین است)
+
+    /*
+    |--------------------------------------------------------------------------
+    | مسیرهای محافظت‌شده (فقط وقتی مدیر وارد شده است)
+    |--------------------------------------------------------------------------
+    */
     Route::middleware('auth:admin')->group(function () {
-        Route::get('/', [App\Http\Controllers\Admin\AdminDashboardController::class, 'index'])->name('dashboard');
-        Route::post('logout', [App\Http\Controllers\Admin\AdminAuthController::class, 'logout'])->name('logout');
+        // داشبورد اصلی
+        Route::get('/', [AdminDashboardController::class, 'index'])->name('dashboard');
+
+        // ✅ لیست کاربران از کنترلر
+        Route::get('/users', [UserController::class, 'index'])->name('users');
+
+        // سایر صفحات (فعلاً استاتیک)
+        Route::get('/plans', fn() => view('admin.plans'))->name('plans');
+        Route::get('/finance', fn() => view('admin.finance'))->name('finance');
+        Route::get('/settings', fn() => view('admin.settings'))->name('settings');
+
+        // خروج از حساب مدیر
+        Route::post('logout', [AdminAuthController::class, 'logout'])->name('logout');
     });
 });
+
+
 

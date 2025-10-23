@@ -40,7 +40,9 @@
 
         .form-control { background: rgba(255, 255, 255, 0.05); border: 2px solid rgba(0, 255, 255, 0.3); border-radius: 15px; padding: 1rem; color: #fff; font-size: 1.1rem; text-align: center; transition: all 0.3s; }
         .form-control:focus { border-color: #ff00ff; box-shadow: 0 0 25px rgba(255, 0, 255, 0.3); background: rgba(255,255,255,0.1); }
-        .form-control::placeholder { color: #706f6c; }
+        .form-control::placeholder {
+            color: rgba(255, 255, 255, 0.85); /* ✅ روشن و واضح */
+        }
 
         .btn-neon { background: linear-gradient(135deg, #00ffff, #ff00ff); border: none; color: white; font-weight: bold; font-size: 1.2rem; padding: 1rem; border-radius: 15px; width: 100%; box-shadow: 0 0 20px rgba(0, 255, 255, 0.4); transition: all 0.3s; }
         .btn-neon:hover { transform: translateY(-3px); box-shadow: 0 0 40px rgba(255, 0, 255, 0.6); }
