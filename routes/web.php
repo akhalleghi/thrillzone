@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Admin\AdminAuthController;
 use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\PlanController;
 
 /*
 |--------------------------------------------------------------------------
@@ -198,7 +199,10 @@ Route::prefix('admin')->name('admin.')->group(function () {
             ->names('games');
 
         // 📦 پلن‌ها
-        Route::get('/plans', fn() => view('admin.plans'))->name('plans');
+        Route::get('/plans', [PlanController::class, 'index'])->name('plans');
+        Route::post('/plans', [PlanController::class, 'store'])->name('plans.store');
+        Route::put('/plans/{plan}', [PlanController::class, 'update'])->name('plans.update');
+        Route::delete('/plans/{plan}', [PlanController::class, 'destroy'])->name('plans.destroy');
 
         // 💰 امور مالی
         Route::get('/finance', fn() => view('admin.finance'))->name('finance');

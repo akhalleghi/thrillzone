@@ -176,6 +176,66 @@
                 margin-right:0;
             }
         }
+
+        .modal-content {
+  max-height: 90vh;
+  overflow-y: auto;
+  border-radius: 16px;
+}
+
+.modal-body {
+  max-height: 70vh;
+  overflow-y: auto;
+  padding-right: 0.75rem;
+}
+
+@media (max-width: 768px) {
+  .modal-dialog {
+    width: 95% !important;
+    margin: 0 auto;
+  }
+  .modal-body {
+    max-height: 65vh;
+  }
+}
+/* ===== حالت کارت در موبایل ===== */
+.plan-card {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 14px;
+  padding: 1rem;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+  backdrop-filter: blur(12px);
+}
+
+[data-theme="light"] .plan-card {
+  background: #fff;
+  border-color: #e4e7ec;
+}
+
+.plan-card b {
+  color: var(--text);
+}
+
+.plan-card .badge {
+  font-size: 0.75rem;
+  padding: 0.35rem 0.5rem;
+}
+
+/* فاصله مناسب در موبایل */
+@media (max-width: 576px) {
+  .plan-card {
+    padding: 0.85rem;
+    font-size: 0.85rem;
+  }
+}
+.text-muted {
+  --bs-text-opacity: 1;
+  color: rgba(249, 252, 255, 0.75) !important;
+}
+
+
+
     </style>
 
 </head>
@@ -193,12 +253,16 @@
             <a href="{{ route('admin.users') }}" class="nav-link {{ request()->routeIs('admin.users') ? 'active' : '' }}">
                 <i class="bi bi-people"></i> کاربران
             </a>
+
             <a href="{{ route('admin.games.index') }}"
                class="nav-link {{ request()->routeIs('admin.games.*') ? 'active' : '' }}">
                 <i class="bi bi-controller"></i> بازی‌ها
             </a>
 
-            <a href="{{ route('admin.plans') }}" class="nav-link {{ request()->routeIs('admin.plans') ? 'active' : '' }}"><i class="bi bi-box"></i> پلن‌ها</a>
+            <a href="{{ route('admin.plans') }}" class="nav-link {{ request()->routeIs('admin.plans') ? 'active' : '' }}">
+            <i class="bi bi-box"></i> پلن‌ها
+            </a>
+
             <a href="{{ route('admin.finance') }}" class="nav-link {{ request()->routeIs('admin.finance') ? 'active' : '' }}"><i class="bi bi-cash-stack"></i> مالی</a>
             <a href="{{ route('admin.settings') }}" class="nav-link {{ request()->routeIs('admin.settings') ? 'active' : '' }}"><i class="bi bi-gear"></i> تنظیمات</a>
         </nav>

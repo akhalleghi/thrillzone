@@ -27,6 +27,41 @@
         @media (max-width: 992px) {
             .filters-stack > * { margin-bottom: .5rem; }
         }
+        /* ===== کارت‌های موبایل برای بازی‌ها ===== */
+        .game-card {
+        background: rgba(255,255,255,0.05);
+        border: 1px solid rgba(255,255,255,0.12);
+        border-radius: 14px;
+        padding: 1rem;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+        backdrop-filter: blur(12px);
+        }
+
+        [data-theme="light"] .game-card {
+        background: #fff;
+        border-color: #e4e7ec;
+        }
+
+        .game-card img {
+        flex-shrink: 0;
+        }
+
+        .game-card small {
+        color: var(--muted);
+        }
+
+        /* برای حالت خیلی کوچک‌تر */
+        @media (max-width: 576px) {
+        .game-card {
+            padding: 0.85rem;
+            font-size: 0.85rem;
+        }
+        }
+        .text-muted {
+        --bs-text-opacity: 1;
+        color: rgba(249, 252, 255, 0.75) !important;
+        }
+
     </style>
 
     {{-- هدر بخش + اکشن‌ها --}}
@@ -105,13 +140,14 @@
         </div>
     @endif
 
-    {{-- جدول لیست بازی‌ها --}}
     <div class="card-glass">
-        <div class="table-responsive">
+    <!-- نسخه دسکتاپ (جدول) -->
+    <div class="table-wrapper d-none d-md-block">
+        <div class="table-scroll">
             <table class="table table-dark align-middle mb-0">
                 <thead>
                 <tr>
-                    <th style="width:70px;">ردیف</th>
+                    <th style="width:70px;">#</th>
                     <th style="width:90px;">کاور</th>
                     <th>نام بازی</th>
                     <th style="width:180px;">ژانر</th>
@@ -125,14 +161,11 @@
                     <tr>
                         <td>{{ \Morilog\Jalali\CalendarUtils::convertNumbers(($games->firstItem() ?? 1) + $index) }}</td>
                         <td>
-                            @php $cover = $game->cover_url; @endphp
-                            <img src="{{ $cover }}" alt="cover" class="cover-img">
+                            <img src="{{ $game->cover_url }}" alt="cover" class="cover-img rounded" style="width:60px; height:40px; object-fit:cover;">
                         </td>
                         <td class="fw-semibold">{{ $game->name }}</td>
                         <td>{{ $game->genre ?: '—' }}</td>
-                        <td class="text-muted-rtl">
-                            {{ Jalalian::fromCarbon($game->created_at)->format('Y/m/d') }}
-                        </td>
+                        <td class="text-muted-rtl">{{ Jalalian::fromCarbon($game->created_at)->format('Y/m/d') }}</td>
                         <td>
                             @if($game->status === 'active')
                                 <span class="badge bg-success badge-status">فعال</span>
@@ -142,7 +175,8 @@
                         </td>
                         <td>
                             <button
-                                class="btn btn-sm btn-outline-info btn-icon me-1"
+                                type="button"
+                                class="btn btn-sm btn-outline-info me-1"
                                 data-bs-toggle="modal" data-bs-target="#gameModal"
                                 data-mode="edit"
                                 data-id="{{ $game->id }}"
@@ -158,28 +192,77 @@
                                   onsubmit="return confirm('حذف این بازی قطعی است. ادامه می‌دهید؟')">
                                 @csrf
                                 @method('DELETE')
-                                <button class="btn btn-sm btn-outline-danger btn-icon" title="حذف">
+                                <button type="submit" class="btn btn-sm btn-outline-danger" title="حذف">
                                     <i class="bi bi-trash"></i>
                                 </button>
                             </form>
                         </td>
                     </tr>
                 @empty
-                    <tr>
-                        <td colspan="7" class="text-center text-muted-rtl py-4">
-                            هیچ بازی‌ای یافت نشد.
-                        </td>
-                    </tr>
+                    <tr><td colspan="7" class="text-center text-muted py-4">هیچ بازی‌ای یافت نشد.</td></tr>
                 @endforelse
                 </tbody>
             </table>
         </div>
-
-        {{-- صفحه‌بندی --}}
-        <div class="mt-3">
-            {{ $games->links('pagination::bootstrap-5') }}
-        </div>
     </div>
+
+    <!-- نسخه موبایل (کارت‌ها) -->
+    <div class="d-md-none">
+        @forelse($games as $index => $game)
+            <div class="game-card mb-3">
+                <div class="d-flex align-items-center mb-2">
+                    <img src="{{ $game->cover_url }}" alt="cover" class="rounded me-2" style="width:64px;height:40px;object-fit:cover;">
+                    <div>
+                        <h6 class="fw-bold mb-0">{{ $game->name }}</h6>
+                        <small class="text-muted">{{ $game->genre ?: 'بدون ژانر' }}</small>
+                    </div>
+                    <div class="ms-auto">
+                        @if($game->status === 'active')
+                            <span class="badge bg-success">فعال</span>
+                        @else
+                            <span class="badge bg-secondary">غیرفعال</span>
+                        @endif
+                    </div>
+                </div>
+
+                <div class="small text-muted mb-2">
+                    <i class="bi bi-calendar-event me-1"></i>
+                    {{ Jalalian::fromCarbon($game->created_at)->format('Y/m/d') }}
+                </div>
+
+                <div class="text-end">
+                    <button
+                        type="button"
+                        class="btn btn-sm btn-outline-info me-1"
+                        data-bs-toggle="modal" data-bs-target="#gameModal"
+                        data-mode="edit"
+                        data-id="{{ $game->id }}"
+                        data-name="{{ $game->name }}"
+                        data-genre="{{ $game->genre }}"
+                        data-status="{{ $game->status }}"
+                        data-cover="{{ $game->cover ? asset('storage/'.$game->cover) : '' }}">
+                        <i class="bi bi-pencil"></i> ویرایش
+                    </button>
+
+                    <form method="POST" action="{{ route('admin.games.destroy', $game) }}" class="d-inline"
+                          onsubmit="return confirm('حذف این بازی قطعی است؟')">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="btn btn-sm btn-outline-danger">
+                            <i class="bi bi-trash"></i> حذف
+                        </button>
+                    </form>
+                </div>
+            </div>
+        @empty
+            <div class="text-center text-muted py-4">هیچ بازی‌ای ثبت نشده است.</div>
+        @endforelse
+    </div>
+
+    <div class="mt-3">
+        {{ $games->links('pagination::bootstrap-5') }}
+    </div>
+</div>
 
     {{-- مودال افزودن/ویرایش بازی (یک مودال چندمنظوره) --}}
     <div class="modal fade" id="gameModal" tabindex="-1" aria-labelledby="gameModalLabel" aria-hidden="true">
