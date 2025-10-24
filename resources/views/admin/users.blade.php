@@ -10,6 +10,7 @@
             <table class="table table-dark align-middle mb-0">
                 <thead>
                 <tr>
+                    <th style="width: 60px;">#</th>
                     <th>نام کاربر</th>
                     <th>شماره تماس</th>
                     <th>تاریخ ثبت‌نام</th>
@@ -17,16 +18,23 @@
                 </tr>
                 </thead>
                 <tbody>
-                @forelse($users as $user)
+                @forelse($users as $index => $user)
                     <tr>
+                        <td>{{ $users->firstItem() + $index }}</td>
                         <td>{{ $user->name ?? '—' }}</td>
                         <td>{{ $user->phone ?? '—' }}</td>
-                        <td>{{ \Carbon\Carbon::parse($user->created_at)->format('Y/m/d') }}</td>
+                        <td>
+                            @if($user->created_at)
+                                {{ \Morilog\Jalali\Jalalian::forge($user->created_at)->format('Y/m/d') }}
+                            @else
+                                —
+                            @endif
+                        </td>
                         <td class="text-muted">—</td>
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="4" class="text-center text-muted py-4">هیچ کاربری ثبت نشده است</td>
+                        <td colspan="5" class="text-center text-muted py-4">هیچ کاربری ثبت نشده است</td>
                     </tr>
                 @endforelse
                 </tbody>

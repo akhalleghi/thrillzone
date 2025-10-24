@@ -193,6 +193,11 @@
             <a href="{{ route('admin.users') }}" class="nav-link {{ request()->routeIs('admin.users') ? 'active' : '' }}">
                 <i class="bi bi-people"></i> کاربران
             </a>
+            <a href="{{ route('admin.games.index') }}"
+               class="nav-link {{ request()->routeIs('admin.games.*') ? 'active' : '' }}">
+                <i class="bi bi-controller"></i> بازی‌ها
+            </a>
+
             <a href="{{ route('admin.plans') }}" class="nav-link {{ request()->routeIs('admin.plans') ? 'active' : '' }}"><i class="bi bi-box"></i> پلن‌ها</a>
             <a href="{{ route('admin.finance') }}" class="nav-link {{ request()->routeIs('admin.finance') ? 'active' : '' }}"><i class="bi bi-cash-stack"></i> مالی</a>
             <a href="{{ route('admin.settings') }}" class="nav-link {{ request()->routeIs('admin.settings') ? 'active' : '' }}"><i class="bi bi-gear"></i> تنظیمات</a>

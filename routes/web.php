@@ -112,6 +112,56 @@ Route::get('/about', function () {return view('about');})->name('about');
 
 
 
+//Route::prefix('admin')->name('admin.')->group(function () {
+//
+//    /*
+//    |--------------------------------------------------------------------------
+//    | مسیرهای ورود مدیر
+//    |--------------------------------------------------------------------------
+//    */
+//    Route::middleware(\App\Http\Middleware\RedirectIfAuthenticatedAdmin::class)->group(function () {
+//        // فرم ورود
+//        Route::get('login', [AdminAuthController::class, 'showLoginForm'])->name('login');
+//
+//        // ارسال اطلاعات ورود
+//        Route::post('login', [AdminAuthController::class, 'login'])
+//            ->middleware('throttle:6,1')
+//            ->name('login.submit');
+//    });
+//
+//
+//    /*
+//    |--------------------------------------------------------------------------
+//    | مسیرهای محافظت‌شده (فقط وقتی مدیر وارد شده است)
+//    |--------------------------------------------------------------------------
+//    */
+//    Route::middleware('auth:admin')->group(function () {
+//        // داشبورد اصلی
+//        Route::get('/', [AdminDashboardController::class, 'index'])->name('dashboard');
+//
+//        // ✅ لیست کاربران از کنترلر
+//        Route::get('/users', [UserController::class, 'index'])->name('users');
+//
+//        // سایر صفحات (فعلاً استاتیک)
+//        Route::get('/plans', fn() => view('admin.plans'))->name('plans');
+//        Route::get('/finance', fn() => view('admin.finance'))->name('finance');
+//        Route::get('/settings', fn() => view('admin.settings'))->name('settings');
+//
+//        // خروج از حساب مدیر
+//        Route::post('logout', [AdminAuthController::class, 'logout'])->name('logout');
+//    });
+//});
+
+
+/*
+|--------------------------------------------------------------------------
+| مسیرهای پنل مدیریت (Admin Panel)
+|--------------------------------------------------------------------------
+*/
+
+
+use App\Http\Controllers\Admin\GameController;
+
 Route::prefix('admin')->name('admin.')->group(function () {
 
     /*
@@ -136,21 +186,31 @@ Route::prefix('admin')->name('admin.')->group(function () {
     |--------------------------------------------------------------------------
     */
     Route::middleware('auth:admin')->group(function () {
-        // داشبورد اصلی
+        // 🏠 داشبورد
         Route::get('/', [AdminDashboardController::class, 'index'])->name('dashboard');
 
-        // ✅ لیست کاربران از کنترلر
+        // 👥 کاربران
         Route::get('/users', [UserController::class, 'index'])->name('users');
 
-        // سایر صفحات (فعلاً استاتیک)
+        // 🎮 بازی‌ها (CRUD کامل)
+        Route::resource('/games', GameController::class)
+            ->except(['show']) // چون صفحه show جدا نیاز نداریم
+            ->names('games');
+
+        // 📦 پلن‌ها
         Route::get('/plans', fn() => view('admin.plans'))->name('plans');
+
+        // 💰 امور مالی
         Route::get('/finance', fn() => view('admin.finance'))->name('finance');
+
+        // ⚙️ تنظیمات
         Route::get('/settings', fn() => view('admin.settings'))->name('settings');
 
-        // خروج از حساب مدیر
+        // 🚪 خروج
         Route::post('logout', [AdminAuthController::class, 'logout'])->name('logout');
     });
 });
+
 
 
 
