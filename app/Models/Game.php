@@ -7,8 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 class Game extends Model
 {
     protected $fillable = [
-        'name', 'genre', 'cover', 'status'
+        'name', 'genre', 'cover', 'status' , 'type','level'
     ];
+    protected $casts    = ['level' => 'integer'];
 
     // آدرس کامل کاور برای نمایش
     public function getCoverUrlAttribute(): string

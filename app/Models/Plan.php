@@ -9,7 +9,8 @@ class Plan extends Model
     protected $fillable = [
         'name','platforms','capability','concurrent_games','all_ps_store','level1_selection',
         'swap_limit','install_options','game_type','has_discount','discount_percent',
-        'has_free_games','free_games_count','description','durations','prices','active'
+        'has_free_games','free_games_count','description','durations','prices','active',
+        'image',
     ];
 
     protected $casts = [
@@ -22,8 +23,19 @@ class Plan extends Model
         'active'          => 'boolean',
     ];
 
+    protected $appends = [
+        'image_url',
+    ];
+
     public function priceFor($months)
     {
         return $this->prices[$months] ?? null;
+    }
+
+    public function getImageUrlAttribute(): string
+    {
+        return $this->image
+            ? asset('storage/' . ltrim($this->image, '/'))
+            : asset('images/plan-placeholder.png');
     }
 }

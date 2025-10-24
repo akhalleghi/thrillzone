@@ -30,6 +30,7 @@
                 <tr>
                     <th>#</th>
                     <th>نام پلن</th>
+                    <th style="width:100px;">تصویر</th>
                     <th>پلتفرم</th>
                     <th>قابلیت</th>
                     <th>بازی همزمان</th>
@@ -44,6 +45,10 @@
                     <tr>
                         <td>{{ $plans->firstItem() + $i }}</td>
                         <td class="fw-bold">{{ $plan->name }}</td>
+                        <td>
+                            <img src="{{ $plan->image_url }}" alt="plan" style="width:72px;height:48px;object-fit:cover;border-radius:8px;">
+                        </td>
+
                         <td>
                             @php $pf = $plan->platforms ?? []; @endphp
                             {{ in_array('ps4',$pf) ? 'PS4' : '' }}
@@ -99,6 +104,7 @@
             <div class="plan-card mb-3">
                 <div class="d-flex justify-content-between align-items-center mb-2">
                     <h6 class="fw-bold mb-0">{{ $plan->name }}</h6>
+                    <img src="{{ $plan->image_url }}" alt="plan" class="me-2" style="width:64px;height:40px;object-fit:cover;border-radius:8px;">
                     {!! $plan->active ? '<span class="badge bg-success">فعال</span>' : '<span class="badge bg-secondary">غیرفعال</span>' !!}
                 </div>
                 <div class="small text-muted mb-2">
@@ -109,7 +115,7 @@
                     {{ in_array('ps5',$pf) ? 'PS5' : '' }}
                 </div>
                 <div class="row small">
-                    <div class="col-6"><b>قابلیت:</b> 
+                    <div class="col-6"><b>قابلیت:</b>
                         @switch($plan->capability)
                             @case('online') آنلاین @break
                             @case('offline') آفلاین @break
@@ -161,11 +167,11 @@
 <div class="modal fade" id="createPlanModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable" style="max-height: 95vh;">
     <div class="modal-content bg-dark text-white">
-      <form method="POST" action="{{ route('admin.plans.store') }}">
+      <form method="POST" action="{{ route('admin.plans.store') }}" enctype="multipart/form-data">
         @csrf
         <div class="modal-header border-0">
           <h5 class="modal-title">افزودن پلن جدید</h5>
-          <button class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
         </div>
 
         <div class="modal-body">
@@ -285,6 +291,19 @@
               <textarea name="description" class="form-control" rows="3" placeholder="توضیحات پلن..."></textarea>
             </div>
 
+
+              <div class="row g-3">
+                  <div class="col-md-6">
+                      <label class="form-label">تصویر پلن (اختیاری)</label>
+                      <input type="file" name="image" class="form-control" accept="image/*" id="addImageInput">
+                  </div>
+                  <div class="col-md-6 d-flex align-items-end">
+                      <img id="addImagePreview" src="{{ asset('images/plan-placeholder.png') }}" alt="preview"
+                           style="width:120px;height:80px;object-fit:cover;border-radius:8px;border:1px solid var(--border);">
+                  </div>
+              </div>
+
+
             <div class="col-12"><hr class="divider"></div>
 
             <div class="col-12">
@@ -333,7 +352,7 @@
 <div class="modal fade" id="editPlanModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable" style="max-height: 95vh;">
     <div class="modal-content bg-dark text-white">
-      <form method="POST" id="editPlanForm">
+      <form method="POST" id="editPlanForm" enctype="multipart/form-data">
         @csrf @method('PUT')
         <div class="modal-header border-0">
           <h5 class="modal-title">ویرایش پلن</h5>
@@ -456,6 +475,23 @@
               <label class="form-label">توضیحات</label>
               <textarea name="description" id="edit_description" class="form-control" rows="3"></textarea>
             </div>
+
+              <div class="row g-3">
+                  <div class="col-md-6">
+                      <label class="form-label">تصویر جدید (در صورت انتخاب، تصویر قبلی جایگزین می‌شود)</label>
+                      <input type="file" name="image" class="form-control" accept="image/*" id="editImageInput">
+                      <div class="form-check mt-2">
+                          <input class="form-check-input" type="checkbox" value="1" id="removeImage" name="remove_image">
+                          <label class="form-check-label" for="removeImage">حذف تصویر فعلی</label>
+                      </div>
+                  </div>
+                  <div class="col-md-6 d-flex align-items-end">
+                      <img id="editImagePreview" src="{{ asset('images/plan-placeholder.png') }}" alt="preview"
+                           style="width:120px;height:80px;object-fit:cover;border-radius:8px;border:1px solid var(--border);">
+                  </div>
+              </div>
+
+
 
             <div class="col-12"><hr class="divider"></div>
 
@@ -609,4 +645,55 @@
     bindDynamicToggles(editModalEl);
   });
 </script>
+<script>
+    // پیش‌نمایش سریع تصویر انتخاب‌شده
+    function previewFile(input, imgElId) {
+        const file = input.files?.[0];
+        const img = document.getElementById(imgElId);
+        if (!img) return;
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = e => img.src = e.target.result;
+            reader.readAsDataURL(file);
+        }
+    }
+
+    // افزودن
+    document.getElementById('addImageInput')?.addEventListener('change', function(){
+        previewFile(this, 'addImagePreview');
+    });
+
+    // ویرایش: هنگام باز شدن مدال، مقداردهی کن
+    const editModal = document.getElementById('editPlanModal');
+    editModal?.addEventListener('show.bs.modal', function (event) {
+        const btn  = event.relatedTarget;
+        const plan = btn ? JSON.parse(btn.getAttribute('data-plan')) : null;
+
+        if (!plan) return;
+
+        // آدرس اکشن فرم
+        const form = document.getElementById('editPlanForm');
+        form.action = "{{ route('admin.plans.update', ':id') }}".replace(':id', plan.id);
+
+        // پیش‌نمایش تصویر فعلی
+        const preview = document.getElementById('editImagePreview');
+        preview.src = plan.image_url || "{{ asset('images/plan-placeholder.png') }}";
+
+        // پاک کردن ورودی فایل و تیک حذف
+        document.getElementById('editImageInput').value = '';
+        document.getElementById('removeImage').checked = false;
+
+        // این‌جا سایر فیلدهای پلن را هم مثل قبل مقداردهی کن (name، durations، ...)
+
+    });
+
+    // وقتی فایل جدید انتخاب شد، پیش‌نمایش را عوض کن
+    document.getElementById('editImageInput')?.addEventListener('change', function(){
+        previewFile(this, 'editImagePreview');
+        // اگر فایل جدید انتخاب شد، تیک حذف را بردار
+        const rm = document.getElementById('removeImage');
+        if (rm) rm.checked = false;
+    });
+</script>
+
 @endpush

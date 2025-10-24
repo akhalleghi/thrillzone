@@ -85,13 +85,13 @@
                            value="{{ request('q') }}"
                            placeholder="نام بازی یا ژانر را جستجو کنید...">
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-2">
                     <label class="form-label">ژانر</label>
                     <input type="text" name="genre" class="form-control"
                            value="{{ request('genre') }}"
                            placeholder="مثلاً: اکشن، ورزشی، ماجراجویی">
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-1">
                     <label class="form-label">وضعیت</label>
                     <select name="status" class="form-select">
                         <option value="">همه</option>
@@ -99,6 +99,25 @@
                         <option value="inactive" {{ request('status')==='inactive' ? 'selected' : '' }}>غیرفعال</option>
                     </select>
                 </div>
+                
+                <div class="col-md-1">
+                    <label class="form-label">نوع بازی</label>
+                    <select name="type" class="form-select">
+                        <option value="">همه</option>
+                        <option value="original" {{ request('type')==='original' ? 'selected' : '' }}>اصلی</option>
+                        <option value="free" {{ request('type')==='free' ? 'selected' : '' }}>رایگان</option>
+                    </select>
+                </div>
+                <div class="col-md-1">
+                    <label class="form-label">سطح</label>
+                    <select name="level" class="form-select">
+                        <option value="">همه</option>
+                        <option value="1" {{ request('level')==='1' ? 'selected' : '' }}>سطح 1</option>
+                        <option value="2" {{ request('level')==='2' ? 'selected' : '' }}>سطح 2 و بیشتر</option>
+                    </select>
+                </div>
+
+
                 <div class="col-md-2 text-end">
                     <button class="neon-btn w-100" type="submit">
                         <i class="bi bi-search"></i> جستجو
@@ -118,6 +137,17 @@
                         وضعیت: {{ request('status')==='active' ? 'فعال' : 'غیرفعال' }}
                     </span>
                 @endif
+                @if(request('type'))
+                    <span class="badge bg-info-subtle text-dark">
+                        نوع: {{ request('type')==='original' ? 'اصلی' : 'رایگان' }}
+                    </span>
+                @endif
+                @if(request('level'))
+                    <span class="badge bg-info-subtle text-dark">
+                        سطح: {{ request('level')==='1' ? 'سطح 1' : 'سطح 2 و بیشتر' }}
+                    </span>
+                @endif
+
                 <a href="{{ route('admin.games.index') }}" class="btn btn-sm btn-outline-light ms-auto">
                     حذف فیلترها
                 </a>
@@ -151,6 +181,8 @@
                     <th style="width:90px;">کاور</th>
                     <th>نام بازی</th>
                     <th style="width:180px;">ژانر</th>
+                    <th style="width:100px;">نوع</th>
+                    <th style="width:110px;">سطح</th>
                     <th style="width:160px;">تاریخ افزودن</th>
                     <th style="width:120px;">وضعیت</th>
                     <th style="width:140px;">عملیات</th>
@@ -165,6 +197,24 @@
                         </td>
                         <td class="fw-semibold">{{ $game->name }}</td>
                         <td>{{ $game->genre ?: '—' }}</td>
+
+                        <td>
+                            @if($game->type === 'free')
+                                <span class="badge bg-info">رایگان</span>
+                            @else
+                                <span class="badge bg-primary">اصلی</span>
+                            @endif
+                        </td>
+
+                        <td>
+                            @if($game->level == 1)
+                                <span class="badge bg-primary">سطح 1</span>
+                            @else
+                                <span class="badge bg-warning text-dark">سطح 2 و بیشتر</span>
+                            @endif
+                        </td>
+
+
                         <td class="text-muted-rtl">{{ Jalalian::fromCarbon($game->created_at)->format('Y/m/d') }}</td>
                         <td>
                             @if($game->status === 'active')
@@ -183,6 +233,8 @@
                                 data-name="{{ $game->name }}"
                                 data-genre="{{ $game->genre }}"
                                 data-status="{{ $game->status }}"
+                                data-type="{{ $game->type }}"
+                                data-level="{{ $game->level }}"
                                 data-cover="{{ $game->cover ? asset('storage/'.$game->cover) : '' }}"
                                 title="ویرایش">
                                 <i class="bi bi-pencil"></i>
@@ -223,6 +275,18 @@
                             <span class="badge bg-secondary">غیرفعال</span>
                         @endif
                     </div>
+                    <div class="ms-auto">
+                        @if($game->type === 'free')
+                                <span class="badge bg-info">رایگان</span>
+                            @else
+                                <span class="badge bg-primary">اصلی</span>
+                            @endif
+                    </div>
+                    <div class="small text-muted mb-2">
+                            <i class="bi bi-diagram-3 me-1"></i>
+                            {{ $game->level == 1 ? 'سطح 1' : 'سطح 2 و بیشتر' }}
+                    </div>
+
                 </div>
 
                 <div class="small text-muted mb-2">
@@ -240,6 +304,8 @@
                         data-name="{{ $game->name }}"
                         data-genre="{{ $game->genre }}"
                         data-status="{{ $game->status }}"
+                        data-type="{{ trim($game->type) }}"
+                        data-level="{{ $game->level }}"
                         data-cover="{{ $game->cover ? asset('storage/'.$game->cover) : '' }}">
                         <i class="bi bi-pencil"></i> ویرایش
                     </button>
@@ -297,6 +363,21 @@
                             <option value="inactive">غیرفعال</option>
                         </select>
                     </div>
+                    <div class="mb-3">
+                        <label class="form-label">نوع بازی</label>
+                        <select class="form-select" name="type" id="gameType" required>
+                            <option value="original">اصلی</option>
+                            <option value="free">رایگان</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">سطح بازی</label>
+                        <select class="form-select" name="level" id="gameLevel" required>
+                            <option value="1">سطح 1</option>
+                            <option value="2">سطح 2 و بیشتر</option>
+                        </select>
+                    </div>
+
                     <div class="mb-1">
                         <label class="form-label">کاور (اختیاری)</label>
                         <input type="file" name="cover" id="gameCover" class="form-control"
@@ -305,6 +386,8 @@
                             فرمت‌های مجاز: jpg, jpeg, png — حداکثر 2MB
                         </div>
                     </div>
+                    
+
 
                     <div class="mt-3 d-none" id="coverPreviewWrap">
                         <label class="form-label">پیش‌نمایش کاور</label>
@@ -322,69 +405,168 @@
     </div>
 
     {{-- اسکریپت‌های صفحه --}}
-    <script>
-        // پیش‌نمایش فایل کاور
-        const coverInput = document.getElementById('gameCover');
-        const coverPreviewWrap = document.getElementById('coverPreviewWrap');
-        const coverPreview = document.getElementById('coverPreview');
+ 
+    <!-- <script>
+    // 📸 پیش‌نمایش فایل کاور
+    const coverInput = document.getElementById('gameCover');
+    const coverPreviewWrap = document.getElementById('coverPreviewWrap');
+    const coverPreview = document.getElementById('coverPreview');
 
-        coverInput?.addEventListener('change', function () {
-            const file = this.files?.[0];
-            if (!file) { coverPreviewWrap.classList.add('d-none'); return; }
-            const url = URL.createObjectURL(file);
-            coverPreview.src = url;
-            coverPreviewWrap.classList.remove('d-none');
-        });
+    coverInput?.addEventListener('change', function () {
+        const file = this.files?.[0];
+        if (!file) {
+            coverPreviewWrap.classList.add('d-none');
+            return;
+        }
+        const url = URL.createObjectURL(file);
+        coverPreview.src = url;
+        coverPreviewWrap.classList.remove('d-none');
+    });
 
-        // مودال چندمنظوره: افزودن/ویرایش
-        const gameModal = document.getElementById('gameModal');
-        const gameForm  = document.getElementById('gameForm');
-        const methodFld = document.getElementById('methodField');
-        const modalTitle= document.getElementById('gameModalLabel');
-        const nameFld   = document.getElementById('gameName');
-        const genreFld  = document.getElementById('gameGenre');
-        const statusFld = document.getElementById('gameStatus');
+    // 🧩 مودال چندمنظوره: افزودن / ویرایش
+    const gameModal  = document.getElementById('gameModal');
+    const gameForm   = document.getElementById('gameForm');
+    const methodFld  = document.getElementById('methodField');
+    const modalTitle = document.getElementById('gameModalLabel');
 
-        gameModal?.addEventListener('show.bs.modal', function (event) {
-            const btn = event.relatedTarget;
-            const mode = btn?.getAttribute('data-mode') || 'create';
+    const nameFld   = document.getElementById('gameName');
+    const genreFld  = document.getElementById('gameGenre');
+    const statusFld = document.getElementById('gameStatus');
+    const typeFld   = document.getElementById('gameType'); // ✅ الان دقیق‌تر شد
 
-            if (mode === 'create') {
-                // تنظیمات حالت افزودن
-                modalTitle.textContent = 'افزودن بازی جدید';
-                gameForm.action = "{{ route('admin.games.store') }}";
-                methodFld.value = "POST";
-                nameFld.value = '';
-                genreFld.value = '';
-                statusFld.value = 'active';
-                coverInput.value = '';
-                coverPreviewWrap.classList.add('d-none');
+    gameModal?.addEventListener('show.bs.modal', function (event) {
+        const btn = event.relatedTarget;
+        const mode = btn?.getAttribute('data-mode') || 'create';
+
+        if (mode === 'create') {
+            // 🟢 حالت افزودن
+            modalTitle.textContent = 'افزودن بازی جدید';
+            gameForm.action = "{{ route('admin.games.store') }}";
+            methodFld.value = "POST";
+
+            // ریست فیلدها
+            nameFld.value = '';
+            genreFld.value = '';
+            statusFld.value = 'active';
+            typeFld.value = 'original'; // پیش‌فرض
+            coverInput.value = '';
+            coverPreviewWrap.classList.add('d-none');
+        } else {
+            // 🟠 حالت ویرایش
+            const id     = btn.getAttribute('data-id');
+            const name   = btn.getAttribute('data-name') || '';
+            const genre  = btn.getAttribute('data-genre') || '';
+            const status = btn.getAttribute('data-status') || 'active';
+            const cover  = btn.getAttribute('data-cover') || '';
+            const type   = (btn.getAttribute('data-type') || 'original').trim();
+
+            modalTitle.textContent = 'ویرایش بازی';
+            gameForm.action = "{{ route('admin.games.update', '__ID__') }}".replace('__ID__', id);
+            methodFld.value = "PUT";
+
+            // پرکردن فیلدها
+            nameFld.value = name;
+            genreFld.value = genre;
+            statusFld.value = status;
+
+            // ✅ انتخاب دقیق نوع بازی
+            if (['original', 'free'].includes(type)) {
+                typeFld.value = type;
             } else {
-                // حالت ویرایش
-                const id     = btn.getAttribute('data-id');
-                const name   = btn.getAttribute('data-name') || '';
-                const genre  = btn.getAttribute('data-genre') || '';
-                const cover  = btn.getAttribute('data-cover') || '';
-
-                modalTitle.textContent = 'ویرایش بازی';
-                gameForm.action = "{{ route('admin.games.update', '__ID__') }}".replace('__ID__', id);
-                methodFld.value = "PUT";
-
-                nameFld.value = name;
-                genreFld.value = genre;
-                const status = btn.getAttribute('data-status') || 'active';
-                statusFld.value = status;
-
-                // پیش‌نمایش کاور موجود
-                if (cover) {
-                    coverPreview.src = cover;
-                    coverPreviewWrap.classList.remove('d-none');
-                } else {
-                    coverPreviewWrap.classList.add('d-none');
-                }
-                coverInput.value = '';
+                typeFld.value = 'original';
             }
-        });
-    </script>
+
+            // پیش‌نمایش کاور
+            if (cover) {
+                coverPreview.src = cover;
+                coverPreviewWrap.classList.remove('d-none');
+            } else {
+                coverPreviewWrap.classList.add('d-none');
+            }
+
+            coverInput.value = '';
+        }
+    });
+</script> -->
+<script>
+  // پیش‌نمایش کاور (اگر دارید)
+  const coverInput = document.getElementById('gameCover');
+  const coverPreviewWrap = document.getElementById('coverPreviewWrap');
+  const coverPreview = document.getElementById('coverPreview');
+  coverInput?.addEventListener('change', function () {
+    const file = this.files?.[0];
+    if (!file) { coverPreviewWrap.classList.add('d-none'); return; }
+    const url = URL.createObjectURL(file);
+    coverPreview.src = url;
+    coverPreviewWrap.classList.remove('d-none');
+  });
+
+  // عناصر فرم
+  const gameModal  = document.getElementById('gameModal');
+  const gameForm   = document.getElementById('gameForm');
+  const methodFld  = document.getElementById('methodField');
+  const modalTitle = document.getElementById('gameModalLabel');
+
+  const nameFld   = document.getElementById('gameName');
+  const genreFld  = document.getElementById('gameGenre');
+  const statusFld = document.getElementById('gameStatus');
+  const typeFld   = document.getElementById('gameType'); //
+  const levelFld  = document.getElementById('gameLevel'); // 👈
+
+  gameModal?.addEventListener('show.bs.modal', function (event) {
+    const btn  = event.relatedTarget;
+    const mode = btn?.getAttribute('data-mode') || 'create';
+
+    if (mode === 'create') {
+      // حالت افزودن
+      modalTitle.textContent = 'افزودن بازی جدید';
+      gameForm.action = "{{ route('admin.games.store') }}";
+      methodFld.value = "POST";
+
+      nameFld.value   = '';
+      genreFld.value  = '';
+      statusFld.value = 'active';
+      typeFld.value   = 'original';
+      levelFld.value  = '1';          // 👈 پیش‌فرض سطح 1
+      if (coverInput) coverInput.value = '';
+      coverPreviewWrap?.classList.add('d-none');
+    } else {
+      // حالت ویرایش
+      const id     = btn.getAttribute('data-id');
+      const name   = btn.getAttribute('data-name')   || '';
+      const genre  = btn.getAttribute('data-genre')  || '';
+      const status = btn.getAttribute('data-status') || 'active';
+      const type   = (btn.getAttribute('data-type')  || 'original').trim();
+      const level  = (btn.getAttribute('data-level') || '1').trim(); // 👈
+
+      modalTitle.textContent = 'ویرایش بازی';
+      gameForm.action = "{{ route('admin.games.update', '__ID__') }}".replace('__ID__', id);
+      methodFld.value = "PUT";
+
+      nameFld.value   = name;
+      genreFld.value  = genre;
+      statusFld.value = status;
+      typeFld.value   = (type === 'free') ? 'free' : 'original';
+      levelFld.value  = (level === '2') ? '2' : '1'; // 👈 فقط 1 یا 2
+
+      const cover = btn.getAttribute('data-cover') || '';
+      if (cover) {
+        coverPreview.src = cover;
+        coverPreviewWrap?.classList.remove('d-none');
+      } else {
+        coverPreviewWrap?.classList.add('d-none');
+      }
+      if (coverInput) coverInput.value = '';
+    }
+  });
+
+  // جلوگیری از submit هنگام بستن مدال با ضربدر
+  gameModal?.addEventListener('hide.bs.modal', function () {
+    // هیچ کاری لازم نیست اگر طبق قبل دکمه بستن type="button" باشد
+  });
+</script>
+
+
+
 @endsection
 

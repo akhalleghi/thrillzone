@@ -9,23 +9,42 @@ use Illuminate\Support\Facades\Storage;
 
 class GameController extends Controller
 {
-    // لیست بازی‌ها
+   
     public function index(Request $request)
-    {
-        $q = trim($request->get('q', ''));
-        $status = $request->get('status', '');
-        $genre = trim($request->get('genre', ''));
+{
+    $q      = trim($request->get('q', ''));
+    $status = $request->get('status', '');
+    $genre  = trim($request->get('genre', ''));
+    $type   = $request->get('type', ''); // 👈 فیلتر جدید نوع بازی
+    $level  = $request->get('level', '');  // '1' | '2' | ''
 
-        $games = Game::query()
-            ->when($q, fn($qr) => $qr->where('name', 'like', "%{$q}%"))
-            ->when($genre, fn($qr) => $qr->where('genre', 'like', "%{$genre}%"))
-            ->when(in_array($status, ['active','inactive'], true), fn($qr) => $qr->where('status', $status))
-            ->latest()
-            ->paginate(12)
-            ->withQueryString();
 
-        return view('admin.games', compact('games', 'q', 'status', 'genre'));
-    }
+    $games = Game::query()
+        ->when($q, fn($qr) => 
+            $qr->where(function ($sub) use ($q) {
+                $sub->where('name', 'like', "%{$q}%")
+                    ->orWhere('genre', 'like', "%{$q}%");
+            })
+        )
+        ->when($genre, fn($qr) => 
+            $qr->where('genre', 'like', "%{$genre}%")
+        )
+        ->when(in_array($status, ['active', 'inactive'], true), fn($qr) => 
+            $qr->where('status', $status)
+        )
+        ->when(in_array($type, ['free', 'original'], true), fn($qr) => 
+            $qr->where('type', $type)
+        )
+        ->when(in_array($level, ['1','2'], true), fn($qr) =>
+            $qr->where('level', (int)$level)
+        )
+        ->latest()
+        ->paginate(12)
+        ->withQueryString();
+
+    return view('admin.games', compact('games', 'q', 'status', 'genre', 'type','level'));
+}
+
 
     // ایجاد بازی جدید
     public function store(Request $request)
@@ -34,6 +53,8 @@ class GameController extends Controller
             'name'   => ['required','string','max:150'],
             'genre'  => ['nullable','string','max:100'],
             'status' => ['required','in:active,inactive'],
+            'type'   => ['required','in:free,original'],
+            'level'  => ['required','integer','in:1,2'],
             'cover'  => ['nullable','image','mimes:jpg,jpeg,png,webp','max:2048'],
         ]);
 
@@ -53,6 +74,8 @@ class GameController extends Controller
             'name'   => ['required','string','max:150'],
             'genre'  => ['nullable','string','max:100'],
             'status' => ['required','in:active,inactive'],
+            'type'   => ['required','in:free,original'],
+            'level'  => ['required','integer','in:1,2'],
             'cover'  => ['nullable','image','mimes:jpg,jpeg,png,webp','max:2048'],
         ]);
 
