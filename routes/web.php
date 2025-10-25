@@ -7,6 +7,8 @@ use App\Http\Controllers\Admin\AdminAuthController;
 use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\PlanController;
+use App\Http\Controllers\Admin\TransactionController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -205,7 +207,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::delete('/plans/{plan}', [PlanController::class, 'destroy'])->name('plans.destroy');
 
         // 💰 امور مالی
-        Route::get('/finance', fn() => view('admin.finance'))->name('finance');
+        Route::get('/finance', [TransactionController::class, 'index'])->name('finance');
 
         // ⚙️ تنظیمات
         Route::get('/settings', fn() => view('admin.settings'))->name('settings');

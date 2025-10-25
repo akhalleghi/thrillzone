@@ -2,21 +2,25 @@
 
 namespace App\Http\Middleware;
 
-use Closure;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Auth\Middleware\Authenticate as Middleware;
 
-class Authenticate
+class Authenticate extends Middleware
 {
     /**
-     * بررسی لاگین بودن کاربر
+     * تعیین مسیر ریدایرکت وقتی کاربر احراز هویت نشده است.
      */
-    public function handle($request, Closure $next)
+    protected function redirectTo($request)
     {
-        if (!Auth::check()) {
-            // 👇 اینجا نام صحیح روت لاگین در پروژه‌ات است
-            return redirect()->route('auth.login');
-        }
+        if (! $request->expectsJson()) {
+            if (
+                $request->routeIs('admin.*')
+                || $request->is('admin')
+                || $request->is('admin/*')
+            ) {
+                return route('admin.login');
+            }
 
-        return $next($request);
+            return route('auth.login');
+        }
     }
 }

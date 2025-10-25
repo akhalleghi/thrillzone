@@ -291,7 +291,12 @@
                         <li><h6 class="dropdown-header">مدیر سیستم</h6></li>
                         <li><a class="dropdown-item" href="{{ route('admin.settings') }}">تنظیمات</a></li>
                         <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item text-danger" href="{{ route('admin.logout') }}">خروج</a></li>
+                        <li>
+                            <a class="dropdown-item text-danger" href="#"
+                               onclick="event.preventDefault(); document.getElementById('admin-logout-form').submit();">
+                                خروج
+                            </a>
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -345,6 +350,10 @@
         localStorage.setItem("theme", mode);
     });
 </script>
+
+<form id="admin-logout-form" action="{{ route('admin.logout') }}" method="POST" class="d-none">
+    @csrf
+</form>
 
 @stack('scripts')
 </body>
