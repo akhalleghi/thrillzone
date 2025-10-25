@@ -8,6 +8,8 @@ use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\PlanController;
 use App\Http\Controllers\Admin\TransactionController;
+use App\Http\Controllers\Admin\SubscriptionController;
+
 
 
 /*
@@ -208,6 +210,24 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
         // 💰 امور مالی
         Route::get('/finance', [TransactionController::class, 'index'])->name('finance');
+
+
+        // 💳 اشتراک ها
+        // لیست اشتراک‌ها
+        Route::get('/subscriptions', [SubscriptionController::class, 'index'])->name('subscriptions');
+
+        // اقدامات سریع روی اشتراک
+        Route::post('/subscriptions/{subscription}/activate', [SubscriptionController::class, 'activate'])
+            ->name('subscriptions.activate');
+
+        Route::post('/subscriptions/{subscription}/finish', [SubscriptionController::class, 'finish'])
+            ->name('subscriptions.finish');
+
+        // نمایش رسید/جزئیات
+        Route::get('/subscriptions/{subscription}', [SubscriptionController::class, 'show'])
+            ->name('subscriptions.show'); // برای مودال/صفحه جزئیات
+
+
 
         // ⚙️ تنظیمات
         Route::get('/settings', fn() => view('admin.settings'))->name('settings');
