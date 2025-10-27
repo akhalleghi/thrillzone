@@ -267,6 +267,10 @@
             <i class="bi bi-box"></i> اشتراک ها
             </a>
 
+            <a href="{{ route('admin.swap_requests.index') }}" class="nav-link {{ request()->routeIs('admin.swap_requests.index') ? 'active' : '' }}">
+            <i class="bi bi-shuffle me-1"></i> درخواست های تعویض
+            </a>
+
             <a href="{{ route('admin.finance') }}" class="nav-link {{ request()->routeIs('admin.finance') ? 'active' : '' }}"><i class="bi bi-cash-stack"></i> مالی</a>
             <a href="{{ route('admin.settings') }}" class="nav-link {{ request()->routeIs('admin.settings') ? 'active' : '' }}"><i class="bi bi-gear"></i> تنظیمات</a>
         </nav>

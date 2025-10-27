@@ -93,6 +93,7 @@
         <thead>
           <tr>
             <th>#</th>
+            <th>شماره اشتراک</th>
             <th>کاربر</th>
             <th>مدت</th>
             <th>پلن</th>
@@ -111,6 +112,7 @@
         @forelse($subscriptions as $i => $s)
           <tr>
             <td>{{ $subscriptions->firstItem() + $i }}</td>
+            <td><span class="badge bg-info">{{ $s->subscription_code }}</span></td>
             <td>
               <div class="fw-bold">{{ $s->user->name ?? '—' }}</div>
               <div class="text-muted">{{ $s->user->phone ?? '—' }}</div>

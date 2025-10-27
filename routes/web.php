@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\PlanController;
 use App\Http\Controllers\Admin\TransactionController;
 use App\Http\Controllers\Admin\SubscriptionController;
+use App\Http\Controllers\Admin\SwapRequestController;
 
 
 
@@ -227,6 +228,10 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/subscriptions/{subscription}', [SubscriptionController::class, 'show'])
             ->name('subscriptions.show'); // برای مودال/صفحه جزئیات
 
+
+        // 🔁 درخواست تعویض
+        Route::get('/swap-requests', [SwapRequestController::class, 'index'])->name('swap_requests.index');
+        Route::post('/swap-requests/{swapRequest}/done', [SwapRequestController::class, 'markDone'])->name('swap_requests.done');
 
 
         // ⚙️ تنظیمات
