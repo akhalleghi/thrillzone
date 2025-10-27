@@ -192,65 +192,96 @@
   </div>
 
   {{-- نسخه موبایل: کارت --}}
-  <div class="d-lg-none">
-    @forelse($subscriptions as $i => $s)
-      <div class="sub-card mb-3">
-        <div class="d-flex align-items-center mb-2">
-          <div class="fw-bold">{{ $s->user->name ?? '—' }}</div>
-          <span class="ms-auto badge {{ $s->status==='active'?'bg-success':($s->status==='waiting'?'bg-warning text-dark':'bg-secondary') }}">
-            {{ $s->status==='waiting' ? 'در انتظار انتخاب بازی' : ($s->status==='active'?'فعال':'پایان یافته') }}
-          </span>
-        </div>
-        <div class="small text-muted mb-2">{{ $s->user->phone ?? '—' }}</div>
+<div class="d-lg-none">
+  @forelse($subscriptions as $i => $s)
+    <div class="sub-card mb-3">
+      {{-- هدر کارت --}}
+      <div class="d-flex align-items-center mb-2">
+        <div class="fw-bold">{{ $s->user->name ?? '—' }}</div>
+        <span class="ms-auto badge 
+          {{ $s->status==='active'
+              ? 'bg-success'
+              : ($s->status==='waiting'
+                  ? 'bg-warning text-dark'
+                  : 'bg-secondary') }}">
+          {{ $s->status==='waiting'
+              ? 'در انتظار انتخاب بازی'
+              : ($s->status==='active' ? 'فعال' : 'پایان یافته') }}
+        </span>
+      </div>
 
-        <div class="row g-2 small">
-          <div class="col-6"><b>پلن:</b> {{ $s->plan->name ?? '—' }}</div>
-          <div class="col-6"><b>مدت:</b> {{ $s->duration_months }} ماهه</div>
-          <div class="col-6"><b>خرید:</b> {{ $s->purchased_at ? Jalalian::fromCarbon($s->purchased_at)->format('Y/m/d H:i') : '—' }}</div>
-          <div class="col-6"><b>شروع:</b> {{ $s->activated_at ? Jalalian::fromCarbon($s->activated_at)->format('Y/m/d H:i') : '—' }}</div>
-          <div class="col-6"><b>پایان:</b> {{ $s->ends_at ? Jalalian::fromCarbon($s->ends_at)->format('Y/m/d H:i') : '—' }}</div>
-          <div class="col-12"><b>بازی‌ها:</b> {{ $s->active_games_list }}</div>
-          <div class="col-6">
-            <b>باقی‌مانده:</b>
-            @if($s->status==='active' && $s->ends_at)
-              <span class="timer countdown" data-end="{{ $s->ends_at->toIso8601String() }}">...</span>
-            @elseif($s->status==='ended')
-              <span class="text-muted">خاتمه یافته</span>
-            @else
-              <span class="text-muted">—</span>
-            @endif
-          </div>
-          <div class="col-6">
-            <b>تا تعویض:</b>
-            @if($s->status==='active' && $s->next_swap_at)
-              <span class="timer swapdown" data-swap="{{ $s->next_swap_at->toIso8601String() }}">...</span>
-            @else
-              <span class="text-muted">—</span>
-            @endif
-          </div>
+      {{-- شماره تلفن --}}
+      <div class="small text-muted mb-1">{{ $s->user->phone ?? '—' }}</div>
+
+      {{-- 🔹 شماره اشتراک (افزوده شده جدید) --}}
+      <div class="small mb-2">
+        <b>شماره اشتراک:</b>
+        <span class="text-primary fw-semibold">{{ $s->subscription_code ?? '—' }}</span>
+      </div>
+
+      {{-- جزئیات اشتراک --}}
+      <div class="row g-2 small">
+        <div class="col-6"><b>پلن:</b> {{ $s->plan->name ?? '—' }}</div>
+        <div class="col-6"><b>مدت:</b> {{ $s->duration_months }} ماهه</div>
+        <div class="col-6"><b>خرید:</b> 
+          {{ $s->purchased_at ? Jalalian::fromCarbon($s->purchased_at)->format('Y/m/d H:i') : '—' }}
+        </div>
+        <div class="col-6"><b>شروع:</b> 
+          {{ $s->activated_at ? Jalalian::fromCarbon($s->activated_at)->format('Y/m/d H:i') : '—' }}
+        </div>
+        <div class="col-6"><b>پایان:</b> 
+          {{ $s->ends_at ? Jalalian::fromCarbon($s->ends_at)->format('Y/m/d H:i') : '—' }}
+        </div>
+        <div class="col-12"><b>بازی‌ها:</b> {{ $s->active_games_list }}</div>
+        
+        <div class="col-6">
+          <b>باقی‌مانده:</b>
+          @if($s->status==='active' && $s->ends_at)
+            <span class="timer countdown" data-end="{{ $s->ends_at->toIso8601String() }}">...</span>
+          @elseif($s->status==='ended')
+            <span class="text-muted">خاتمه یافته</span>
+          @else
+            <span class="text-muted">—</span>
+          @endif
         </div>
 
-        <div class="text-end mt-2">
-          <a href="{{ route('admin.subscriptions.show',$s) }}" class="btn btn-sm btn-outline-info me-1">
-            <i class="bi bi-receipt"></i> رسید
-          </a>
-          @if($s->status==='waiting')
-            <form class="d-inline" method="POST" action="{{ route('admin.subscriptions.activate',$s) }}">
-              @csrf
-              <button class="btn btn-sm btn-outline-success"><i class="bi bi-play"></i> فعال</button>
-            </form>
-          @elseif($s->status==='active')
-            <form class="d-inline" method="POST" action="{{ route('admin.subscriptions.finish',$s) }}">
-              @csrf
-              <button class="btn btn-sm btn-outline-danger"><i class="bi bi-stop"></i> پایان</button>
-            </form>
+        <div class="col-6">
+          <b>تا تعویض:</b>
+          @if($s->status==='active' && $s->next_swap_at)
+            <span class="timer swapdown" data-swap="{{ $s->next_swap_at->toIso8601String() }}">...</span>
+          @else
+            <span class="text-muted">—</span>
           @endif
         </div>
       </div>
-    @empty
-      <div class="text-center text-muted py-4">موردی یافت نشد.</div>
-    @endforelse
-  </div>
+
+      {{-- دکمه‌ها --}}
+      <div class="text-end mt-2">
+        {{-- <a href="{{ route('admin.subscriptions.show',$s) }}" class="btn btn-sm btn-outline-info me-1">
+          <i class="bi bi-receipt"></i> رسید
+        </a> --}}
+        @if($s->status==='waiting')
+          <form class="d-inline" method="POST" action="{{ route('admin.subscriptions.activate',$s) }}">
+            @csrf
+            <button class="btn btn-sm btn-outline-success">
+              <i class="bi bi-play"></i> فعال
+            </button>
+          </form>
+        @elseif($s->status==='active')
+          <form class="d-inline" method="POST" action="{{ route('admin.subscriptions.finish',$s) }}">
+            @csrf
+            <button class="btn btn-sm btn-outline-danger">
+              <i class="bi bi-stop"></i> پایان
+            </button>
+          </form>
+        @endif
+      </div>
+    </div>
+  @empty
+    <div class="text-center text-muted py-4">موردی یافت نشد.</div>
+  @endforelse
+</div>
+
 
   <div class="mt-3">
     {{ $subscriptions->links('pagination::bootstrap-5') }}

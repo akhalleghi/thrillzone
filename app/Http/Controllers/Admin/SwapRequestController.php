@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\SwapRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use App\Helpers\SmsHelper;
+
 
 class SwapRequestController extends Controller
 {
@@ -47,8 +49,14 @@ class SwapRequestController extends Controller
 
         // ✅ تغییر وضعیت درخواست به انجام‌شده
         $swapRequest->update(['status' => 'done']);
+        
+        $user = $subscription->user;
+        if ($user && $user->phone) {
+        $message = "{$user->name} {$user->family} عزیز\nدرخواست تعویض بازی شما با موفقیت انجام شد ✅\n\nفروشگاه هیجان 🎮";
+        SmsHelper::sendMessage($user->phone, $message);
+    }
 
-        return back()->with('success', 'درخواست تعویض انجام شد و بازی‌های جدید جایگزین شدند.');
+        return back()->with('success', 'درخواست تعویض انجام شد و بازی‌های جدید جایگزین شدند ، پیامک نیز ارسال گردید.');
     }
 
 }
