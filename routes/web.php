@@ -11,6 +11,7 @@ use App\Http\Controllers\Admin\TransactionController;
 use App\Http\Controllers\Admin\SubscriptionController;
 use App\Http\Controllers\Admin\SwapRequestController;
 use App\Http\Controllers\Admin\BookingController;
+use App\Http\Controllers\User\DashboardController;
 
 
 /*
@@ -53,7 +54,7 @@ Route::post('/complete-profile', [AuthController::class, 'completeProfile'])->na
 Route::middleware(['auth'])->prefix('user')->name('user.')->group(function () {
 
     // داشبورد کاربر
-    Route::get('/dashboard', fn() => view('user.dashboard'))->name('dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     // صفحات دیگر هم می‌تونی اینجا اضافه کنی
     Route::get('/games', fn() => view('user.games'))->name('games');
@@ -70,26 +71,6 @@ Route::middleware(['auth'])->prefix('user')->name('user.')->group(function () {
 });
 
 
-//Route::middleware(['auth'])->group(function () {
-
-    // داشبورد کاربر
-    // Route::get('dashboard', function () {
-    //     return view('dashboard');
-    // })->name('dashboard');
-
-//    // صفحه سوالات متداول
-//    Route::get('/faq', function () {
-//        return view('faq');
-//    })->name('faq');
-
-    // خروج از حساب
-    // Route::post('/logout', function () {
-    //     Auth::logout();
-    //     session()->invalidate();
-    //     session()->regenerateToken();
-    //     return redirect()->route('login')->with('success', 'شما با موفقیت خارج شدید.');
-    // })->name('logout');
-//});
 
 
 /*
@@ -107,77 +88,7 @@ Route::get('/faq', function () {return view('faq');})->name('faq');
 Route::get('/about', function () {return view('about');})->name('about');
 
 
-///*
-//|--------------------------------------------------------------------------
-//| مسیرهای پنل ادمین
-//|--------------------------------------------------------------------------
-//*/
-//
-//// گروه روت‌های پنل مدیریت
-//Route::prefix('admin')->name('admin.')->group(function () {
-//
-//    // ورود ادمین (موقتی بدون alias)
-//    Route::middleware(\App\Http\Middleware\RedirectIfAuthenticatedAdmin::class)->group(function () {
-//        Route::get('login', [App\Http\Controllers\Admin\AdminAuthController::class, 'showLoginForm'])->name('login');
-//        Route::post('login', [App\Http\Controllers\Admin\AdminAuthController::class, 'login'])
-//            ->middleware('throttle:6,1')
-//            ->name('login.submit');
-//    });
-//
-//    // صفحات محافظت‌شده (فقط وقتی لاگین است)
-//    Route::middleware('auth:admin')->group(function () {
-//        Route::get('/', [App\Http\Controllers\Admin\AdminDashboardController::class, 'index'])->name('dashboard');
-//        Route::post('logout', [App\Http\Controllers\Admin\AdminAuthController::class, 'logout'])->name('logout');
-//    });
-//});
 
-/*
-|--------------------------------------------------------------------------
-| مسیرهای پنل مدیریت (Admin Panel)
-|--------------------------------------------------------------------------
-*/
-
-
-
-//Route::prefix('admin')->name('admin.')->group(function () {
-//
-//    /*
-//    |--------------------------------------------------------------------------
-//    | مسیرهای ورود مدیر
-//    |--------------------------------------------------------------------------
-//    */
-//    Route::middleware(\App\Http\Middleware\RedirectIfAuthenticatedAdmin::class)->group(function () {
-//        // فرم ورود
-//        Route::get('login', [AdminAuthController::class, 'showLoginForm'])->name('login');
-//
-//        // ارسال اطلاعات ورود
-//        Route::post('login', [AdminAuthController::class, 'login'])
-//            ->middleware('throttle:6,1')
-//            ->name('login.submit');
-//    });
-//
-//
-//    /*
-//    |--------------------------------------------------------------------------
-//    | مسیرهای محافظت‌شده (فقط وقتی مدیر وارد شده است)
-//    |--------------------------------------------------------------------------
-//    */
-//    Route::middleware('auth:admin')->group(function () {
-//        // داشبورد اصلی
-//        Route::get('/', [AdminDashboardController::class, 'index'])->name('dashboard');
-//
-//        // ✅ لیست کاربران از کنترلر
-//        Route::get('/users', [UserController::class, 'index'])->name('users');
-//
-//        // سایر صفحات (فعلاً استاتیک)
-//        Route::get('/plans', fn() => view('admin.plans'))->name('plans');
-//        Route::get('/finance', fn() => view('admin.finance'))->name('finance');
-//        Route::get('/settings', fn() => view('admin.settings'))->name('settings');
-//
-//        // خروج از حساب مدیر
-//        Route::post('logout', [AdminAuthController::class, 'logout'])->name('logout');
-//    });
-//});
 
 
 /*
