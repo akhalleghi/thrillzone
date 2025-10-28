@@ -114,7 +114,7 @@ class AuthController extends Controller
             // کاربر قدیمی → ورود مستقیم
             session()->forget(['otp', 'otp_expires', 'otp_sent', 'last_otp_time', 'otp_verified', 'need_name']);
             Auth::login($existing);
-            return redirect()->route('dashboard')->with('success', 'خوش آمدید!');
+            return redirect()->route('user.dashboard')->with('success', 'خوش آمدید!');
         }
 
         // کاربر جدید → مرحله سوم: گرفتن نام
@@ -156,7 +156,7 @@ class AuthController extends Controller
         session()->forget(['otp', 'otp_expires', 'otp_sent', 'last_otp_time', 'otp_verified', 'need_name']);
 
         Auth::login($user);
-        return redirect()->route('dashboard')->with('success', 'ثبت نام با موفقیت انجام شد. خوش آمدید!');
+        return redirect()->route('user.dashboard')->with('success', 'ثبت نام با موفقیت انجام شد. خوش آمدید!');
     }
 
     /**

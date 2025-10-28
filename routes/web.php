@@ -49,19 +49,18 @@ Route::post('/complete-profile', [AuthController::class, 'completeProfile'])->na
 | مسیرهای محافظت‌شده (فقط برای کاربران واردشده)
 |--------------------------------------------------------------------------
 */
-Route::middleware(['auth'])->group(function () {
+
+Route::middleware(['auth'])->prefix('user')->name('user.')->group(function () {
 
     // داشبورد کاربر
-    Route::get('/dashboard', function () {
-        return view('dashboard');
-    })->name('dashboard');
+    Route::get('/dashboard', fn() => view('user.dashboard'))->name('dashboard');
 
-//    // صفحه سوالات متداول
-//    Route::get('/faq', function () {
-//        return view('faq');
-//    })->name('faq');
+    // صفحات دیگر هم می‌تونی اینجا اضافه کنی
+    Route::get('/games', fn() => view('user.games'))->name('games');
+    Route::get('/wallet', fn() => view('user.wallet'))->name('wallet');
+    Route::get('/transactions', fn() => view('user.transactions'))->name('transactions');
+    Route::get('/profile', fn() => view('user.profile'))->name('profile');
 
-    // خروج از حساب
     Route::post('/logout', function () {
         Auth::logout();
         session()->invalidate();
@@ -69,6 +68,28 @@ Route::middleware(['auth'])->group(function () {
         return redirect()->route('login')->with('success', 'شما با موفقیت خارج شدید.');
     })->name('logout');
 });
+
+
+//Route::middleware(['auth'])->group(function () {
+
+    // داشبورد کاربر
+    // Route::get('dashboard', function () {
+    //     return view('dashboard');
+    // })->name('dashboard');
+
+//    // صفحه سوالات متداول
+//    Route::get('/faq', function () {
+//        return view('faq');
+//    })->name('faq');
+
+    // خروج از حساب
+    // Route::post('/logout', function () {
+    //     Auth::logout();
+    //     session()->invalidate();
+    //     session()->regenerateToken();
+    //     return redirect()->route('login')->with('success', 'شما با موفقیت خارج شدید.');
+    // })->name('logout');
+//});
 
 
 /*

@@ -650,6 +650,10 @@
             position: relative;
             overflow: hidden;
             box-shadow: 0 10px 30px rgba(0, 255, 255, 0.4);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
         }
 
         .btn-card::before {
@@ -964,7 +968,11 @@
                     <a href="/about" class="nav-link">درباره ما</a>
                     <a href="/faq" class="nav-link">سوالات متداول</a>
                     <a href="/tutorial" class="nav-link">آموزش</a>
-                    <a href="/login" class="btn-neon" role="button">ورود / ثبت نام</a>
+                    @auth
+                        <a href="{{ route('user.dashboard') }}" class="btn-neon" role="button">پنل کاربری</a>
+                    @else
+                        <a href="/login" class="btn-neon" role="button">ورود / ثبت نام</a>
+                    @endauth
                 </nav>
 
                 <!-- Mobile Menu Button -->
@@ -990,7 +998,11 @@
             <a href="/about" class="nav-link" style="margin: 0; font-size: 1.2rem;">درباره ما</a>
             <a href="/faq" class="nav-link" style="margin: 0; font-size: 1.2rem;">سوالات متداول</a>
             <a href="/tutorial" class="nav-link" style="margin: 0; font-size: 1.2rem;">آموزش</a>
-            <a href="/login" class="btn-neon mt-3" role="button">ورود / ثبت نام</a>
+            @auth
+                <a href="{{ route('user.dashboard') }}" class="btn-neon mt-3" role="button">پنل کاربری</a>
+            @else
+                <a href="/login" class="btn-neon mt-3" role="button">ورود / ثبت نام</a>
+            @endauth
         </nav>
     </div>
 
@@ -1099,7 +1111,11 @@
                     <ul class="card-features">
                         ${card.features.map(f => `<li>${f}</li>`).join('')}
                     </ul>
-                    <button class="btn-card">ورود و خرید اشتراک</button>
+                    @auth
+                        <a href="{{ route('user.dashboard') }}" class="btn-card">خرید در داشبورد</a>
+                    @else
+                        <a href="{{ route('login') }}" class="btn-card">ورود و خرید اشتراک</a>
+                    @endauth
                 `;
                 carousel.appendChild(cardEl);
             });
