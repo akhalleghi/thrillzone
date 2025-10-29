@@ -144,6 +144,122 @@
         from { opacity:0; transform:translateY(30px); }
         to { opacity:1; transform:translateY(0); }
     }
+    .modal-xxl {
+  max-width: 1400px;
+}
+
+.modal-subscribe {
+  background: linear-gradient(135deg, #0b1035, #1a1f47);
+  border-radius: 20px;
+  border: 1px solid rgba(61,245,255,0.25);
+}
+
+.step-guide {
+  background: rgba(255,255,255,0.05);
+  border-radius: 10px;
+  padding: 6px 12px;
+  display: inline-block;
+}
+
+.plan-card {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(61,245,255,0.25);
+  border-radius: 12px;
+  padding: 1rem;
+  transition: 0.3s;
+}
+.plan-card:hover {
+  border-color: #00ffff;
+  transform: translateY(-3px);
+  box-shadow: 0 0 15px rgba(0,255,255,0.1);
+}
+.plan-card.active {
+  border: 2px solid #00ffff;
+  background: rgba(0,255,255,0.05);
+}
+
+.plan-header {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  margin-bottom: 0.5rem;
+}
+.plan-header img {
+  width: 55px;
+  height: 55px;
+  border-radius: 10px;
+  border: 1px solid rgba(0,255,255,0.3);
+}
+
+.plan-features {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 0.5rem 0;
+  font-size: 0.9rem;
+  color: #bcd;
+}
+
+.duration-box {
+  background: rgba(0,255,255,0.07);
+  border: 1px dashed rgba(0,255,255,0.3);
+  border-radius: 10px;
+  padding: 8px;
+  text-align: center;
+}
+.duration-box label {
+  display: block;
+  color: #00ffff;
+  font-weight: bold;
+  margin-bottom: 8px;
+  font-size: 0.95rem;
+}
+
+.duration-buttons {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+.duration-btn {
+  background: transparent;
+  border: 1px solid rgba(61,245,255,0.4);
+  color: #00ffff;
+  border-radius: 999px;
+  padding: 4px 14px;
+  transition: 0.2s;
+  font-size: 0.9rem;
+}
+.duration-btn:hover {
+  background: rgba(0,255,255,0.2);
+  color: #fff;
+}
+.duration-btn.active {
+  background: #00ffff;
+  color: #0b1035;
+  font-weight: 600;
+}
+
+.plan-price {
+  text-align: center;
+  margin-top: 0.8rem;
+  font-size: 1rem;
+  color: #00ffff;
+  font-weight: bold;
+}
+
+.invoice-box {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(61,245,255,0.3);
+  border-radius: 10px;
+  padding: 0.75rem;
+  text-align: center;
+  font-size: 0.95rem;
+  width: 100%;
+}
+.invoice-box span {
+  color: #00ffff;
+  font-weight: bold;
+}
 </style>
 @endsection
 
@@ -234,7 +350,7 @@
 </section>
 
 <!-- Purchase Modal -->
-<div class="modal fade" id="purchaseModal" tabindex="-1" aria-hidden="true">
+{{-- <div class="modal fade" id="purchaseModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-scrollable">
         <div class="modal-content text-white">
             <div class="modal-header border-0">
@@ -278,7 +394,135 @@
             </div>
         </div>
     </div>
+</div> --}}
+<div class="modal fade" id="purchaseModal" tabindex="-1" aria-labelledby="purchaseModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xxl modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content modal-subscribe text-white">
+      <div class="modal-header border-0">
+        <h5 class="modal-title fw-bold text-info">
+          <i class="bi bi-bag-plus me-2"></i> خرید اشتراک
+        </h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+
+      <!-- راهنمای مراحل -->
+      <div class="step-guide text-center text-light small mb-3">
+        <span class="badge bg-info text-dark ms-2">۱</span> انتخاب پلن
+        <span class="mx-1">←</span>
+        <span class="badge bg-info text-dark ms-2">۲</span> انتخاب مدت زمان
+        <span class="mx-1">←</span>
+        <span class="badge bg-info text-dark ms-2">۳</span> پرداخت و فعال‌سازی
+      </div>
+
+      <div class="modal-body pb-0">
+        <div class="row g-3">
+          @foreach($plans as $plan)
+            @php
+              $swap = $plan->swap_limit;
+              $num = (int) preg_replace('/\D/', '', $swap);
+              $unit = str_ends_with($swap, 'm') ? 'ماه' : 'روز';
+              $swapText = $swap ? \Morilog\Jalali\CalendarUtils::convertNumbers($num) . " {$unit} یک‌بار" : '—';
+
+              $installText = collect($plan->install_options ?? [])->map(function($opt){
+                  return $opt === 'inperson' ? 'به‌صورت حضوری در محل فروشگاه' :
+                         ($opt === 'online' ? 'آنلاین توسط خود کاربر' : $opt);
+              })->all();
+
+              $gamesText = $plan->all_ps_store
+                ? 'دسترسی به تمام بازی‌های PlayStation Store'
+                : 'انتخاب از لیست بازی‌های تعریف‌شده توسط مجموعه';
+
+              $firstDuration = $plan->durations[0] ?? null;
+              $firstPrice = $firstDuration ? ($plan->prices[$firstDuration] ?? 0) : 0;
+            @endphp
+
+            <div class="col-12 col-md-6 col-xl-4">
+              <div class="plan-card" id="plan-card-{{ $plan->id }}" onclick="selectPlan('{{ $plan->id }}')">
+
+                <div class="plan-header">
+                  <img src="{{ $plan->image_url }}" alt="{{ $plan->name }}">
+                  <div>
+                    <h5 class="fw-bold text-info mb-1">{{ $plan->name }}</h5>
+                    <small class="text-white-50">{{ $plan->description ?? 'بدون توضیح' }}</small>
+                  </div>
+                </div>
+
+                <hr class="text-info my-2">
+
+                <ul class="plan-features">
+                  <li><i class="bi bi-controller text-info"></i> نوع بازی: <span class="text-light">{{ $plan->game_type ?? '—' }}</span></li>
+                  <li><i class="bi bi-joystick text-info"></i> بازی‌های همزمان مجاز: <span class="text-light">{{ \Morilog\Jalali\CalendarUtils::convertNumbers($plan->concurrent_games) }}</span></li>
+                  <li><i class="bi bi-grid-3x3-gap text-info"></i> تعداد بازی قابل انتخاب سطح ۱: <span class="text-light">{{ \Morilog\Jalali\CalendarUtils::convertNumbers($plan->level1_selection) }}</span></li>
+                  <li><i class="bi bi-collection text-info"></i> لیست بازی‌ها: <span class="text-light">{{ $gamesText }}</span></li>
+                  <li><i class="bi bi-arrow-repeat text-info"></i> محدودیت تعویض رایگان: <span class="text-light">هر {{ $swapText }}</span></li>
+                  <li><i class="bi bi-hdd-network text-info"></i> نحوه نصب دیتا:
+                    @forelse($installText as $txt)
+                      <span class="badge bg-info bg-opacity-10 text-info me-1">{{ $txt }}</span>
+                    @empty
+                      <span class="text-muted">—</span>
+                    @endforelse
+                  </li>
+                  <li><i class="bi bi-percent text-info"></i> تخفیف خرید از سایت و فروشگاه:
+                    @if($plan->has_discount)
+                      <span class="text-success fw-bold">دارد ({{ \Morilog\Jalali\CalendarUtils::convertNumbers($plan->discount_percent) }}%)</span>
+                    @else
+                      <span class="text-danger">ندارد</span>
+                    @endif
+                  </li>
+                  <li><i class="bi bi-gift text-info"></i> بازی رایگان ماهانه:
+                    @if($plan->has_free_games)
+                      <span class="text-light">{{ \Morilog\Jalali\CalendarUtils::convertNumbers($plan->free_games_count) }} عدد</span>
+                    @else
+                      <span class="text-muted">ندارد</span>
+                    @endif
+                  </li>
+                  <li><i class="bi bi-cpu text-info"></i> پلتفرم‌ها:
+                    @foreach($plan->platforms ?? [] as $p)
+                      <span class="badge bg-transparent border border-info text-info me-1">{{ $p }}</span>
+                    @endforeach
+                  </li>
+                </ul>
+
+                <div class="duration-box">
+                  <label>مدت زمان اشتراک:</label>
+                  <div class="duration-buttons" data-plan="{{ $plan->id }}">
+                    @foreach($plan->durations ?? [] as $duration)
+                      <button type="button" class="duration-btn" data-plan="{{ $plan->id }}" data-months="{{ $duration }}">
+                        {{ \Morilog\Jalali\CalendarUtils::convertNumbers($duration) }} ماه
+                      </button>
+                    @endforeach
+                  </div>
+                </div>
+
+                <div class="plan-price" id="price-{{ $plan->id }}">
+                  {{ \Morilog\Jalali\CalendarUtils::convertNumbers(number_format($firstPrice)) }} تومان
+                </div>
+
+              </div>
+            </div>
+          @endforeach
+        </div>
+      </div>
+
+      <div class="modal-footer border-0 flex-column">
+        <div id="invoiceBox" class="invoice-box d-none">
+          <div>پلن انتخابی: <span id="inv-plan">—</span></div>
+          <div>مدت زمان: <span id="inv-months">—</span></div>
+          <div>مبلغ قابل پرداخت: <span id="inv-price">—</span></div>
+        </div>
+        <button class="btn btn-neon mt-3" id="confirmPlanBtn" disabled>
+          <i class="bi bi-wallet2 me-1"></i> پرداخت و فعال‌سازی
+        </button>
+      </div>
+    </div>
+  </div>
 </div>
+
+
+
+
+
+
 @endsection
 
 @section('scripts')
@@ -289,5 +533,49 @@
         document.querySelectorAll('.modal-backdrop').forEach(el => el.style.pointerEvents = 'none');
     });
 </script>
+<script>
+  const plans = @json($plans);
+  let selected = { planId: null, months: null, price: 0 };
+  const toFa = n => new Intl.NumberFormat('fa-IR').format(Number(n || 0));
+
+  function selectPlan(planId) {
+    selected.planId = planId;
+    selected.months = null;
+    document.querySelectorAll('.plan-card').forEach(c => c.classList.remove('active'));
+    document.getElementById(`plan-card-${planId}`).classList.add('active');
+    document.getElementById('confirmPlanBtn').disabled = true;
+    document.getElementById('invoiceBox').classList.add('d-none');
+  }
+
+  document.addEventListener('click', e => {
+    const btn = e.target.closest('.duration-btn');
+    if (!btn) return;
+    const planId = btn.dataset.plan;
+    const months = btn.dataset.months;
+    btn.closest('.duration-buttons').querySelectorAll('.duration-btn')
+        .forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+
+    const plan = plans.find(p => String(p.id) === String(planId));
+    const price = plan?.prices?.[months] || 0;
+    document.getElementById(`price-${planId}`).textContent = `${toFa(price)} تومان`;
+
+    selected = { planId, months, price };
+    updateInvoice(plan.name, months, price);
+    document.getElementById('confirmPlanBtn').disabled = false;
+  });
+
+  function updateInvoice(planName, months, price) {
+    document.getElementById('invoiceBox').classList.remove('d-none');
+    document.getElementById('inv-plan').textContent = planName;
+    document.getElementById('inv-months').textContent = toFa(months) + ' ماه';
+    document.getElementById('inv-price').textContent = toFa(price) + ' تومان';
+  }
+</script>
+
+
+
+
+
 @endsection
 
