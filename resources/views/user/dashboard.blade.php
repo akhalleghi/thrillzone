@@ -306,6 +306,36 @@
 
 
 @section('content')
+
+
+@if(session('success'))
+<div class="alert alert-success text-center rounded-3 mt-3 shadow">
+  <i class="bi bi-check-circle-fill me-1"></i>
+  {{ session('success') }}
+  @if(session('track_id'))
+    <div class="mt-1 small text-info">
+      <i class="bi bi-receipt-cutoff"></i>
+      کد پیگیری: <strong>{{ session('track_id') }}</strong>
+    </div>
+  @endif
+</div>
+@endif
+
+@if(session('error'))
+<div class="alert alert-danger text-center rounded-3 mt-3 shadow">
+  <i class="bi bi-x-circle-fill me-1"></i>
+  {{ session('error') }}
+  @if(session('track_id'))
+    <div class="mt-1 small text-light">
+      <i class="bi bi-receipt"></i>
+      کد پیگیری: <strong>{{ session('track_id') }}</strong>
+    </div>
+  @endif
+</div>
+@endif
+
+
+
 <!-- Header -->
 <header class="dashboard-header">
     <div class="user-profile">
@@ -524,131 +554,155 @@
 
 @section('scripts')
 <script>
-    // اطمینان از فعال بودن کلیک روی مدال‌ها (رفع مشکل تار/غیرفعال شدن)
-    document.addEventListener('show.bs.modal', (e) => {
-        document.body.classList.add('modal-open');
-        document.querySelectorAll('.modal-backdrop').forEach(el => el.style.pointerEvents = 'none');
-    });
+/* --- رفع مشکل لایه تار روی مدال --- */
+document.addEventListener('show.bs.modal', () => {
+  document.body.classList.add('modal-open');
+  document.querySelectorAll('.modal-backdrop').forEach(el => el.style.pointerEvents = 'none');
+});
 </script>
 
 <script>
-  // فقط یک‌بار plans تعریف می‌شود
-  const plans = @json($plans);
-  let selected = { planId: null, months: null, price: 0, discount: 0, final: 0 };
+/* --- متغیرهای اصلی --- */
+const plans = @json($plans);
+let selected = { planId: null, months: null, price: 0, discount: 0, final: 0 };
+const toFa = n => new Intl.NumberFormat('fa-IR').format(Number(n || 0));
 
-  const toFa = n => new Intl.NumberFormat('fa-IR').format(Number(n || 0));
+/* --- انتخاب پلن --- */
+function selectPlan(planId) {
+  selected = { planId, months: null, price: 0, discount: 0, final: 0 };
+  document.querySelectorAll('.plan-card').forEach(c => c.classList.remove('active'));
+  document.getElementById(`plan-card-${planId}`).classList.add('active');
 
-  function selectPlan(planId) {
-    selected.planId = planId;
-    selected.months = null;
-    selected.price = 0;
-    selected.discount = 0;
-    selected.final = 0;
+  document.getElementById('confirmPlanBtn').disabled = true;
+  document.getElementById('invoiceBox').classList.add('d-none');
+  document.getElementById('inv-discount').classList.add('d-none');
+  document.getElementById('inv-final').classList.add('d-none');
+  const msg = document.getElementById('couponMessage');
+  msg.textContent = '';
+  msg.className = 'small';
+}
 
-    document.querySelectorAll('.plan-card').forEach(c => c.classList.remove('active'));
-    document.getElementById(`plan-card-${planId}`).classList.add('active');
+/* --- انتخاب مدت‌زمان --- */
+document.addEventListener('click', e => {
+  const btn = e.target.closest('.duration-btn');
+  if (!btn) return;
+  const planId = btn.dataset.plan;
+  const months = btn.dataset.months;
 
-    // ریست فاکتور
-    document.getElementById('confirmPlanBtn').disabled = true;
-    document.getElementById('invoiceBox').classList.add('d-none');
-    document.getElementById('inv-discount').classList.add('d-none');
-    document.getElementById('inv-final').classList.add('d-none');
-    document.getElementById('couponMessage').textContent = '';
-    document.getElementById('couponMessage').className = 'small';
-  }
-
-  // انتخاب مدت زمان
-  document.addEventListener('click', e => {
-    const btn = e.target.closest('.duration-btn');
-    if (!btn) return;
-    const planId = btn.dataset.plan;
-    const months = btn.dataset.months;
-
-    btn.closest('.duration-buttons').querySelectorAll('.duration-btn')
+  btn.closest('.duration-buttons').querySelectorAll('.duration-btn')
       .forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
+  btn.classList.add('active');
 
-    const plan = plans.find(p => String(p.id) === String(planId));
-    const price = plan?.prices?.[months] || 0;
-    document.getElementById(`price-${planId}`).textContent = `${toFa(price)} تومان`;
+  const plan = plans.find(p => String(p.id) === String(planId));
+  const price = plan?.prices?.[months] || 0;
 
-    selected.planId = planId;
-    selected.months = months;
-    selected.price = price;
-    selected.discount = 0;
-    selected.final = price;
+  selected.planId = planId;
+  selected.months = months;
+  selected.price = price;
+  selected.final = price;
+  selected.discount = 0;
 
-    updateInvoice(plan.name, months, price);
-    document.getElementById('confirmPlanBtn').disabled = false;
+  document.getElementById(`price-${planId}`).textContent = `${toFa(price)} تومان`;
+  updateInvoice(plan.name, months, price);
 
-    // پاک‌سازی پیام کوپن در انتخاب جدید
-    const msg = document.getElementById('couponMessage');
-    msg.textContent = '';
-    msg.className = 'small';
-    document.getElementById('inv-discount').classList.add('d-none');
-    document.getElementById('inv-final').classList.add('d-none');
-  });
+  document.getElementById('confirmPlanBtn').disabled = false;
 
-  function updateInvoice(planName, months, price) {
-    document.getElementById('invoiceBox').classList.remove('d-none');
-    document.getElementById('inv-plan').textContent = planName;
-    document.getElementById('inv-months').textContent = toFa(months) + ' ماه';
-    document.getElementById('inv-price').textContent = toFa(price) + ' تومان';
+  // پاک‌سازی پیام کوپن
+  const msg = document.getElementById('couponMessage');
+  msg.textContent = '';
+  msg.className = 'small';
+  document.getElementById('inv-discount').classList.add('d-none');
+  document.getElementById('inv-final').classList.add('d-none');
+});
+
+/* --- به‌روزرسانی فاکتور --- */
+function updateInvoice(planName, months, price) {
+  document.getElementById('invoiceBox').classList.remove('d-none');
+  document.getElementById('inv-plan').textContent = planName;
+  document.getElementById('inv-months').textContent = toFa(months) + ' ماه';
+  document.getElementById('inv-price').textContent = toFa(price) + ' تومان';
+}
+
+/* --- اعمال کد تخفیف --- */
+document.getElementById('applyCouponBtn').addEventListener('click', async () => {
+  const code = document.getElementById('couponCode').value.trim();
+  const msg = document.getElementById('couponMessage');
+  msg.textContent = '';
+  msg.className = 'small';
+
+  if (!code) {
+    msg.textContent = 'کد تخفیف را وارد کنید.';
+    msg.classList.add('text-danger');
+    return;
   }
 
-  // اعمال کد تخفیف (بدون افزایش used_count — این کار را بعد از پرداخت موفق انجام دهید)
-  document.getElementById('applyCouponBtn').addEventListener('click', async () => {
-    const code = document.getElementById('couponCode').value.trim();
-    const msg = document.getElementById('couponMessage');
-    msg.textContent = '';
-    msg.className = 'small';
+  if (!selected.price || selected.price <= 0) {
+    msg.textContent = 'ابتدا پلن و مدت زمان را انتخاب کنید.';
+    msg.classList.add('text-warning');
+    return;
+  }
 
-    if (!code) {
-      msg.textContent = 'کد تخفیف را وارد کنید.';
-      msg.classList.add('text-danger');
-      return;
-    }
-    if (!selected.price || selected.price <= 0) {
-      msg.textContent = 'ابتدا پلن و مدت زمان را انتخاب کنید.';
-      msg.classList.add('text-warning');
-      return;
-    }
+  try {
+    const res = await fetch('{{ route("user.apply_coupon") }}', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+      },
+      body: JSON.stringify({ code, price: selected.price })
+    });
 
-    try {
-      const res = await fetch('{{ route("user.apply_coupon") }}', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-CSRF-TOKEN': '{{ csrf_token() }}',
-        },
-        body: JSON.stringify({ code, price: selected.price }),
-      });
+    const data = await res.json();
 
-      const data = await res.json();
-      console.log('Coupon Response:', data);
+    if (data.status === 'success') {
+      msg.textContent = data.message;
+      msg.classList.add('text-success');
 
-      if (data.status === 'success') {
-        msg.textContent = data.message;
-        msg.classList.add('text-success');
+      selected.discount = data.discountAmount;
+      selected.final = data.finalPrice;
 
-        selected.discount = data.discountAmount;
-        selected.final = data.finalPrice;
-
-        document.getElementById('inv-discount').classList.remove('d-none');
-        document.getElementById('inv-final').classList.remove('d-none');
-        document.getElementById('inv-discount-amount').textContent = toFa(data.discountAmount);
-        document.getElementById('inv-final-price').textContent = toFa(data.finalPrice);
-
-      } else {
-        msg.textContent = data.message;
-        msg.classList.add('text-danger');
-        // در صورت خطا، خروجی نهایی را ریست نکنیم تا کاربر دوباره تلاش کند
-      }
-    } catch (err) {
-      console.error('Coupon Error:', err);
-      msg.textContent = 'خطا در ارتباط با سرور.';
+      document.getElementById('inv-discount').classList.remove('d-none');
+      document.getElementById('inv-final').classList.remove('d-none');
+      document.getElementById('inv-discount-amount').textContent = toFa(data.discountAmount);
+      document.getElementById('inv-final-price').textContent = toFa(data.finalPrice);
+    } else {
+      msg.textContent = data.message;
       msg.classList.add('text-danger');
     }
-  });
+  } catch (err) {
+    console.error('Coupon Error:', err);
+    msg.textContent = 'خطا در ارتباط با سرور.';
+    msg.classList.add('text-danger');
+  }
+});
+
+/* --- ارسال امن به درگاه پرداخت --- */
+document.getElementById('confirmPlanBtn').addEventListener('click', () => {
+  const btn = document.getElementById('confirmPlanBtn');
+  btn.disabled = true;
+  btn.innerHTML = '<i class="bi bi-hourglass-split"></i> در حال انتقال...';
+
+  // اعتبارسنجی نهایی قبل از ارسال
+  if (!selected.planId || !selected.months) {
+    alert('لطفاً پلن و مدت زمان اشتراک را انتخاب کنید.');
+    btn.disabled = false;
+    btn.innerHTML = '<i class="bi bi-wallet2 me-1"></i> پرداخت و فعال‌سازی';
+    return;
+  }
+
+  // ارسال از طریق فرم مخفی برای محافظت CSRF
+  const form = document.createElement('form');
+  form.method = 'POST';
+  form.action = '{{ route("user.payment.start") }}';
+  form.innerHTML = `
+    @csrf
+    <input type="hidden" name="plan_id" value="${selected.planId}">
+    <input type="hidden" name="months" value="${selected.months}">
+    <input type="hidden" name="coupon_code" value="${document.getElementById('couponCode').value.trim()}">
+  `;
+  document.body.appendChild(form);
+  form.submit();
+});
 </script>
+
 @endsection

@@ -7,8 +7,17 @@ use Illuminate\Database\Eloquent\Model;
 class Transaction extends Model
 {
     protected $fillable = [
-        'txn_number', 'activity', 'user_id', 'plan_id', 'amount',
-        'paid_at', 'gateway', 'status', 'ref_code', 'receipt',
+        'user_id',
+        'plan_id',
+        'amount',
+        'status',
+        'gateway',
+        'txn_number',
+        'ref_code',
+        'paid_at',
+        'months',        // ✅ اضافه شد
+        'coupon_code',   // ✅ اضافه شد
+        'discount',      // ✅ اضافه شد
     ];
 
     protected $casts = [

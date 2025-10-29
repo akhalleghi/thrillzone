@@ -12,6 +12,7 @@ use App\Http\Controllers\Admin\SubscriptionController;
 use App\Http\Controllers\Admin\SwapRequestController;
 use App\Http\Controllers\Admin\BookingController;
 use App\Http\Controllers\User\DashboardController;
+use App\Http\Controllers\User\PaymentController;
 
 
 /*
@@ -59,6 +60,10 @@ Route::middleware(['auth'])->prefix('user')->name('user.')->group(function () {
     // روت بررسی کد تخفیف
     Route::post('/apply-coupon', [\App\Http\Controllers\User\CouponController::class, 'apply'])
     ->name('apply_coupon');
+
+    // روت های درگاه پرداخت
+    Route::post('/payment/start', [PaymentController::class, 'start'])->name('payment.start');
+    Route::get('/payment/callback', [PaymentController::class, 'callback'])->name('payment.callback');
 
 
     // صفحات دیگر هم می‌تونی اینجا اضافه کنی
