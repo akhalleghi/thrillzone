@@ -56,6 +56,11 @@ Route::middleware(['auth'])->prefix('user')->name('user.')->group(function () {
     // داشبورد کاربر
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
+    // روت بررسی کد تخفیف
+    Route::post('/apply-coupon', [\App\Http\Controllers\User\CouponController::class, 'apply'])
+    ->name('apply_coupon');
+
+
     // صفحات دیگر هم می‌تونی اینجا اضافه کنی
     Route::get('/games', fn() => view('user.games'))->name('games');
     Route::get('/wallet', fn() => view('user.wallet'))->name('wallet');
@@ -169,6 +174,9 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/bookings', [BookingController::class,'index'])->name('bookings.index');
         Route::post('/bookings', [BookingController::class,'store'])->name('bookings.store');
         Route::delete('/bookings/{booking}', [BookingController::class,'destroy'])->name('bookings.destroy'); 
+
+        //  مدیریت بن های تخفیف
+        Route::resource('coupons', \App\Http\Controllers\Admin\CouponController::class);
 
 
         // ⚙️ تنظیمات

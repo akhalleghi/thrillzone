@@ -59,7 +59,7 @@
         background:linear-gradient(135deg,rgba(255,255,255,.06),rgba(255,255,255,.1));
         border-radius:18px;
         padding:1.5rem;
-        border:2px solid rgba(255,255,255,.1);
+        border:2px solid rgba(255,255,255,.08);
         transition:all .3s ease;
         position:relative; overflow:hidden;
     }
@@ -144,122 +144,163 @@
         from { opacity:0; transform:translateY(30px); }
         to { opacity:1; transform:translateY(0); }
     }
-    .modal-xxl {
-  max-width: 1400px;
-}
 
-.modal-subscribe {
-  background: linear-gradient(135deg, #0b1035, #1a1f47);
-  border-radius: 20px;
-  border: 1px solid rgba(61,245,255,0.25);
-}
+    /* ====== Modal (Subscribe) & Cards ====== */
+    .modal-xxl { max-width: 1400px; }
 
-.step-guide {
-  background: rgba(255,255,255,0.05);
-  border-radius: 10px;
-  padding: 6px 12px;
-  display: inline-block;
-}
+    .modal-subscribe {
+      background: linear-gradient(135deg, #0b1035, #1a1f47);
+      border-radius: 20px;
+      border: 1px solid rgba(61,245,255,0.25);
+    }
 
-.plan-card {
-  background: rgba(255,255,255,0.03);
-  border: 1px solid rgba(61,245,255,0.25);
-  border-radius: 12px;
-  padding: 1rem;
-  transition: 0.3s;
-}
-.plan-card:hover {
-  border-color: #00ffff;
-  transform: translateY(-3px);
-  box-shadow: 0 0 15px rgba(0,255,255,0.1);
-}
-.plan-card.active {
-  border: 2px solid #00ffff;
-  background: rgba(0,255,255,0.05);
-}
+    .step-guide {
+      background: rgba(255,255,255,0.05);
+      border-radius: 10px;
+      padding: 6px 12px;
+      display: inline-block;
+    }
 
-.plan-header {
+    .plan-card {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(61,245,255,0.25);
+      border-radius: 12px;
+      padding: 1rem;
+      transition: 0.3s;
+    }
+    .plan-card:hover {
+      border-color: #00ffff;
+      transform: translateY(-3px);
+      box-shadow: 0 0 15px rgba(0,255,255,0.1);
+    }
+    .plan-card.active {
+      border: 2px solid #00ffff;
+      background: rgba(0,255,255,0.05);
+    }
+
+    .plan-header {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      margin-bottom: 0.5rem;
+    }
+    .plan-header img {
+      width: 55px;
+      height: 55px;
+      border-radius: 10px;
+      border: 1px solid rgba(0,255,255,0.3);
+      object-fit: cover;
+    }
+
+    .plan-features {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 0.5rem 0;
+      font-size: 0.9rem;
+      color: #bcd;
+      line-height: 1.6;
+    }
+    .plan-features i { margin-left: 6px; }
+
+    .duration-box {
+      background: rgba(0,255,255,0.07);
+      border: 1px dashed rgba(0,255,255,0.3);
+      border-radius: 10px;
+      padding: 8px;
+      text-align: center;
+    }
+    .duration-box label {
+      display: block;
+      color: #00ffff;
+      font-weight: bold;
+      margin-bottom: 8px;
+      font-size: 0.95rem;
+    }
+
+    .duration-buttons {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+    .duration-btn {
+      background: transparent;
+      border: 1px solid rgba(61,245,255,0.4);
+      color: #00ffff;
+      border-radius: 999px;
+      padding: 4px 14px;
+      transition: 0.2s;
+      font-size: 0.9rem;
+    }
+    .duration-btn:hover {
+      background: rgba(0,255,255,0.2);
+      color: #fff;
+    }
+    .duration-btn.active {
+      background: #00ffff;
+      color: #0b1035;
+      font-weight: 600;
+    }
+
+    .plan-price {
+      text-align: center;
+      margin-top: 0.8rem;
+      font-size: 1rem;
+      color: #00ffff;
+      font-weight: bold;
+    }
+
+    .invoice-box {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(61,245,255,0.3);
+      border-radius: 10px;
+      padding: 0.75rem;
+      text-align: center;
+      font-size: 0.95rem;
+      width: 100%;
+    }
+    .invoice-box span {
+      color: #00ffff;
+      font-weight: bold;
+    }
+
+    /* === Coupon Box === */
+    .coupon-box {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(61,245,255,0.3);
+      border-radius: 12px;
+    }
+    .coupon-box input::placeholder {
+      color: rgba(255,255,255,0.8); /* روشن‌تر */
+    }
+    #couponMessage { min-height: 20px; }
+    #couponMessage.text-success { color: #00ffae !important; }
+    #couponMessage.text-danger { color: #ff6b6b !important; }
+
+    /* تنظیم جای دکمه بستن مدال در حالت راست‌به‌چپ */
+.modal-header {
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  gap: 0.8rem;
-  margin-bottom: 0.5rem;
-}
-.plan-header img {
-  width: 55px;
-  height: 55px;
-  border-radius: 10px;
-  border: 1px solid rgba(0,255,255,0.3);
+  direction: rtl; /* جهت درست برای چینش عنوان و دکمه */
 }
 
-.plan-features {
-  list-style: none;
-  padding: 0;
-  margin: 0 0 0.5rem 0;
-  font-size: 0.9rem;
-  color: #bcd;
+.modal-header .modal-title {
+  flex: 1;
+  text-align: right; /* عنوان در سمت راست */
 }
 
-.duration-box {
-  background: rgba(0,255,255,0.07);
-  border: 1px dashed rgba(0,255,255,0.3);
-  border-radius: 10px;
-  padding: 8px;
-  text-align: center;
+.modal-header .btn-close {
+  margin-left: auto; /* هل دادن دکمه به چپ */
+  margin-right: 0;
+  filter: invert(1); /* سفیدتر برای تم تاریک */
+  opacity: 0.9;
 }
-.duration-box label {
-  display: block;
-  color: #00ffff;
-  font-weight: bold;
-  margin-bottom: 8px;
-  font-size: 0.95rem;
+.modal-header .btn-close:hover {
+  opacity: 1;
+  transform: scale(1.1);
 }
 
-.duration-buttons {
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-}
-.duration-btn {
-  background: transparent;
-  border: 1px solid rgba(61,245,255,0.4);
-  color: #00ffff;
-  border-radius: 999px;
-  padding: 4px 14px;
-  transition: 0.2s;
-  font-size: 0.9rem;
-}
-.duration-btn:hover {
-  background: rgba(0,255,255,0.2);
-  color: #fff;
-}
-.duration-btn.active {
-  background: #00ffff;
-  color: #0b1035;
-  font-weight: 600;
-}
-
-.plan-price {
-  text-align: center;
-  margin-top: 0.8rem;
-  font-size: 1rem;
-  color: #00ffff;
-  font-weight: bold;
-}
-
-.invoice-box {
-  background: rgba(255,255,255,0.05);
-  border: 1px solid rgba(61,245,255,0.3);
-  border-radius: 10px;
-  padding: 0.75rem;
-  text-align: center;
-  font-size: 0.95rem;
-  width: 100%;
-}
-.invoice-box span {
-  color: #00ffff;
-  font-weight: bold;
-}
 </style>
 @endsection
 
@@ -285,59 +326,47 @@
 <!-- Stats Section -->
 <div class="stats-grid">
     <div class="stat-card">
-    <div class="stat-title">پلن‌های فعال</div>
-    <div class="stat-value">
-        {{ \Morilog\Jalali\CalendarUtils::convertNumbers($activePlansCount) }} پلن
+        <div class="stat-title">پلن‌های فعال</div>
+        <div class="stat-value">
+            {{ \Morilog\Jalali\CalendarUtils::convertNumbers($activePlansCount) }} پلن
+        </div>
+        <div class="small text-light">
+            {{ $activePlansCount > 0 ? 'در حال استفاده از اشتراک فعال' : 'بدون اشتراک فعال' }}
+        </div>
     </div>
-    <div class="small text-light">
-        {{ $activePlansCount > 0 ? 'در حال استفاده از اشتراک فعال' : 'بدون اشتراک فعال' }}
-    </div>
-</div>
-
-
 
     <div class="stat-card">
-    <div class="stat-title">سابقه عضویت</div>
-    <div class="stat-value">{{ \Morilog\Jalali\CalendarUtils::convertNumbers($membershipDays) }} روز
-</div>
-    <div class="small text-light">
-    از {{ \Morilog\Jalali\CalendarUtils::convertNumbers(
-        jdate(auth()->user()->created_at)->format('Y/m/d')
-    ) }}
-</div>
-
-
-</div>
-
-
-
-   <div class="stat-card">
-    <div class="stat-title">وضعیت اشتراک</div>
-    <div class="stat-value {{ $activePlansCount ? 'text-success' : 'text-warning' }}">
-        {{ $activePlansCount ? 'فعال' : 'غیرفعال' }}
+        <div class="stat-title">سابقه عضویت</div>
+        <div class="stat-value">
+            {{ \Morilog\Jalali\CalendarUtils::convertNumbers($membershipDays) }} روز
+        </div>
+        <div class="small text-light">
+            از {{ \Morilog\Jalali\CalendarUtils::convertNumbers( jdate(auth()->user()->created_at)->format('Y/m/d') ) }}
+        </div>
     </div>
-    <div class="small text-light">
-        تمدید بعدی:
-        @if($nextRenewAt)
-            {{ \Morilog\Jalali\CalendarUtils::convertNumbers(
-                jdate($nextRenewAt)->format('Y/m/d')
-            ) }}
-        @else
-            —
-        @endif
-    </div>
-</div>
-
-
 
     <div class="stat-card">
-    <div class="stat-title">تراکنش‌های موفق</div>
-    <div class="stat-value">{{ \Morilog\Jalali\CalendarUtils::convertNumbers( number_format($successfulTransactions) ) }} تومان
-</div>
-    {{-- اگر ستون amount به ریاله/تومنه برحسب نیاز تغییر بده --}}
-    <div class="small text-light">مجموع پرداخت‌های موفق شما</div>
-</div>
+        <div class="stat-title">وضعیت اشتراک</div>
+        <div class="stat-value {{ $activePlansCount ? 'text-success' : 'text-warning' }}">
+            {{ $activePlansCount ? 'فعال' : 'غیرفعال' }}
+        </div>
+        <div class="small text-light">
+            تمدید بعدی:
+            @if($nextRenewAt)
+                {{ \Morilog\Jalali\CalendarUtils::convertNumbers( jdate($nextRenewAt)->format('Y/m/d') ) }}
+            @else
+                —
+            @endif
+        </div>
+    </div>
 
+    <div class="stat-card">
+        <div class="stat-title">تراکنش‌های موفق</div>
+        <div class="stat-value">
+            {{ \Morilog\Jalali\CalendarUtils::convertNumbers( number_format($successfulTransactions) ) }} تومان
+        </div>
+        <div class="small text-light">مجموع پرداخت‌های موفق شما</div>
+    </div>
 </div>
 
 <!-- CTA: خرید اشتراک -->
@@ -350,51 +379,6 @@
 </section>
 
 <!-- Purchase Modal -->
-{{-- <div class="modal fade" id="purchaseModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-scrollable">
-        <div class="modal-content text-white">
-            <div class="modal-header border-0">
-                <h5 class="modal-title">خرید اشتراک جدید</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                <label class="form-label">انتخاب پلن</label>
-                <div class="row g-3 mb-3">
-                    <div class="col-md-6">
-                        <label class="w-100 p-3 rounded-3 border border-info" style="background:rgba(61,245,255,.08); cursor:pointer;">
-                            <input type="radio" name="plan" checked> Thrill Silver
-                            <div class="small mt-1 text-info">۳ بازی • تعویض هر ۳۰ روز</div>
-                        </label>
-                    </div>
-                    <div class="col-md-6">
-                        <label class="w-100 p-3 rounded-3 border border-pink" style="background:rgba(255,92,232,.08); cursor:pointer;">
-                            <input type="radio" name="plan"> Thrill Max
-                            <div class="small mt-1 text-info">۷ بازی • تعویض هر ۱۵ روز</div>
-                        </label>
-                    </div>
-                </div>
-
-                <label class="form-label">مدت زمان</label>
-                <select class="form-select mb-3">
-                    <option>۳ ماهه</option>
-                    <option selected>۶ ماهه</option>
-                    <option>۱۲ ماهه</option>
-                </select>
-
-                <label class="form-label">بازی‌های انتخابی</label>
-                <div class="row g-2">
-                    <div class="col-md-6"><input type="text" class="form-control" placeholder="نام بازی ۱"></div>
-                    <div class="col-md-6"><input type="text" class="form-control" placeholder="نام بازی ۲"></div>
-                    <div class="col-md-6"><input type="text" class="form-control" placeholder="نام بازی ۳"></div>
-                </div>
-            </div>
-            <div class="modal-footer border-0">
-                <button class="btn btn-secondary" data-bs-dismiss="modal">انصراف</button>
-                <button class="btn btn-neon"><i class="bi bi-check2-circle"></i> تایید خرید</button>
-            </div>
-        </div>
-    </div>
-</div> --}}
 <div class="modal fade" id="purchaseModal" tabindex="-1" aria-labelledby="purchaseModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-xxl modal-dialog-centered modal-dialog-scrollable">
     <div class="modal-content modal-subscribe text-white">
@@ -405,7 +389,7 @@
         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
       </div>
 
-      <!-- راهنمای مراحل -->
+      <!-- راهنمای مراحل (فلش راست‌به‌چپ) -->
       <div class="step-guide text-center text-light small mb-3">
         <span class="badge bg-info text-dark ms-2">۱</span> انتخاب پلن
         <span class="mx-1">←</span>
@@ -505,11 +489,30 @@
       </div>
 
       <div class="modal-footer border-0 flex-column">
-        <div id="invoiceBox" class="invoice-box d-none">
+        <!-- 🏷 بخش کد تخفیف -->
+        <div class="coupon-box w-100 mt-3 p-3 rounded-3 text-center">
+          <div class="input-group input-group-sm flex-nowrap">
+            <input type="text" id="couponCode" class="form-control bg-transparent text-white border-info"
+                   placeholder="کد تخفیف را وارد کنید...">
+            <button class="btn btn-outline-info" type="button" id="applyCouponBtn">
+              <i class="bi bi-check2-circle me-1"></i> اعمال
+            </button>
+          </div>
+          <div id="couponMessage" class="mt-2 small"></div>
+        </div>
+
+        <div id="invoiceBox" class="invoice-box d-none mt-3">
           <div>پلن انتخابی: <span id="inv-plan">—</span></div>
           <div>مدت زمان: <span id="inv-months">—</span></div>
           <div>مبلغ قابل پرداخت: <span id="inv-price">—</span></div>
+          <div id="inv-discount" class="text-success mt-1 d-none">
+            تخفیف: <span id="inv-discount-amount">۰</span> تومان
+          </div>
+          <div id="inv-final" class="fw-bold text-info mt-1 d-none">
+            مبلغ نهایی: <span id="inv-final-price">۰</span> تومان
+          </div>
         </div>
+
         <button class="btn btn-neon mt-3" id="confirmPlanBtn" disabled>
           <i class="bi bi-wallet2 me-1"></i> پرداخت و فعال‌سازی
         </button>
@@ -517,52 +520,73 @@
     </div>
   </div>
 </div>
-
-
-
-
-
-
 @endsection
 
 @section('scripts')
 <script>
-    // اطمینان از فعال بودن کلیک روی مدال‌ها
+    // اطمینان از فعال بودن کلیک روی مدال‌ها (رفع مشکل تار/غیرفعال شدن)
     document.addEventListener('show.bs.modal', (e) => {
         document.body.classList.add('modal-open');
         document.querySelectorAll('.modal-backdrop').forEach(el => el.style.pointerEvents = 'none');
     });
 </script>
+
 <script>
+  // فقط یک‌بار plans تعریف می‌شود
   const plans = @json($plans);
-  let selected = { planId: null, months: null, price: 0 };
+  let selected = { planId: null, months: null, price: 0, discount: 0, final: 0 };
+
   const toFa = n => new Intl.NumberFormat('fa-IR').format(Number(n || 0));
 
   function selectPlan(planId) {
     selected.planId = planId;
     selected.months = null;
+    selected.price = 0;
+    selected.discount = 0;
+    selected.final = 0;
+
     document.querySelectorAll('.plan-card').forEach(c => c.classList.remove('active'));
     document.getElementById(`plan-card-${planId}`).classList.add('active');
+
+    // ریست فاکتور
     document.getElementById('confirmPlanBtn').disabled = true;
     document.getElementById('invoiceBox').classList.add('d-none');
+    document.getElementById('inv-discount').classList.add('d-none');
+    document.getElementById('inv-final').classList.add('d-none');
+    document.getElementById('couponMessage').textContent = '';
+    document.getElementById('couponMessage').className = 'small';
   }
 
+  // انتخاب مدت زمان
   document.addEventListener('click', e => {
     const btn = e.target.closest('.duration-btn');
     if (!btn) return;
     const planId = btn.dataset.plan;
     const months = btn.dataset.months;
+
     btn.closest('.duration-buttons').querySelectorAll('.duration-btn')
-        .forEach(b => b.classList.remove('active'));
+      .forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
 
     const plan = plans.find(p => String(p.id) === String(planId));
     const price = plan?.prices?.[months] || 0;
     document.getElementById(`price-${planId}`).textContent = `${toFa(price)} تومان`;
 
-    selected = { planId, months, price };
+    selected.planId = planId;
+    selected.months = months;
+    selected.price = price;
+    selected.discount = 0;
+    selected.final = price;
+
     updateInvoice(plan.name, months, price);
     document.getElementById('confirmPlanBtn').disabled = false;
+
+    // پاک‌سازی پیام کوپن در انتخاب جدید
+    const msg = document.getElementById('couponMessage');
+    msg.textContent = '';
+    msg.className = 'small';
+    document.getElementById('inv-discount').classList.add('d-none');
+    document.getElementById('inv-final').classList.add('d-none');
   });
 
   function updateInvoice(planName, months, price) {
@@ -571,11 +595,60 @@
     document.getElementById('inv-months').textContent = toFa(months) + ' ماه';
     document.getElementById('inv-price').textContent = toFa(price) + ' تومان';
   }
+
+  // اعمال کد تخفیف (بدون افزایش used_count — این کار را بعد از پرداخت موفق انجام دهید)
+  document.getElementById('applyCouponBtn').addEventListener('click', async () => {
+    const code = document.getElementById('couponCode').value.trim();
+    const msg = document.getElementById('couponMessage');
+    msg.textContent = '';
+    msg.className = 'small';
+
+    if (!code) {
+      msg.textContent = 'کد تخفیف را وارد کنید.';
+      msg.classList.add('text-danger');
+      return;
+    }
+    if (!selected.price || selected.price <= 0) {
+      msg.textContent = 'ابتدا پلن و مدت زمان را انتخاب کنید.';
+      msg.classList.add('text-warning');
+      return;
+    }
+
+    try {
+      const res = await fetch('{{ route("user.apply_coupon") }}', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRF-TOKEN': '{{ csrf_token() }}',
+        },
+        body: JSON.stringify({ code, price: selected.price }),
+      });
+
+      const data = await res.json();
+      console.log('Coupon Response:', data);
+
+      if (data.status === 'success') {
+        msg.textContent = data.message;
+        msg.classList.add('text-success');
+
+        selected.discount = data.discountAmount;
+        selected.final = data.finalPrice;
+
+        document.getElementById('inv-discount').classList.remove('d-none');
+        document.getElementById('inv-final').classList.remove('d-none');
+        document.getElementById('inv-discount-amount').textContent = toFa(data.discountAmount);
+        document.getElementById('inv-final-price').textContent = toFa(data.finalPrice);
+
+      } else {
+        msg.textContent = data.message;
+        msg.classList.add('text-danger');
+        // در صورت خطا، خروجی نهایی را ریست نکنیم تا کاربر دوباره تلاش کند
+      }
+    } catch (err) {
+      console.error('Coupon Error:', err);
+      msg.textContent = 'خطا در ارتباط با سرور.';
+      msg.classList.add('text-danger');
+    }
+  });
 </script>
-
-
-
-
-
 @endsection
-

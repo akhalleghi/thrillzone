@@ -275,6 +275,10 @@
             <i class="bi bi-clock-history"></i> مدیریت نوبت دهی
             </a>
 
+            <a href="{{ route('admin.coupons.index') }}" class="nav-link {{ request()->routeIs('admin.coupons.index') ? 'active' : '' }}">
+            <i class="bi bi-clock-history"></i> کدهای تخفیف
+            </a>
+
             <a href="{{ route('admin.finance') }}" class="nav-link {{ request()->routeIs('admin.finance') ? 'active' : '' }}"><i class="bi bi-cash-stack"></i> مالی</a>
             <a href="{{ route('admin.settings') }}" class="nav-link {{ request()->routeIs('admin.settings') ? 'active' : '' }}"><i class="bi bi-gear"></i> تنظیمات</a>
         </nav>
