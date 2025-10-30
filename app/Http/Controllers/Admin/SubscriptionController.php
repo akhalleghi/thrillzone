@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Helpers\SmsHelper;
 use App\Models\Subscription;
 use App\Models\User;
 use App\Models\Plan;
@@ -76,6 +77,18 @@ class SubscriptionController extends Controller
             'ends_at'       => $endsAt,
             'next_swap_at'  => $nextSwap,
         ]);
+
+        $subscription->loadMissing(['user', 'plan']);
+
+        $userName    = trim($subscription->user->name ?? 'کاربر');
+        $planName    = $subscription->plan->name ?? 'اشتراک';
+        $mobile      = $subscription->user->phone ?? null;
+        $usableDays  = max(1, (int) $activatedAt->diffInDays($endsAt));
+
+        if ($mobile) {
+            $message = "{$userName} عزیز 📣\nاشتراک 🌟 {$planName} 🌟\nبا موفقیت فعال شد ✅\nاز امروز به مدت ⏰ {$usableDays} روز در دسترس شماست.\nاز انتخاب شما سپاسگزاریم 🙏\n💥 منطقه هیجان 💥";
+            SmsHelper::sendMessage($mobile, $message);
+        }
 
         return back()->with('success','اشتراک فعال شد.');
     }
