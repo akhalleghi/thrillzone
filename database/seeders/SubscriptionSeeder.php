@@ -41,6 +41,7 @@ class SubscriptionSeeder extends Seeder
             'price'           => 200000,
             'status'          => 'waiting',
             'purchased_at'    => $now->copy()->subDay(),
+            'games_selected_at' => $now->copy()->subHours(12),
             'swap_every_days' => 30,
         ]);
 
@@ -64,6 +65,7 @@ class SubscriptionSeeder extends Seeder
             'price'           => 350000,
             'status'          => 'active',
             'purchased_at'    => $activatedNoDelay->copy()->subDay(),
+            'games_selected_at' => $activatedNoDelay->copy()->subDay(),
             'activated_at'    => $activatedNoDelay,
             'ends_at'         => $activatedNoDelay->copy()->addMonths(6),
             'swap_every_days' => 30,
@@ -74,13 +76,15 @@ class SubscriptionSeeder extends Seeder
         // Active – activated with 8-day delay (should be shortened by 8 days)
         $delayDays = 8;
         $activatedWithDelay = $now->copy()->subDay();
+        $purchasedWithDelay = $activatedWithDelay->copy()->subDays($delayDays + 1);
         Subscription::create([
             'user_id'         => $user->id,
             'plan_id'         => $plan->id,
             'duration_months' => 6,
             'price'           => 350000,
             'status'          => 'active',
-            'purchased_at'    => $activatedWithDelay->copy()->subDays($delayDays + 1),
+            'purchased_at'    => $purchasedWithDelay,
+            'games_selected_at' => $purchasedWithDelay->copy()->addDays(Subscription::SELECTION_GRACE_DAYS + $delayDays),
             'activated_at'    => $activatedWithDelay,
             'ends_at'         => $activatedWithDelay->copy()->addMonths(6)->subDays($delayDays),
             'swap_every_days' => 30,
@@ -97,6 +101,7 @@ class SubscriptionSeeder extends Seeder
             'status'          => 'ended',
             'purchased_at'    => $now->copy()->subYear(),
             'activated_at'    => $now->copy()->subMonths(12),
+            'games_selected_at' => $now->copy()->subMonths(12)->subDays(2),
             'ends_at'         => $now->copy()->subDays(5),
             'swap_every_days' => 60,
             'active_games'    => ['GTA V'],

@@ -54,6 +54,7 @@
         <select name="status" class="form-select">
           <option value="">همه</option>
           <option value="waiting" {{ $status==='waiting'?'selected':'' }}>در انتظار انتخاب بازی</option>
+          <option value="waiting_ready" {{ $status==='waiting_ready'?'selected':'' }}>در انتظار فعالسازی توسط ادمین</option>
           <option value="active"  {{ $status==='active'?'selected':'' }}>فعال</option>
           <option value="ended"   {{ $status==='ended'?'selected':'' }}>پایان یافته</option>
         </select>
@@ -111,6 +112,9 @@
         </thead>
         <tbody>
         @forelse($subscriptions as $i => $s)
+          @php
+            $waitingReady = $s->is_waiting_ready;
+          @endphp
           <tr>
             <td>{{ $subscriptions->firstItem() + $i }}</td>
             <td><span class="badge bg-info">{{ $s->subscription_code }}</span></td>
@@ -124,7 +128,12 @@
             <td>{{ $s->requested_at ? Jalalian::fromCarbon($s->requested_at)->format('Y/m/d H:i') : '—' }}</td>
             <td>
               @if($s->selection_deadline)
-                @if($s->status === 'waiting')
+                @if($waitingReady)
+                  <span class="text-success">بازی‌ها انتخاب شدند</span>
+                  @if($s->selection_delay_days > 0)
+                    <div class="small text-danger">{{ $s->selection_delay_days }} روز تأخیر</div>
+                  @endif
+                @elseif($s->status === 'waiting')
                   <span class="timer selection-timer" data-selection="{{ $s->selection_deadline->toIso8601String() }}">...</span>
                   @if($s->selection_delay_days > 0)
                     <div class="small text-danger">{{ $s->selection_delay_days }} روز تأخیر</div>
@@ -159,7 +168,9 @@
             {{-- وضعیت --}}
             <td>
               @if($s->status === 'waiting')
-                <span class="badge bg-warning text-dark badge-round">در انتظار انتخاب بازی</span>
+                <span class="badge bg-warning text-dark badge-round">
+                  {{ $waitingReady ? 'در انتظار فعالسازی توسط ادمین' : 'در انتظار انتخاب بازی توسط کاربر' }}
+                </span>
               @elseif($s->status === 'active')
                 <span class="badge bg-success badge-round">فعال</span>
               @else
@@ -211,6 +222,9 @@
   {{-- نسخه موبایل: کارت --}}
 <div class="d-lg-none">
   @forelse($subscriptions as $i => $s)
+    @php
+      $waitingReady = $s->is_waiting_ready;
+    @endphp
     <div class="sub-card mb-3">
       {{-- هدر کارت --}}
       <div class="d-flex align-items-center mb-2">
@@ -222,7 +236,7 @@
                   ? 'bg-warning text-dark'
                   : 'bg-secondary') }}">
           {{ $s->status==='waiting'
-              ? 'در انتظار انتخاب بازی'
+              ? ($waitingReady ? 'در انتظار فعالسازی توسط ادمین' : 'در انتظار انتخاب بازی توسط کاربر')
               : ($s->status==='active' ? 'فعال' : 'پایان یافته') }}
         </span>
       </div>
@@ -249,7 +263,12 @@
         <div class="col-6">
           <b>فرصت انتخاب:</b>
           @if($s->selection_deadline)
-            @if($s->status==='waiting')
+            @if($waitingReady)
+              <span class="text-success">بازی‌ها انتخاب شدند</span>
+              @if($s->selection_delay_days > 0)
+                <div class="small text-danger">{{ $s->selection_delay_days }} روز تأخیر</div>
+              @endif
+            @elseif($s->status==='waiting')
               <span class="timer selection-timer" data-selection="{{ $s->selection_deadline->toIso8601String() }}">...</span>
               @if($s->selection_delay_days > 0)
                 <div class="small text-danger">{{ $s->selection_delay_days }} روز تأخیر</div>

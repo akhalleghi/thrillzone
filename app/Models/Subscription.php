@@ -17,6 +17,7 @@ class Subscription extends Model
         'status',
         'purchased_at',
         'requested_at',
+        'games_selected_at',
         'activated_at',
         'ends_at',
         'swap_every_days',
@@ -28,6 +29,7 @@ class Subscription extends Model
     protected $casts = [
         'purchased_at'  => 'datetime',
         'requested_at'  => 'datetime',
+        'games_selected_at' => 'datetime',
         'activated_at'  => 'datetime',
         'ends_at'       => 'datetime',
         'next_swap_at'  => 'datetime',
@@ -90,6 +92,11 @@ class Subscription extends Model
         return $base->copy()->addDays(self::SELECTION_GRACE_DAYS);
     }
 
+    public function getSelectionCompletedAtAttribute(): ?Carbon
+    {
+        return $this->games_selected_at;
+    }
+
     public function getSelectionRemainingSecondsAttribute(): ?int
     {
         if ($this->status !== 'waiting') {
@@ -115,9 +122,13 @@ class Subscription extends Model
             return 0;
         }
 
-        $reference = $this->status === 'active'
-            ? ($this->activated_at ?? now())
-            : now();
+        if ($this->games_selected_at) {
+            $reference = $this->games_selected_at;
+        } elseif ($this->status === 'active') {
+            $reference = $this->activated_at ?? now();
+        } else {
+            $reference = now();
+        }
 
         if ($reference->lessThanOrEqualTo($deadline)) {
             return 0;
@@ -129,6 +140,22 @@ class Subscription extends Model
     public function getSelectionOverdueDaysAttribute(): int
     {
         return $this->selection_delay_days;
+    }
+
+    public function getHasSelectedGamesAttribute(): bool
+    {
+        $games = $this->active_games;
+
+        if (is_array($games)) {
+            return count(array_filter($games, fn($item) => $item !== null && $item !== '')) > 0;
+        }
+
+        return !empty($games);
+    }
+
+    public function getIsWaitingReadyAttribute(): bool
+    {
+        return $this->status === 'waiting' && $this->has_selected_games && (bool) $this->games_selected_at;
     }
 
     protected static function booted(): void
@@ -145,6 +172,22 @@ class Subscription extends Model
 
             $subscription->subscription_code = $code;
         });
+
+        static::saving(function (self $subscription): void {
+            $isWaiting = $subscription->status === 'waiting';
+
+            $games = $subscription->active_games;
+            $hasGames = is_array($games)
+                ? count(array_filter($games, fn($item) => $item !== null && $item !== '')) > 0
+                : !empty($games);
+
+            if ($isWaiting && !$hasGames && $subscription->isDirty('active_games')) {
+                $subscription->games_selected_at = null;
+            }
+
+            if ($isWaiting && $hasGames && !$subscription->games_selected_at && ($subscription->isDirty('active_games') || $subscription->isDirty('requested_at'))) {
+                $subscription->games_selected_at = now();
+            }
+        });
     }
 }
-

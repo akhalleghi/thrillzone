@@ -15,7 +15,7 @@ class SubscriptionController extends Controller
     public function index(Request $request)
     {
         $q       = trim($request->get('q',''));        // جستجو: نام/موبایل کاربر
-        $status  = $request->get('status','');         // waiting|active|ended
+        $status  = $request->get('status','');         // waiting|waiting_ready|active|ended
         $planId  = $request->get('plan_id','');        // فیلتر پلن
         $from    = $request->get('from','');           // تاریخ از (میلادی یا تبدیل‌شده)
         $to      = $request->get('to','');             // تاریخ تا
@@ -29,6 +29,12 @@ class SubscriptionController extends Controller
                 });
             })
             ->when(in_array($status,['waiting','active','ended'], true), fn($qr)=>$qr->where('status',$status))
+            ->when($status === 'waiting_ready', function ($qr) {
+                $qr->where('status', 'waiting')
+                   ->whereNotNull('games_selected_at')
+                   ->whereNotNull('active_games')
+                   ->whereRaw('JSON_LENGTH(active_games) > 0');
+            })
             ->when($planId, fn($qr)=>$qr->where('plan_id',(int)$planId))
             ->when($from, fn($qr)=>$qr->whereDate('purchased_at','>=',$from))
             ->when($to,   fn($qr)=>$qr->whereDate('purchased_at','<=',$to))
@@ -49,11 +55,12 @@ class SubscriptionController extends Controller
         }
 
         $activatedAt = now();
-        $selectionDeadline  = $subscription->selection_deadline;
-        $selectionDelayDays = 0;
+        $selectionDeadline    = $subscription->selection_deadline;
+        $selectionCompletedAt = $subscription->games_selected_at ?? $activatedAt;
+        $selectionDelayDays   = 0;
 
-        if ($selectionDeadline && $activatedAt->greaterThan($selectionDeadline)) {
-            $selectionDelayDays = $selectionDeadline->diffInDays($activatedAt);
+        if ($selectionDeadline && $selectionCompletedAt->greaterThan($selectionDeadline)) {
+            $selectionDelayDays = $selectionDeadline->diffInDays($selectionCompletedAt);
         }
 
         $endsAt = (clone $activatedAt)->addMonths($subscription->duration_months);
