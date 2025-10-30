@@ -93,8 +93,21 @@ class SubscriptionController extends Controller
         $usableDays  = max(1, (int) $activatedAt->diffInDays($endsAt));
 
         if ($mobile) {
-            $message = "{$userName} عزیز 📣\nاشتراک 🌟 {$planName} 🌟\nبا موفقیت فعال شد ✅\nاز امروز به مدت ⏰ {$usableDays} روز در دسترس شماست.\nاز انتخاب شما سپاسگزاریم 🙏\n💥 منطقه هیجان 💥";
-            SmsHelper::sendMessage($mobile, $message);
+            $lines = [
+                "{$userName} عزیز 📣",
+                "اشتراک 🌟 {$planName} 🌟",
+                "با موفقیت فعال شد ✅",
+                "از امروز به مدت ⏰ {$usableDays} روز در دسترس شماست.",
+            ];
+
+            if ($selectionDelayDays > 0) {
+                $lines[] = "توجه: به دلیل تأخیر در انتخاب بازی‌ها {$selectionDelayDays} روز از مدت اشتراک شما کسر شد.";
+            }
+
+            $lines[] = "از انتخاب شما سپاسگزاریم 🙏";
+            $lines[] = "💥 منطقه هیجان 💥";
+
+            SmsHelper::sendMessage($mobile, implode("\n", $lines));
         }
 
         return back()->with('success','اشتراک فعال شد.');
