@@ -99,6 +99,7 @@
             <th>پلن</th>
             <th>تاریخ خرید</th>
             <th>زمان درخواستی</th>
+            <th>فرصت انتخاب بازی</th>
             <th>شروع</th>
             <th>پایان</th>
             <th>زمان باقی‌مانده</th>
@@ -121,6 +122,22 @@
             <td>{{ $s->plan->name ?? '—' }}</td>
             <td>{{ $s->purchased_at ? Jalalian::fromCarbon($s->purchased_at)->format('Y/m/d H:i') : '—' }}</td>
             <td>{{ $s->requested_at ? Jalalian::fromCarbon($s->requested_at)->format('Y/m/d H:i') : '—' }}</td>
+            <td>
+              @if($s->selection_deadline)
+                @if($s->status === 'waiting')
+                  <span class="timer selection-timer" data-selection="{{ $s->selection_deadline->toIso8601String() }}">...</span>
+                  @if($s->selection_delay_days > 0)
+                    <div class="small text-danger">{{ $s->selection_delay_days }} روز تأخیر</div>
+                  @endif
+                @elseif($s->selection_delay_days > 0)
+                  <span class="text-danger">مهلت تمام شده ({{ $s->selection_delay_days }} روز تأخیر)</span>
+                @else
+                  <span class="text-muted">-</span>
+                @endif
+              @else
+                <span class="text-muted">-</span>
+              @endif
+            </td>
             <td>{{ $s->activated_at ? Jalalian::fromCarbon($s->activated_at)->format('Y/m/d H:i') : '—' }}</td>
             <td>{{ $s->ends_at ? Jalalian::fromCarbon($s->ends_at)->format('Y/m/d H:i') : '—' }}</td>
 
@@ -184,7 +201,7 @@
             </td>
           </tr>
         @empty
-          <tr><td colspan="13" class="text-center text-muted py-4">موردی یافت نشد.</td></tr>
+          <tr><td colspan="14" class="text-center text-muted py-4">موردی یافت نشد.</td></tr>
         @endforelse
         </tbody>
       </table>
@@ -225,6 +242,26 @@
         <div class="col-6"><b>مدت:</b> {{ $s->duration_months }} ماهه</div>
         <div class="col-6"><b>خرید:</b> 
           {{ $s->purchased_at ? Jalalian::fromCarbon($s->purchased_at)->format('Y/m/d H:i') : '—' }}
+        </div>
+        <div class="col-6"><b>درخواستی:</b> 
+          {{ $s->requested_at ? Jalalian::fromCarbon($s->requested_at)->format('Y/m/d H:i') : '—' }}
+        </div>
+        <div class="col-6">
+          <b>فرصت انتخاب:</b>
+          @if($s->selection_deadline)
+            @if($s->status==='waiting')
+              <span class="timer selection-timer" data-selection="{{ $s->selection_deadline->toIso8601String() }}">...</span>
+              @if($s->selection_delay_days > 0)
+                <div class="small text-danger">{{ $s->selection_delay_days }} روز تأخیر</div>
+              @endif
+            @elseif($s->selection_delay_days > 0)
+              <span class="text-danger">مهلت تمام شد ({{ $s->selection_delay_days }} روز تأخیر)</span>
+            @else
+              <span class="text-muted">-</span>
+            @endif
+          @else
+            <span class="text-muted">-</span>
+          @endif
         </div>
         <div class="col-6"><b>شروع:</b> 
           {{ $s->activated_at ? Jalalian::fromCarbon($s->activated_at)->format('Y/m/d H:i') : '—' }}
@@ -309,6 +346,20 @@
     const now = new Date().getTime();
 
     // پایان اشتراک
+    document.querySelectorAll('.selection-timer').forEach(el=>{
+      const deadline = el.getAttribute('data-selection');
+      if (!deadline) { el.textContent = '\u2014'; el.classList.remove('text-danger'); return; }
+      const t = new Date(deadline).getTime() - now;
+      const secs = Math.floor(t/1000);
+      if (secs > 0) {
+        el.textContent = fmt(secs);
+        el.classList.remove('text-danger');
+      } else {
+        el.textContent = '\u0645\u0647\u0644\u062a \u062a\u0645\u0627\u0645 \u0634\u062f';
+        el.classList.add('text-danger');
+      }
+    });
+
     document.querySelectorAll('.countdown').forEach(el=>{
       const end = el.getAttribute('data-end');
       if (!end) { el.textContent = '—'; return; }

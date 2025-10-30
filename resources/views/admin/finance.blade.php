@@ -72,145 +72,214 @@
 
 <div class="card-glass">
 
-    {{-- جدول دسکتاپ --}}
-    <div class="desktop-table">
-        <div class="table-scroll">
-            <table class="table table-dark align-middle mb-0" style="min-width:980px;">
-                <thead>
-                <tr>
-                    <th>شماره تراکنش</th>
-                    <th>فعالیت</th>
-                    <th>نام پلن</th>
-                    <th>کاربر</th>
-                    <th>مبلغ</th>
-                    <th>تاریخ و ساعت</th>
-                    <th>درگاه</th>
-                    <th>وضعیت</th>
-                    <th>رسید</th>
-                </tr>
-                </thead>
-                <tbody>
-                @forelse($transactions as $tx)
-                    <tr>
-                        <td class="fw-semibold">{{ $tx->txn_number }}</td>
-                        <td>{{ $tx->activity }}</td>
-                        <td>{{ $tx->plan?->name ?? '—' }}</td>
-                        <td>
-                            {{ $tx->user?->name ?? '—' }}
-                            <div class="small text-muted">{{ $tx->user?->phone }}</div>
-                        </td>
-                        <td>{{ number_format($tx->amount) }}</td>
-                        <td>
-                            @if($tx->paid_at)
-                                {{ Jalalian::fromCarbon($tx->paid_at)->format('Y/m/d H:i') }}
-                            @else
-                                —
-                            @endif
-                        </td>
-                        <td>{{ $tx->gateway ?: '—' }}</td>
-                        <td>
-                            @php
-                                $badge = match($tx->status) {
-                                    'success'  => 'success',
-                                    'pending'  => 'warning text-dark',
-                                    'failed'   => 'danger',
-                                    'refunded' => 'secondary',
-                                    default    => 'secondary'
-                                };
-                                $label = [
-                                    'success'=>'موفق','pending'=>'در انتظار','failed'=>'ناموفق','refunded'=>'برگشت شده'
-                                ][$tx->status] ?? $tx->status;
-                            @endphp
-                            <span class="badge bg-{{ $badge }} badge-status">{{ $label }}</span>
-                        </td>
-                        <td>
-                            <button
-                                class="btn btn-sm btn-outline-info"
-                                data-bs-toggle="modal" data-bs-target="#receiptModal"
-                                data-txn="{{ $tx->txn_number }}"
-                                data-activity="{{ $tx->activity }}"
-                                data-plan="{{ $tx->plan?->name ?? '—' }}"
-                                data-user="{{ ($tx->user?->name ?? '—').' ('.($tx->user?->phone ?? '—').')' }}"
-                                data-amount="{{ number_format($tx->amount) }}"
-                                data-datetime="{{ $tx->paid_at ? Jalalian::fromCarbon($tx->paid_at)->format('Y/m/d H:i') : '—' }}"
-                                data-gateway="{{ $tx->gateway ?: '—' }}"
-                                data-status="{{ $label }}"
-                                data-ref="{{ $tx->ref_code ?: '—' }}"
-                                data-receipt='@json($tx->receipt)'>
-                                <i class="bi bi-receipt"></i>
-                            </button>
-                        </td>
-                    </tr>
-                @empty
-                    <tr><td colspan="9" class="text-center text-muted py-4">تراکنشی ثبت نشده است.</td></tr>
-                @endforelse
-                </tbody>
-            </table>
-        </div>
-        <div class="mt-3">
-            {{ $transactions->links('pagination::bootstrap-5') }}
-        </div>
+  {{-- جدول دسکتاپ --}}
+  <div class="desktop-table">
+    <div class="table-scroll">
+      <table class="table table-dark align-middle mb-0" style="min-width:1150px;">
+        <thead>
+          <tr>
+            <th>شماره تراکنش</th>
+            <th>فعالیت</th>
+            <th>پلن</th>
+            <th>مدت</th>
+            <th>کاربر</th>
+            <th>مبلغ</th>
+            <th>تخفیف</th>
+            <th>کد تخفیف</th>
+            <th>تاریخ پرداخت</th>
+            <th>درگاه</th>
+            <th>وضعیت</th>
+            <th>رسید</th>
+          </tr>
+        </thead>
+        <tbody>
+          @forelse($transactions as $tx)
+            <tr>
+              {{-- شماره تراکنش --}}
+              <td class="fw-semibold">{{ $tx->txn_number ?? '—' }}</td>
+
+              {{-- نوع فعالیت --}}
+              <td>
+                  @if($tx->activity === 'subscription')
+                      خرید اشتراک
+                  @elseif($tx->activity)
+                      {{ $tx->activity }}
+                  @else
+                      —
+                  @endif
+              </td>
+
+              {{-- پلن --}}
+              <td>{{ $tx->plan?->name ?? '—' }}</td>
+
+              {{-- مدت اشتراک --}}
+              <td>{{ $tx->months ? $tx->months . ' ماهه' : '—' }}</td>
+
+              {{-- کاربر --}}
+              <td>
+                {{ $tx->user?->name ?? '—' }}
+                <div class="small text-muted">{{ $tx->user?->phone }}</div>
+              </td>
+
+              {{-- مبلغ پرداختی --}}
+              <td>{{ number_format($tx->amount) }} تومان</td>
+
+              {{-- مبلغ تخفیف --}}
+              <td>
+                @if($tx->discount && $tx->discount > 0)
+                  <span class="text-success">-{{ number_format($tx->discount) }}</span>
+                @else
+                  <span class="text-muted">—</span>
+                @endif
+              </td>
+
+              {{-- کد تخفیف --}}
+              <td>{{ $tx->coupon_code ?? '—' }}</td>
+
+              {{-- تاریخ پرداخت --}}
+              <td>
+                @if($tx->paid_at)
+                  {{ Jalalian::fromCarbon($tx->paid_at)->format('Y/m/d H:i') }}
+                @else
+                  —
+                @endif
+              </td>
+
+              {{-- درگاه --}}
+              <td>{{ $tx->gateway ?: '—' }}</td>
+
+              {{-- وضعیت --}}
+              <td>
+                @php
+                  $badge = match($tx->status) {
+                      'success'  => 'success',
+                      'pending'  => 'warning text-dark',
+                      'failed'   => 'danger',
+                      'refunded' => 'secondary',
+                      default    => 'secondary'
+                  };
+                  $label = [
+                      'success'=>'موفق',
+                      'pending'=>'در انتظار',
+                      'failed'=>'ناموفق',
+                      'refunded'=>'برگشت شده'
+                  ][$tx->status] ?? $tx->status;
+                @endphp
+                <span class="badge bg-{{ $badge }} badge-status">{{ $label }}</span>
+              </td>
+
+              {{-- رسید --}}
+              <td>
+                <button
+                  class="btn btn-sm btn-outline-info"
+                  data-bs-toggle="modal" data-bs-target="#receiptModal"
+                  data-txn="{{ $tx->txn_number }}"
+                  data-activity="{{ $tx->activity }}"
+                  data-plan="{{ $tx->plan?->name ?? '—' }}"
+                  data-user="{{ ($tx->user?->name ?? '—').' ('.($tx->user?->phone ?? '—').')' }}"
+                  data-amount="{{ number_format($tx->amount) }}"
+                  data-discount="{{ $tx->discount ? number_format($tx->discount) : '0' }}"
+                  data-coupon="{{ $tx->coupon_code ?? '—' }}"
+                  data-months="{{ $tx->months ?? '—' }}"
+                  data-datetime="{{ $tx->paid_at ? Jalalian::fromCarbon($tx->paid_at)->format('Y/m/d H:i') : '—' }}"
+                  data-gateway="{{ $tx->gateway ?: '—' }}"
+                  data-status="{{ $label }}"
+                  data-ref="{{ $tx->ref_code ?: '—' }}"
+                  data-receipt='@json($tx->receipt)'>
+                  <i class="bi bi-receipt"></i>
+                </button>
+              </td>
+            </tr>
+          @empty
+            <tr><td colspan="12" class="text-center text-muted py-4">تراکنشی ثبت نشده است.</td></tr>
+          @endforelse
+        </tbody>
+      </table>
     </div>
 
-    {{-- کارت‌های موبایل --}}
-    <div class="mobile-cards">
-        @forelse($transactions as $tx)
-            <div class="card-glass mb-2">
-                <div class="d-flex justify-content-between">
-                    <div>
-                        <div class="fw-bold">{{ $tx->txn_number }}</div>
-                        <div class="small text-muted">{{ $tx->activity }}</div>
-                    </div>
-                    <div>
-                        @php
-                            $badge = match($tx->status) {
-                                'success'  => 'success',
-                                'pending'  => 'warning text-dark',
-                                'failed'   => 'danger',
-                                'refunded' => 'secondary',
-                                default    => 'secondary'
-                            };
-                            $label = [
-                                'success'=>'موفق','pending'=>'در انتظار','failed'=>'ناموفق','refunded'=>'برگشت شده'
-                            ][$tx->status] ?? $tx->status;
-                        @endphp
-                        <span class="badge bg-{{ $badge }}">{{ $label }}</span>
-                    </div>
-                </div>
-                <div class="mt-2 small">
-                    <div><b>پلن:</b> {{ $tx->plan?->name ?? '—' }}</div>
-                    <div><b>کاربر:</b> {{ $tx->user?->name ?? '—' }} ({{ $tx->user?->phone }})</div>
-                    <div><b>مبلغ:</b> {{ number_format($tx->amount) }}</div>
-                    <div><b>زمان:</b> {{ $tx->paid_at ? Jalalian::fromCarbon($tx->paid_at)->format('Y/m/d H:i') : '—' }}</div>
-                    <div><b>درگاه:</b> {{ $tx->gateway ?: '—' }}</div>
-                </div>
-                <div class="text-end mt-2">
-                    <button
-                        class="btn btn-sm btn-outline-info"
-                        data-bs-toggle="modal" data-bs-target="#receiptModal"
-                        data-txn="{{ $tx->txn_number }}"
-                        data-activity="{{ $tx->activity }}"
-                        data-plan="{{ $tx->plan?->name ?? '—' }}"
-                        data-user="{{ ($tx->user?->name ?? '—').' ('.($tx->user?->phone ?? '—').')' }}"
-                        data-amount="{{ number_format($tx->amount) }}"
-                        data-datetime="{{ $tx->paid_at ? Jalalian::fromCarbon($tx->paid_at)->format('Y/m/d H:i') : '—' }}"
-                        data-gateway="{{ $tx->gateway ?: '—' }}"
-                        data-status="{{ $label }}"
-                        data-ref="{{ $tx->ref_code ?: '—' }}"
-                        data-receipt='@json($tx->receipt)'>
-                        <i class="bi bi-receipt"></i> رسید
-                    </button>
-                </div>
+    <div class="mt-3">
+      {{ $transactions->links('pagination::bootstrap-5') }}
+    </div>
+  </div>
+
+  {{-- کارت‌های موبایل --}}
+  <div class="mobile-cards">
+    @forelse($transactions as $tx)
+      <div class="card-glass mb-2 p-3 rounded">
+        <div class="d-flex justify-content-between">
+          <div>
+            <div class="fw-bold">{{ $tx->txn_number }}</div>
+            <div class="small text-muted">
+                @if($tx->activity === 'subscription')
+                    خرید اشتراک
+                @elseif($tx->activity)
+                    {{ $tx->activity }}
+                @else
+                    —
+                @endif
             </div>
-        @empty
-            <div class="text-center text-muted py-4">تراکنشی یافت نشد.</div>
-        @endforelse
 
-        <div class="mt-3">
-            {{ $transactions->links('pagination::bootstrap-5') }}
+          </div>
+          @php
+            $badge = match($tx->status) {
+                'success'  => 'success',
+                'pending'  => 'warning text-dark',
+                'failed'   => 'danger',
+                'refunded' => 'secondary',
+                default    => 'secondary'
+            };
+            $label = [
+                'success'=>'موفق',
+                'pending'=>'در انتظار',
+                'failed'=>'ناموفق',
+                'refunded'=>'برگشت شده'
+            ][$tx->status] ?? $tx->status;
+          @endphp
+          <span class="badge bg-{{ $badge }}">{{ $label }}</span>
         </div>
+
+        <div class="mt-2 small">
+          <div><b>پلن:</b> {{ $tx->plan?->name ?? '—' }}</div>
+          <div><b>مدت:</b> {{ $tx->months ? $tx->months.' ماهه' : '—' }}</div>
+          <div><b>کاربر:</b> {{ $tx->user?->name ?? '—' }} ({{ $tx->user?->phone ?? '—' }})</div>
+          <div><b>مبلغ:</b> {{ number_format($tx->amount) }} تومان</div>
+          <div><b>تخفیف:</b> {{ $tx->discount ? '-'.number_format($tx->discount).' تومان' : '—' }}</div>
+          <div><b>کد تخفیف:</b> {{ $tx->coupon_code ?? '—' }}</div>
+          <div><b>درگاه:</b> {{ $tx->gateway ?: '—' }}</div>
+          <div><b>زمان:</b> {{ $tx->paid_at ? Jalalian::fromCarbon($tx->paid_at)->format('Y/m/d H:i') : '—' }}</div>
+        </div>
+
+        <div class="text-end mt-2">
+          <button
+            class="btn btn-sm btn-outline-info"
+            data-bs-toggle="modal" data-bs-target="#receiptModal"
+            data-txn="{{ $tx->txn_number }}"
+            data-activity="{{ $tx->activity }}"
+            data-plan="{{ $tx->plan?->name ?? '—' }}"
+            data-user="{{ ($tx->user?->name ?? '—').' ('.($tx->user?->phone ?? '—').')' }}"
+            data-amount="{{ number_format($tx->amount) }}"
+            data-discount="{{ $tx->discount ? number_format($tx->discount) : '0' }}"
+            data-coupon="{{ $tx->coupon_code ?? '—' }}"
+            data-months="{{ $tx->months ?? '—' }}"
+            data-datetime="{{ $tx->paid_at ? Jalalian::fromCarbon($tx->paid_at)->format('Y/m/d H:i') : '—' }}"
+            data-gateway="{{ $tx->gateway ?: '—' }}"
+            data-status="{{ $label }}"
+            data-ref="{{ $tx->ref_code ?: '—' }}"
+            data-receipt='@json($tx->receipt)'>
+            <i class="bi bi-receipt"></i> رسید
+          </button>
+        </div>
+      </div>
+    @empty
+      <div class="text-center text-muted py-4">تراکنشی یافت نشد.</div>
+    @endforelse
+
+    <div class="mt-3">
+      {{ $transactions->links('pagination::bootstrap-5') }}
     </div>
+  </div>
 </div>
+
 
 {{-- مودال رسید --}}
 <div class="modal fade" id="receiptModal" tabindex="-1" aria-labelledby="receiptModalLabel" aria-hidden="true">

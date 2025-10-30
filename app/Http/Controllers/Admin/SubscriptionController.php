@@ -48,7 +48,21 @@ class SubscriptionController extends Controller
         }
 
         $activatedAt = now();
+        $selectionDeadline  = $subscription->selection_deadline;
+        $selectionDelayDays = 0;
+
+        if ($selectionDeadline && $activatedAt->greaterThan($selectionDeadline)) {
+            $selectionDelayDays = $selectionDeadline->diffInDays($activatedAt);
+        }
+
         $endsAt = (clone $activatedAt)->addMonths($subscription->duration_months);
+        if ($selectionDelayDays > 0) {
+            $endsAt->subDays($selectionDelayDays);
+
+            if ($endsAt->lessThanOrEqualTo($activatedAt)) {
+                $endsAt = $activatedAt->copy();
+            }
+        }
 
         // محاسبه next_swap_at از swap_every_days
         $nextSwap = null;

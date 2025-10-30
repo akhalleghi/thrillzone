@@ -52,6 +52,7 @@ class PaymentController extends Controller
             'months'      => $months, // 👈 اینجا مقدار واقعی ذخیره میشه
             'coupon_code' => $couponModel?->code,
             'discount'    => $discountAmount,
+            
         ]);
 
         $callbackUrl = route('user.payment.callback', [], true);
@@ -152,13 +153,13 @@ class PaymentController extends Controller
             }
 
             return redirect()->route('user.dashboard')->with([
-                'success'  => 'پرداخت با موفقیت انجام شد ✅ اشتراک شما در وضعیت انتظار ثبت گردید.',
+                'success'  => 'پرداخت با موفقیت انجام شد ✅ اشتراک شما در وضعیت انتظار انتخاب بازی ثبت گردید. لطفا از قسمت اشتراک ها بازی مد نظر خود را انتخاب نمایید.',
                 'track_id' => $trackId,
             ]);
         }
 
         // پرداخت ناموفق
-        $txn->update(['status' => 'failed']);
+        $txn->update(['status' => 'failed' , 'paid_at' => now(),]);
         $message = match((int)($verify['result'] ?? 0)) {
             -1 => 'در انتظار پرداخت.',
             -2 => 'خطای بانکی رخ داده است.',
