@@ -1056,6 +1056,11 @@
             background: linear-gradient(to right, transparent 0%, rgba(0, 255, 200, 0.1) 50%, transparent 100%);
             background-size: 1000px 100%;
         }
+        footer, .footer-bottom, .footer-content {
+  position: relative;
+  z-index: 10;
+}
+
     </style>
 </head>
 <body>
@@ -1396,8 +1401,15 @@
             </div>
 
             <div class="footer-bottom">
-                <p>© ۱۴۰۴ منطقه هیجان. تمامی حقوق محفوظ است.</p>
-            </div>
+  <p>© ۱۴۰۴ منطقه هیجان. تمامی حقوق محفوظ است. | طراحی و توسعه با ♥️ توسط 
+    <a href="https://wa.me/989137640338" target="_blank" 
+       style="color:#00ffc8; text-decoration:none; font-weight:700; cursor:pointer;">
+       امین
+    </a>
+  </p>
+</div>
+
+
         </div>
     </footer>
 
