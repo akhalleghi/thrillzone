@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\User;
 
+use App\Helpers\SmsHelper;
 use App\Http\Controllers\Controller;
 use App\Models\Booking;
 use App\Models\Game;
@@ -237,10 +238,56 @@ class SubscriptionController extends Controller
             return back()->with('error', $e->getMessage())->withInput();
         }
 
+        if ($mode === 'initial') {
+            $this->sendSelectionSuccessSms($user, $subscription);
+        }
+
         $message = $mode === 'initial'
             ? 'بازی‌ها با موفقیت ثبت شدند و منتظر تأیید پشتیبانی است.'
             : 'درخواست تعویض بازی ثبت شد و پس از تأیید اعمال می‌گردد.';
 
         return back()->with('success', $message);
+    }
+
+    private function sendSelectionSuccessSms($user, Subscription $subscription): void
+    {
+        $mobile = $user->phone
+            ?? $user->mobile
+            ?? $user->cellphone
+            ?? $user->contact_number
+            ?? null;
+
+        if (!$mobile) {
+            return;
+        }
+
+        $fullName = trim(
+            $user->name
+            ?? $user->full_name
+            ?? trim(($user->first_name ?? '') . ' ' . ($user->last_name ?? ''))
+            ?? ''
+        );
+
+        if ($fullName === '') {
+            $fullName = 'دوست عزیز';
+        }
+
+        $message = "🎮 {$fullName} عزیز\n"
+            . "بازی‌های شما با موفقیت ثبت شد! ✅\n"
+            . "لطفاً در زمان ارتباط با کارشناسان انتخاب شده، حتماً کنار دستگاه خود حضورداشته باشید.\n"
+            . "⚡️ منطقه هیجان";
+
+        try {
+            SmsHelper::sendMessage($mobile, $message, [
+                'user_id'         => $user->id ?? null,
+                'transaction_id'  => null,
+                'subscription_id' => $subscription->id ?? null,
+                'purpose'         => 'subscription_selection_success',
+                'track_id'        => null,
+                'gateway'         => 'subscription_flow',
+            ]);
+        } catch (\Throwable $e) {
+            report($e);
+        }
     }
 }

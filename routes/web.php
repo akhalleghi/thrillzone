@@ -14,6 +14,7 @@ use App\Http\Controllers\Admin\BookingController;
 use App\Http\Controllers\User\DashboardController;
 use App\Http\Controllers\User\PaymentController;
 use App\Http\Controllers\User\SubscriptionController as UserSubscriptionController;
+use App\Http\Controllers\User\TransactionController as UserTransactionController;
 
 
 /*
@@ -70,7 +71,7 @@ Route::middleware(['auth'])->prefix('user')->name('user.')->group(function () {
     // صفحات دیگر هم می‌تونی اینجا اضافه کنی
     Route::get('/games', fn() => view('user.games'))->name('games');
     Route::get('/wallet', fn() => view('user.wallet'))->name('wallet');
-    Route::get('/transactions', fn() => view('user.transactions'))->name('transactions');
+    Route::get('/transactions', [UserTransactionController::class, 'index'])->name('transactions');
     Route::get('/profile', fn() => view('user.profile'))->name('profile');
     Route::get('/subscriptions', [UserSubscriptionController::class, 'index'])->name('subscriptions.index');
     Route::post('/subscriptions/{subscription}/selection', [UserSubscriptionController::class, 'saveSelection'])
@@ -195,6 +196,5 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::post('logout', [AdminAuthController::class, 'logout'])->name('logout');
     });
 });
-
 
 
