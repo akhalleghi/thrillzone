@@ -280,7 +280,7 @@
             </a>
 
             <a href="{{ route('admin.finance') }}" class="nav-link {{ request()->routeIs('admin.finance') ? 'active' : '' }}"><i class="bi bi-cash-stack"></i> مالی</a>
-            <a href="{{ route('admin.settings') }}" class="nav-link {{ request()->routeIs('admin.settings') ? 'active' : '' }}"><i class="bi bi-gear"></i> تنظیمات</a>
+            <!-- <a href="{{ route('admin.settings') }}" class="nav-link {{ request()->routeIs('admin.settings') ? 'active' : '' }}"><i class="bi bi-gear"></i> تنظیمات</a> -->
         </nav>
         <div class="mt-4 p-3 card-glass">
             <div class="d-flex align-items-center justify-content-between">
@@ -305,7 +305,7 @@
                     <button class="btn btn-link text-light dropdown-toggle" data-bs-toggle="dropdown"><i class="bi bi-person-circle fs-4"></i></button>
                     <ul class="dropdown-menu dropdown-menu-end">
                         <li><h6 class="dropdown-header">مدیر سیستم</h6></li>
-                        <li><a class="dropdown-item" href="{{ route('admin.settings') }}">تنظیمات</a></li>
+                        <!-- <li><a class="dropdown-item" href="{{ route('admin.settings') }}">تنظیمات</a></li> -->
                         <li><hr class="dropdown-divider"></li>
                         <li>
                             <a class="dropdown-item text-danger" href="#"
