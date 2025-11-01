@@ -1,662 +1,226 @@
-<![CDATA[<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>منطقه هیجان - پلتفرم بازی</title>
-
-    <!-- Vazir Font -->
-    <link href="https://cdn.jsdelivr.net/npm/vazir-font@30.1.0/dist/font-face.css" rel="stylesheet">
-
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- Bootstrap Icons -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-
-    
+    <title>منطقه هیجان - زون‌ها و اشتراک‌های قانونی پلی‌استیشن</title>
+    <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet">
     <style>
-        html, body {
-    overflow-x: hidden !important;
-}
-.indicators {
-    flex-direction: row-reverse;
-}
-
-
-
-
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Vazir', sans-serif;
         }
 
         body {
-            background: linear-gradient(135deg, #0a0e27 0%, #1a1a2e 50%, #16213e 100%);
+            font-family: 'Vazirmatn', -apple-system, sans-serif;
+            background: #000000;
             color: #fff;
-            overflow: hidden;
-            height: 100vh;
+            min-height: 100vh;
             position: relative;
+            overflow-x: hidden;
         }
 
-        /* Animated Background Particles */
-        .particles {
+        /* Animated Background */
+        .animated-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .animated-bg::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background:
+                radial-gradient(ellipse at 20% 20%, rgba(0, 255, 200, 0.12) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 80%, rgba(0, 200, 255, 0.12) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 50%, rgba(0, 255, 150, 0.08) 0%, transparent 60%);
+            animation: bgPulse 8s ease-in-out infinite;
+        }
+
+        @keyframes bgPulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        .floating-shapes {
             position: absolute;
             width: 100%;
             height: 100%;
             overflow: hidden;
-            top: 0;
-            left: 0;
-            z-index: 0;
         }
 
-        .particle {
+        .shape {
             position: absolute;
-            width: 3px;
-            height: 3px;
-            background: rgba(0, 255, 255, 0.5);
             border-radius: 50%;
-            animation: float 15s infinite ease-in-out;
+            filter: blur(80px);
+            opacity: 0.15;
+            animation: float 20s infinite ease-in-out;
+        }
+
+        .shape:nth-child(1) {
+            width: 400px;
+            height: 400px;
+            background: linear-gradient(135deg, #00ffc8, #00d4aa);
+            top: 10%;
+            left: 10%;
+            animation-delay: 0s;
+        }
+
+        .shape:nth-child(2) {
+            width: 300px;
+            height: 300px;
+            background: linear-gradient(135deg, #00d4ff, #0088ff);
+            top: 60%;
+            right: 15%;
+            animation-delay: 3s;
+        }
+
+        .shape:nth-child(3) {
+            width: 350px;
+            height: 350px;
+            background: linear-gradient(135deg, #00ff88, #00cc77);
+            bottom: 10%;
+            left: 50%;
+            animation-delay: 6s;
         }
 
         @keyframes float {
             0%, 100% {
                 transform: translate(0, 0) scale(1);
-                opacity: 0;
             }
-            10% {
-                opacity: 1;
+            33% {
+                transform: translate(50px, -50px) scale(1.1);
             }
-            90% {
-                opacity: 1;
-            }
-            100% {
-                transform: translate(var(--tx), var(--ty)) scale(0);
-                opacity: 0;
+            66% {
+                transform: translate(-50px, 50px) scale(0.9);
             }
         }
 
-        /* Glowing Background Orbs */
-        .glow-orb {
-            position: absolute;
-            border-radius: 50%;
-            filter: blur(100px);
-            opacity: 0.4;
-            animation: pulse 10s infinite ease-in-out;
-        }
-
-        .orb-1 {
-            width: 500px;
-            height: 500px;
-            background: radial-gradient(circle, #00ffff, transparent);
-            top: -150px;
-            right: -150px;
-            animation-delay: 0s;
-        }
-
-        .orb-2 {
-            width: 450px;
-            height: 450px;
-            background: radial-gradient(circle, #ff00ff, transparent);
-            bottom: -150px;
-            left: -150px;
-            animation-delay: 2s;
-        }
-
-        .orb-3 {
-            width: 400px;
-            height: 400px;
-            background: radial-gradient(circle, #00ffaa, transparent);
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            animation-delay: 4s;
-        }
-
-        @keyframes pulse {
-            0%, 100% {
-                transform: scale(1);
-                opacity: 0.3;
-            }
-            50% {
-                transform: scale(1.3);
-                opacity: 0.6;
-            }
-        }
-
-        /* Header Styles */
-        .header {
-            position: relative;
-            z-index: 1000;
-            background: linear-gradient(135deg, rgba(10, 14, 39, 0.95), rgba(26, 26, 46, 0.95));
+        /* Header */
+        header {
+            background: rgba(0, 0, 0, 0.85);
             backdrop-filter: blur(30px);
-            border-bottom: 2px solid transparent;
-            border-image: linear-gradient(90deg, #00ffff, #ff00ff, #00ffaa) 1;
-            padding: 1.2rem 0;
-            box-shadow: 0 10px 40px rgba(0, 255, 255, 0.2);
+            padding: 1.2rem 5%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(0, 255, 200, 0.15);
+            transition: all 0.3s ease;
         }
 
-        .logo-container {
+        header.scrolled {
+            padding: 0.8rem 5%;
+            box-shadow: 0 10px 40px rgba(0, 255, 200, 0.1);
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
             display: flex;
             align-items: center;
-            gap: 1rem;
+            gap: 15px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .logo:hover {
+            transform: scale(1.05);
         }
 
         .logo-icon {
             width: 50px;
             height: 50px;
-            background: linear-gradient(135deg, #00ffff, #ff00ff);
-            border-radius: 15px;
+            background: linear-gradient(135deg, #00ffc8 0%, #00d4aa 100%);
+            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.8rem;
-            animation: logoRotate 20s infinite linear;
-            box-shadow: 0 5px 25px rgba(0, 255, 255, 0.5);
-            position: relative;
+            font-size: 26px;
+            box-shadow: 0 0 30px rgba(0, 255, 200, 0.5);
+            animation: logoGlow 3s ease-in-out infinite;
         }
 
-        .logo-icon::before {
-            content: '';
-            position: absolute;
-            inset: -3px;
-            background: linear-gradient(135deg, #00ffff, #ff00ff);
-            border-radius: 18px;
-            z-index: -1;
-            opacity: 0;
-            animation: logoPulse 3s infinite;
+        @keyframes logoGlow {
+            0%, 100% { box-shadow: 0 0 30px rgba(0, 255, 200, 0.5); }
+            50% { box-shadow: 0 0 50px rgba(0, 255, 200, 0.8); }
         }
 
-        @keyframes logoRotate {
-            0%, 100% {
-                transform: rotateY(0deg);
-            }
-            50% {
-                transform: rotateY(360deg);
-            }
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #fff;
+            letter-spacing: -0.5px;
         }
 
-        @keyframes logoPulse {
-            0%, 100% {
-                opacity: 0;
-                transform: scale(1);
-            }
-            50% {
-                opacity: 0.5;
-                transform: scale(1.2);
-            }
-        }
-
-        .logo {
-            font-size: 2rem;
-            font-weight: bold;
-            background: linear-gradient(135deg, #00ffff, #ff00ff, #00ffaa);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            animation: shimmer 3s infinite;
-            filter: drop-shadow(0 0 20px rgba(0, 255, 255, 0.5));
-        }
-
-        @keyframes shimmer {
-            0%, 100% {
-                filter: hue-rotate(0deg) drop-shadow(0 0 20px rgba(0, 255, 255, 0.5));
-            }
-            50% {
-                filter: hue-rotate(30deg) drop-shadow(0 0 20px rgba(255, 0, 255, 0.5));
-            }
+        .nav-menu {
+            display: flex;
+            gap: 35px;
+            align-items: center;
         }
 
         .nav-link {
-            color: #00ffff !important;
-            font-weight: 600;
+            color: #b0b0b0;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
             position: relative;
-            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-            margin: 0 1.5rem;
-            padding: 0.5rem 1rem;
-            font-size: 1.1rem;
-        }
-
-        .nav-link::before {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 50%;
-            width: 0;
-            height: 3px;
-            background: linear-gradient(90deg, #00ffff, #ff00ff);
-            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-            transform: translateX(-50%);
-            border-radius: 3px;
-            box-shadow: 0 0 15px rgba(0, 255, 255, 0.8);
         }
 
         .nav-link::after {
             content: '';
             position: absolute;
-            inset: 0;
-            background: linear-gradient(135deg, rgba(0, 255, 255, 0.1), rgba(255, 0, 255, 0.1));
-            border-radius: 10px;
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
-
-        .nav-link:hover::after {
-            opacity: 1;
-        }
-
-        .nav-link:hover::before {
-            width: 100%;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #00ffc8, #00d4aa);
+            transition: width 0.3s ease;
         }
 
         .nav-link:hover {
-            color: #ff00ff !important;
-            transform: translateY(-3px);
+            color: #00ffc8;
         }
 
-        .btn-neon {
-            background: linear-gradient(135deg, #00ffff, #ff00ff);
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        .auth-btn {
+            background: linear-gradient(135deg, #00ffc8 0%, #00d4aa 100%);
+            color: #000;
+            padding: 11px 30px;
             border: none;
-            padding: 0.8rem 2.5rem;
-            border-radius: 50px;
-            color: #fff;
-            font-weight: bold;
-            font-size: 1.1rem;
-            position: relative;
-            overflow: hidden;
-            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-            box-shadow: 0 5px 25px rgba(0, 255, 255, 0.4);
-        }
-
-        .btn-neon::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
-            transition: left 0.7s;
-        }
-
-        .btn-neon:hover::before {
-            left: 100%;
-        }
-
-        .btn-neon::after {
-            content: '';
-            position: absolute;
-            inset: -3px;
-            background: linear-gradient(135deg, #00ffff, #ff00ff);
-            border-radius: 50px;
-            z-index: -1;
-            opacity: 0;
-            filter: blur(15px);
-            transition: opacity 0.3s;
-        }
-
-        .btn-neon:hover::after {
-            opacity: 0.8;
-        }
-
-        .btn-neon:hover {
-            transform: translateY(-5px) scale(1.05);
-            box-shadow: 0 15px 40px rgba(255, 0, 255, 0.6);
-        }
-
-        /* Mobile Menu */
-        .mobile-menu {
-            position: fixed;
-            top: 0;
-            right: -100%;
-            width: 85%;
-            max-width: 400px;
-            height: 100vh;
-            background: linear-gradient(135deg, rgba(10, 14, 39, 0.98), rgba(26, 26, 46, 0.98));
-            backdrop-filter: blur(30px);
-            border-left: 3px solid transparent;
-            border-image: linear-gradient(180deg, #00ffff, #ff00ff) 1;
-            z-index: 2000;
-            transition: right 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-            padding: 2rem;
-            box-shadow: -10px 0 50px rgba(0, 255, 255, 0.3);
-        }
-
-        .mobile-menu.active {
-            right: 0;
-        }
-
-        .mobile-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            backdrop-filter: blur(5px);
-            z-index: 1999;
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.4s;
-        }
-
-        .mobile-overlay.active {
-            opacity: 1;
-            visibility: visible;
-        }
-
-        /* Main Content */
-        .main-content {
-            position: relative;
-            z-index: 1;
-            height: calc(100vh - 90px - 45px); /* Adjusted for footer */
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            padding: 1rem 2rem; /* Reduced top/bottom padding */
-        }
-
-        .main-title {
-            font-size: 2rem;
-            font-weight: bold;
-            background: linear-gradient(135deg, #00ffff, #ff00ff, #00ffaa, #00ffff);
-            background-size: 200% auto;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            text-align: center;
-            margin-bottom: 1rem;
-            animation: titleFloat 4s infinite ease-in-out, gradientShift 5s infinite;
-            filter: drop-shadow(0 0 30px rgba(0, 255, 255, 0.6));
-        }
-
-        @keyframes titleFloat {
-            0%, 100% {
-                transform: translateY(0);
-            }
-            50% {
-                transform: translateY(-15px);
-            }
-        }
-
-        @keyframes gradientShift {
-            0%, 100% {
-                background-position: 0% 50%;
-            }
-            50% {
-                background-position: 100% 50%;
-            }
-        }
-
-        /* 3D Card Carousel */
-        .carousel-3d-container {
-            position: relative;
-            width: 100%;
-            max-width: 1600px;
-            height: 600px; /* Reduced height */
-            perspective: 2500px;
-            margin: 0 auto;
-        }
-
-        .carousel-3d {
-            position: relative;
-            width: 100%;
-            height: 100%;
-            transform-style: preserve-3d;
-            transition: transform 1s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-        }
-
-        .card-3d {
-            position: absolute;
-            width: 420px;
-            height: 600px;
-            left: 50%;
-            top: 50%;
-            margin-left: -210px;
-            margin-top: -300px;
-            background: linear-gradient(135deg, rgba(15, 25, 50, 0.95), rgba(30, 20, 60, 0.95));
-            border-radius: 30px;
-            border: 3px solid rgba(0, 255, 255, 0.3);
-            backdrop-filter: blur(30px);
-            padding: 2.5rem;
-            transform-style: preserve-3d;
-            transition: all 1s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            border-radius: 10px;
+            font-size: 0.95rem;
+            font-weight: 700;
             cursor: pointer;
-            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6);
-            overflow: hidden;
-        }
-
-        .card-3d:hover {
-            border-color: rgba(255, 0, 255, 0.7);
-            box-shadow: 0 40px 100px rgba(255, 0, 255, 0.5);
-        }
-
-        .card-3d::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, rgba(0, 255, 255, 0.15), rgba(255, 0, 255, 0.15));
-            border-radius: 30px;
-            opacity: 0;
-            transition: opacity 0.1s;
-        }
-
-        .card-3d:hover::before {
-            opacity: 1;
-        }
-
-        .card-3d::after {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-            transform: rotate(45deg);
-            animation: shine 8s infinite;
-        }
-
-        @keyframes shine {
-            0% {
-                top: -50%;
-                left: -50%;
-            }
-            100% {
-                top: 150%;
-                left: 150%;
-            }
-        }
-
-        .card-icon {
-            width: 70px;
-            height: 70px;
-            margin: 0 auto 1.5rem;
-            background: linear-gradient(135deg, #00ffff, #ff00ff);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 4rem;
-            box-shadow: 0 15px 40px rgba(0, 255, 255, 0.6);
-            animation: iconFloat 5s infinite ease-in-out;
-            position: relative;
-        }
-
-        .card-icon::before {
-            content: '';
-            position: absolute;
-            inset: -5px;
-            background: linear-gradient(135deg, #00ffff, #ff00ff);
-            border-radius: 50%;
-            z-index: -1;
-            opacity: 0.5;
-            filter: blur(20px);
-            animation: iconPulse 3s infinite;
-        }
-
-        @keyframes iconFloat {
-            0%, 100% {
-                transform: translateY(0) rotateY(0deg);
-            }
-            25% {
-                transform: translateY(-10px) rotateY(90deg);
-            }
-            50% {
-                transform: translateY(0) rotateY(180deg);
-            }
-            75% {
-                transform: translateY(-10px) rotateY(270deg);
-            }
-        }
-
-        @keyframes iconPulse {
-            0%, 100% {
-                opacity: 0.3;
-                transform: scale(1);
-            }
-            50% {
-                opacity: 0.8;
-                transform: scale(1.2);
-            }
-        }
-
-        .card-badge {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            background: linear-gradient(135deg, #ff00ff, #00ffff);
-            padding: 0.5rem 1rem;
-            border-radius: 20px;
-            font-weight: bold;
-            font-size: 0.9rem;
-            box-shadow: 0 5px 20px rgba(255, 0, 255, 0.5);
-            animation: badgeBounce 2s infinite;
-        }
-
-        @keyframes badgeBounce {
-            0%, 100% {
-                transform: scale(1);
-            }
-            50% {
-                transform: scale(1.1);
-            }
-        }
-
-        .card-title {
-            font-size: 1.5rem;
-            font-weight: bold;
-            text-align: center;
-            margin-bottom: 1rem;
-            background: linear-gradient(135deg, #00ffff, #ff00ff);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            filter: drop-shadow(0 0 15px rgba(0, 255, 255, 0.5));
-        }
-
-        .card-price {
-            text-align: center;
-            font-size: 1.3rem;
-            font-weight: bold;
-            color: #fff;
-            margin-bottom: 0.5rem;
-            filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.5));
-        }
-
-        .card-duration {
-            text-align: center;
-            color: #ff00ff;
-            font-size: 1rem;
-            margin-bottom: 1.5rem;
-            font-weight: 600;
-        }
-
-        .card-divider {
-            width: 100%;
-            height: 2px;
-            background: linear-gradient(90deg, transparent, #00ffff, #ff00ff, transparent);
-            margin: 1.5rem 0;
-            box-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
-        }
-
-        .card-features {
-            list-style: none;
-            padding: 0;
-            margin-bottom: 2rem;
-            direction: initial;
-        }
-
-        .card-features li {
-            padding: 0.09rem 0;
-            color: #00ffff;
-            display: flex;
-            align-items: center;
-            justify-content: flex-end;
-            font-size: 1.05rem;
-            transition: all 0.3s;
-            
-        }
-
-        .card-features li:hover {
-            color: #ff00ff;
-            transform: translateX(-5px);
-        }
-
-        .card-features li::before {
-            /* content: '✦'; */
-            margin-left: 0.8rem;
-            color: #ff00ff;
-            font-size: 1.2rem;
-            animation: sparkle 2s infinite;
-        }
-
-        @keyframes sparkle {
-            0%, 100% {
-                opacity: 1;
-                transform: scale(1) rotate(0deg);
-            }
-            50% {
-                opacity: 0.6;
-                transform: scale(1.3) rotate(180deg);
-            }
-        }
-
-        .card-description {
-            text-align: center;
-            color: rgba(255, 255, 255, 0.7);
-            font-size: 0.85rem;
-            margin-bottom: 1rem;
-            line-height: 1.6;
-        }
-
-        .btn-card {
-            width: 100%;
-            padding: 1.2rem;
-            background: linear-gradient(135deg, #00ffff, #ff00ff);
-            border: none;
-            border-radius: 20px;
-            color: #fff;
-            font-weight: bold;
-            font-size: 1.2rem;
-            cursor: pointer;
-            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-            position: relative;
-            overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0, 255, 255, 0.4);
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
+            transition: all 0.3s ease;
             text-decoration: none;
+            display: inline-block;
+            box-shadow: 0 5px 20px rgba(0, 255, 200, 0.3);
+            position: relative;
+            overflow: hidden;
         }
 
-        .btn-card::before {
+        .auth-btn::before {
             content: '';
             position: absolute;
             top: 50%;
@@ -666,607 +230,1302 @@
             border-radius: 50%;
             background: rgba(255, 255, 255, 0.3);
             transform: translate(-50%, -50%);
-            transition: width 0.8s, height 0.8s;
+            transition: width 0.6s, height 0.6s;
         }
 
-        .btn-card:hover::before {
-            width: 500px;
-            height: 500px;
+        .auth-btn:hover::before {
+            width: 300px;
+            height: 300px;
         }
 
-        .btn-card::after {
-            content: '←';
-            position: absolute;
-            left: 30px;
-            opacity: 0;
-            transition: all 0.3s;
+        .auth-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(0, 255, 200, 0.5);
         }
 
-        .btn-card:hover::after {
-            opacity: 1;
-            left: 20px;
-        }
-
-        .btn-card:hover {
-            transform: translateY(-5px) scale(1.02);
-            box-shadow: 0 20px 50px rgba(255, 0, 255, 0.6);
-        }
-
-        /* Navigation Buttons */
-        .nav-btn {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 70px;
-            height: 70px;
-            background: linear-gradient(135deg, #00ffff, #ff00ff);
-            border: none;
-            border-radius: 50%;
-            color: #fff;
-            font-size: 2rem;
+        .menu-toggle {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
             cursor: pointer;
-            z-index: 100;
-            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 10px 30px rgba(0, 255, 255, 0.5);
+            z-index: 1001;
         }
 
-        .nav-btn::before {
+        .menu-toggle span {
+            width: 25px;
+            height: 3px;
+            background: #00ffc8;
+            border-radius: 2px;
+            transition: all 0.3s ease;
+        }
+
+        /* Container */
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 130px 5% 60px;
+        }
+
+        /* Hero */
+        .hero {
+            text-align: center;
+            margin-bottom: 120px;
+            position: relative;
+            padding: 60px 0;
+        }
+
+        .hero-particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            pointer-events: none;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: #00ffc8;
+            border-radius: 50%;
+            animation: particleFloat 6s infinite ease-in-out;
+        }
+
+        @keyframes particleFloat {
+            0%, 100% {
+                transform: translateY(0) translateX(0);
+                opacity: 0;
+            }
+            50% {
+                opacity: 1;
+            }
+        }
+
+        .hero-badge {
+            display: inline-block;
+            background: rgba(0, 255, 200, 0.15);
+            border: 1px solid rgba(0, 255, 200, 0.4);
+            padding: 10px 24px;
+            border-radius: 25px;
+            font-size: 0.85rem;
+            color: #00ffc8;
+            margin-bottom: 30px;
+            font-weight: 600;
+            animation: fadeInDown 1s ease;
+            letter-spacing: 0.5px;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero h1 {
+            font-size: 4.5rem;
+            margin-bottom: 25px;
+            font-weight: 900;
+            line-height: 1.15;
+            background: linear-gradient(135deg, #ffffff 0%, #00ffc8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: fadeInUp 1s ease 0.2s both;
+            letter-spacing: -2px;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            color: #b0b0b0;
+            max-width: 700px;
+            margin: 0 auto 45px;
+            line-height: 1.8;
+            animation: fadeInUp 1s ease 0.4s both;
+        }
+
+        .hero-cta {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+            animation: fadeInUp 1s ease 0.6s both;
+        }
+
+        .cta-primary {
+            background: linear-gradient(135deg, #00ffc8 0%, #00d4aa 100%);
+            color: #000;
+            padding: 16px 40px;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 8px 30px rgba(0, 255, 200, 0.4);
+        }
+
+        .cta-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 40px rgba(0, 255, 200, 0.6);
+        }
+
+        .cta-secondary {
+            background: rgba(255, 255, 255, 0.05);
+            color: #fff;
+            padding: 16px 40px;
+            border: 2px solid rgba(0, 255, 200, 0.3);
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .cta-secondary:hover {
+            background: rgba(0, 255, 200, 0.1);
+            border-color: #00ffc8;
+            transform: translateY(-3px);
+        }
+
+        /* Section */
+        .section {
+            margin-bottom: 120px;
+            animation: fadeInUp 1s ease both;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 70px;
+        }
+
+        .section-title {
+            font-size: 3rem;
+            font-weight: 900;
+            margin-bottom: 20px;
+            color: #fff;
+            letter-spacing: -1px;
+        }
+
+        .section-subtitle {
+            font-size: 1.2rem;
+            color: #888;
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.7;
+        }
+
+        /* Plans Grid */
+        .plans-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 35px;
+            margin-bottom: 120px;
+        }
+
+        .plan-card {
+            background: rgba(15, 15, 15, 0.9);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 40px 35px;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .plan-card::before {
             content: '';
             position: absolute;
-            inset: -5px;
-            background: linear-gradient(135deg, #00ffff, #ff00ff);
-            border-radius: 50%;
-            z-index: -1;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, transparent, #00ffc8, transparent);
             opacity: 0;
-            filter: blur(20px);
-            transition: opacity 0.3s;
+            transition: opacity 0.5s ease;
         }
 
-        .nav-btn:hover::before {
-            opacity: 0.8;
-        }
-
-        .nav-btn:hover {
-            transform: translateY(-50%) scale(1.2) rotate(360deg);
-            box-shadow: 0 15px 50px rgba(255, 0, 255, 0.8);
-        }
-
-        .nav-btn.prev {
-            right: 10px;
-        }
-
-        .nav-btn.next {
-            left: 10px;
-        }
-
-        /* Indicators */
-        .indicators {
+        .plan-card::after {
+            content: '';
             position: absolute;
-            bottom: 10px; /* Moved inside the container */
+            top: 50%;
             left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            gap: 1rem;
-        }
-
-        .indicator {
-            width: 15px;
-            height: 15px;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(0, 255, 200, 0.15) 0%, transparent 70%);
+            transform: translate(-50%, -50%) scale(0);
+            transition: transform 0.6s ease;
             border-radius: 50%;
-            background: rgba(255, 255, 255, 0.3);
-            cursor: pointer;
-            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-            border: 2px solid transparent;
         }
 
-        .indicator:hover {
-            background: rgba(255, 255, 255, 0.6);
+        .plan-card:hover::after {
+            transform: translate(-50%, -50%) scale(1);
+        }
+
+        .plan-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            border-color: rgba(0, 255, 200, 0.4);
+            box-shadow: 0 25px 70px rgba(0, 255, 200, 0.2);
+        }
+
+        .plan-card:hover::before {
+            opacity: 1;
+        }
+
+        .plan-badge,
+        .plan-price,
+        .plan-period {
+            display: none !important; /* قیمت/بج/دوره مخفی تا ساختار حفظ شود */
+        }
+
+        .plan-badge {
+            display: inline-block;
+            background: rgba(0, 255, 200, 0.15);
+            color: #00ffc8;
+            padding: 6px 14px;
+            border-radius: 8px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            margin-bottom: 24px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .plan-name {
+            font-size: 1.9rem;
+            font-weight: 900;
+            margin-bottom: 12px;
+            color: #fff;
+            position: relative;
+            z-index: 1;
+        }
+
+        .plan-divider {
+            width: 100%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(0, 255, 200, 0.3), transparent);
+            margin: 25px 0;
+        }
+
+        .plan-features {
+            list-style: none;
+            margin: 30px 0;
+            position: relative;
+            z-index: 1;
+        }
+
+        .plan-features li {
+            padding: 12px 0;
+            padding-right: 30px;
+            color: #c0c0c0;
+            position: relative;
+            font-size: 0.95rem;
+            line-height: 1.7;
+            transition: all 0.3s ease;
+        }
+
+        .plan-features li:hover {
+            color: #fff;
+            padding-right: 35px;
+        }
+
+        .plan-features li::before {
+            content: '✓';
+            position: absolute;
+            right: 0;
+            color: #00ffc8;
+            font-weight: bold;
+            font-size: 1.1rem;
+            transition: transform 0.3s ease;
+        }
+
+        .plan-features li:hover::before {
             transform: scale(1.2);
         }
 
-        .indicator.active {
-            width: 50px;
-            border-radius: 15px;
-            background: linear-gradient(90deg, #00ffff, #ff00ff);
-            box-shadow: 0 0 25px rgba(0, 255, 255, 0.9);
-            border-color: rgba(255, 255, 255, 0.3);
+        .plan-btn {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.05);
+            color: #fff;
+            padding: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            font-size: 1.05rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            text-decoration: none;
+            display: block;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+            overflow: hidden;
         }
 
-        /* Responsive */
-        @media (max-width: 992px) {
-            .carousel-3d-container {
-                height: 620px;
-            }
+        .plan-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
 
-            .card-3d {
-                width: 380px;
-                height: 580px;
-                margin-left: -190px;
-                margin-top: -290px;
+        .plan-btn:hover::before {
+            left: 100%;
+        }
+
+        .plan-btn:hover {
+            background: linear-gradient(135deg, #00ffc8 0%, #00d4aa 100%);
+            color: #000;
+            border-color: transparent;
+            box-shadow: 0 10px 35px rgba(0, 255, 200, 0.4);
+            transform: translateY(-2px);
+        }
+
+        /* Features Grid */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 30px;
+        }
+
+        .feature-card {
+            text-align: center;
+            padding: 40px 30px;
+            background: rgba(15, 15, 15, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            transition: all 0.4s ease;
+            cursor: pointer;
+        }
+
+        .feature-card:hover {
+            border-color: rgba(0, 255, 200, 0.3);
+            transform: translateY(-8px);
+            box-shadow: 0 15px 50px rgba(0, 255, 200, 0.15);
+        }
+
+        .feature-icon {
+            width: 70px;
+            height: 70px;
+            margin: 0 auto 25px;
+            background: linear-gradient(135deg, rgba(0, 255, 200, 0.15) 0%, rgba(0, 212, 170, 0.15) 100%);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            transition: all 0.4s ease;
+        }
+
+        .feature-card:hover .feature-icon {
+            transform: scale(1.1) rotate(5deg);
+            box-shadow: 0 10px 30px rgba(0, 255, 200, 0.3);
+        }
+
+        .feature-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: #fff;
+        }
+
+        .feature-desc {
+            color: #888;
+            font-size: 0.95rem;
+            line-height: 1.7;
+        }
+
+        /* Video Section */
+        .video-section {
+            background: rgba(15, 15, 15, 0.6);
+            border: 1px solid rgba(0, 255, 200, 0.1);
+            border-radius: 30px;
+            padding: 60px 50px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .video-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(0, 255, 200, 0.05) 0%, transparent 70%);
+            animation: rotate 20s linear infinite;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .video-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .video-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 900px;
+            margin: 0 auto;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        .video-thumbnail {
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .video-thumbnail:hover {
+            transform: scale(1.02);
+        }
+
+        .play-button {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #00ffc8 0%, #00d4aa 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            color: #000;
+            box-shadow: 0 10px 40px rgba(0, 255, 200, 0.5);
+            transition: all 0.3s ease;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+                box-shadow: 0 10px 40px rgba(0, 255, 200, 0.5);
+            }
+            50% {
+                transform: scale(1.1);
+                box-shadow: 0 15px 60px rgba(0, 255, 200, 0.8);
             }
         }
 
-        @media (max-width: 768px) {
-            .main-title {
-                font-size: 2.2rem;
-            }
-
-            .carousel-3d-container {
-                height: 550px; /* Reduced height */
-                perspective: 1500px;
-            }
-
-            .card-3d {
-                
-                width: 320px; /* Reduced width */
-                height: 520px; /* Reduced height */
-                margin-left: -160px;
-                margin-top: -260px;
-                padding: 1.8rem;
-            }
-
-            .nav-btn {
-                width: 60px;
-                height: 60px;
-            }
-
-            .nav-btn.prev {
-                right: 5px;
-            }
-
-            .nav-btn.next {
-                left: 5px;
-            }
-
-            .card-icon {
-                width: 100px;
-                height: 100px;
-                font-size: 3rem;
-            }
-
-            .card-title {
-                font-size: 2rem;
-            }
-
-            .card-price {
-                font-size: 2.3rem;
-            }
+        .video-thumbnail:hover .play-button {
+            transform: scale(1.15);
         }
 
-        @media (max-width: 480px) {
-            .main-title {
-                font-size: 1.8rem;
-                margin-bottom: 0.5rem;
-            }
-
-            .carousel-3d-container {
-                height: 480px;
-            }
-
-            .card-3d {
-                width: 280px;
-                height: 460px;
-                margin-left: -150px; /* Adjusted margin for better separation */
-                margin-top: -230px;
-                padding: 1.3rem; /* Slightly increased padding */
-            }
-
-            .card-icon {
-                width: 50px;
-                height: 50px;
-                font-size: 1.6rem;
-                margin-bottom: 0.8rem; /* Increased margin */
-            }
-
-            .card-title {
-                font-size: 1.2rem;
-                margin-bottom: 0.5rem;
-            }
-
-            .card-price {
-                font-size: 1rem;
-                margin-bottom: 0.2rem;
-            }
-            
-            .card-duration {
-                font-size: 0.75rem;
-                margin-bottom: 0.5rem;
-            }
-
-            .card-divider {
-                margin: 0.8rem 0;
-            }
-
-            .card-description {
-                font-size: 0.75rem;
-                line-height: 1.4;
-                margin-bottom: 0.5rem;
-            }
-
-            .card-features {
-                margin-bottom: 0.8rem;
-            }
-
-            .card-features li {
-                font-size: 0.8rem;
-                padding: 0;
-            }
-
-            .btn-card {
-                padding: 0.6rem;
-                font-size: 0.85rem;
-                border-radius: 15px;
-            }
-
-            .nav-btn {
-                width: 45px;
-                height: 45px;
-                font-size: 1.3rem;
-            }
+        /* FAQ Section */
+        .faq-container {
+            max-width: 900px;
+            margin: 0 auto;
         }
 
-        /* Mobile Side Cards Visibility */
-        @media (max-width: 768px) {
-            .carousel-3d {
-                overflow: visible;
-            }
+        .faq-item {
+            background: rgba(15, 15, 15, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            margin-bottom: 20px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .faq-item:hover {
+            border-color: rgba(0, 255, 200, 0.3);
+        }
+
+        .faq-question {
+            padding: 25px 30px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            font-size: 1.05rem;
+            color: #fff;
+            transition: all 0.3s ease;
+            user-select: none;
+        }
+
+        .faq-question:hover {
+            color: #00ffc8;
+        }
+
+        .faq-icon {
+            font-size: 1.5rem;
+            color: #00ffc8;
+            transition: transform 0.3s ease;
+        }
+
+        .faq-item.active .faq-icon {
+            transform: rotate(45deg);
+        }
+
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease, padding 0.4s ease;
+            padding: 0 30px;
+            color: #b0b0b0;
+            line-height: 1.8;
+        }
+
+        .faq-item.active .faq-answer {
+            max-height: 500px;
+            padding: 0 30px 25px;
+        }
+
+        /* About Section */
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+        }
+
+        .about-content h3 {
+            font-size: 2.5rem;
+            font-weight: 900;
+            margin-bottom: 25px;
+            color: #fff;
+            line-height: 1.3;
+        }
+
+        .about-content p {
+            font-size: 1.05rem;
+            color: #b0b0b0;
+            line-height: 1.9;
+            margin-bottom: 20px;
+        }
+
+        .about-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .stat-card {
+            text-align: center;
+            padding: 25px;
+            background: rgba(0, 255, 200, 0.05);
+            border: 1px solid rgba(0, 255, 200, 0.2);
+            border-radius: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 255, 200, 0.2);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: #00ffc8;
+            margin-bottom: 8px;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: #888;
+            font-weight: 500;
+        }
+
+        .about-image {
+            position: relative;
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        .about-image-placeholder {
+            width: 100%;
+            aspect-ratio: 4 / 3;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
         }
 
         /* Footer */
-        .footer {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            padding: 0.8rem 0;
+        footer {
+            background: rgba(0, 0, 0, 0.8);
+            padding: 60px 5% 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            margin-top: 120px;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* حذف لینک‌ها/آیکن‌ها در فوتر طبق درخواست */
+        .footer-grid { display: grid; grid-template-columns: 1fr; gap: 30px; margin-bottom: 30px; }
+        .footer-brand h3 { font-size: 1.5rem; font-weight: 800; margin-bottom: 15px; color: #fff; }
+        .footer-brand p { color: #888; line-height: 1.7; margin-bottom: 12px; }
+        .footer-support { font-size: 1.1rem; color: #00ffc8; font-weight: 700; }
+        .footer-bottom {
             text-align: center;
-            font-size: 0.85rem;
-            color: rgba(255, 255, 255, 0.4);
-            z-index: 100;
-            background: linear-gradient(135deg, rgba(10, 14, 39, 0.5), rgba(26, 26, 46, 0.5));
-            backdrop-filter: blur(10px);
-            border-top: 1px solid rgba(0, 255, 255, 0.1);
+            padding-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            color: #666;
+            font-size: 0.9rem;
         }
 
-        .footer a {
-            color: #00ffff;
-            text-decoration: none;
-            font-weight: 600;
-            transition: all 0.3s;
+        /* Scroll to Top */
+        .scroll-top {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #00ffc8 0%, #00d4aa 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #000;
+            font-size: 1.5rem;
+            cursor: pointer;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 20px rgba(0, 255, 200, 0.4);
+            z-index: 999;
         }
 
-        .footer a:hover {
-            color: #ff00ff;
-            text-shadow: 0 0 10px rgba(255, 0, 255, 0.7);
+        .scroll-top.visible {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .scroll-top:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(0, 255, 200, 0.6);
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .plans-grid {
+                grid-template-columns: 1fr;
+                max-width: 500px;
+                margin: 0 auto 120px;
+            }
+
+            .features-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .about-grid {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+
+            .footer-grid {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-menu {
+                position: fixed;
+                top: 0;
+                right: -100%;
+                width: 80%;
+                height: 100vh;
+                background: rgba(0, 0, 0, 0.98);
+                backdrop-filter: blur(20px);
+                flex-direction: column;
+                justify-content: center;
+                gap: 30px;
+                transition: right 0.3s ease;
+                border-left: 1px solid rgba(0, 255, 200, 0.2);
+            }
+
+            .nav-menu.active {
+                right: 0;
+            }
+
+            .menu-toggle {
+                display: flex;
+            }
+
+            .menu-toggle.active span:nth-child(1) {
+                transform: rotate(45deg) translate(7px, 7px);
+            }
+
+            .menu-toggle.active span:nth-child(2) {
+                opacity: 0;
+            }
+
+            .menu-toggle.active span:nth-child(3) {
+                transform: rotate(-45deg) translate(7px, -7px);
+            }
+
+            .hero h1 {
+                font-size: 2.5rem;
+                letter-spacing: -1px;
+            }
+
+            .hero p {
+                font-size: 1.1rem;
+            }
+
+            .hero-cta {
+                flex-direction: column;
+            }
+
+            .cta-primary, .cta-secondary {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .about-stats {
+                grid-template-columns: 1fr;
+            }
+
+            .video-section {
+                padding: 40px 25px;
+            }
+        }
+
+        /* Loading Animation */
+        @keyframes shimmer {
+            0% {
+                background-position: -1000px 0;
+            }
+            100% {
+                background-position: 1000px 0;
+            }
+        }
+
+        .shimmer {
+            animation: shimmer 2s infinite;
+            background: linear-gradient(to right, transparent 0%, rgba(0, 255, 200, 0.1) 50%, transparent 100%);
+            background-size: 1000px 100%;
         }
     </style>
 </head>
 <body>
-    <!-- Background Elements -->
-    <div class="particles" id="particles"></div>
-    <div class="glow-orb orb-1"></div>
-    <div class="glow-orb orb-2"></div>
-    <div class="glow-orb orb-3"></div>
-
-    <!-- Mobile Overlay -->
-    <div class="mobile-overlay" id="mobileOverlay"></div>
+    <!-- Animated Background -->
+    <div class="animated-bg">
+        <div class="floating-shapes">
+            <div class="shape"></div>
+            <div class="shape"></div>
+            <div class="shape"></div>
+        </div>
+    </div>
 
     <!-- Header -->
-    <header class="header">
-        <div class="container">
-            <div class="d-flex justify-content-between align-items-center">
-                <div class="logo-container">
-                    <div class="logo-icon">🎮</div>
-                    <div class="logo">منطقه هیجانی!</div>
-                </div>
-
-                <!-- Desktop Menu -->
-                <nav class="d-none d-md-flex align-items-center">
-                    <a href="/about" class="nav-link">درباره ما</a>
-                    <a href="/faq" class="nav-link">سوالات متداول</a>
-                    <a href="/tutorial" class="nav-link">آموزش</a>
-                    @auth
-                        <a href="{{ route('user.dashboard') }}" class="btn-neon" role="button">پنل کاربری</a>
+    <header id="header">
+        <div class="header-content">
+            <div class="logo">
+                <div class="logo-icon">🎮</div>
+                <div class="logo-text">منطقه هیجان</div>
+            </div>
+            <nav class="nav-menu" id="navMenu">
+                <a href="#plans" class="nav-link">پلن‌ها</a>
+                <a href="#features" class="nav-link">ویژگی‌ها</a>
+                <a href="#video" class="nav-link">آموزش</a>
+                <a href="#faq" class="nav-link">سوالات</a>
+                <a href="#about" class="nav-link">درباره ما</a>
+                @auth
+                        <a href="{{ route('user.dashboard') }}" class="auth-btn" role="button">پنل کاربری</a>
                     @else
-                        <a href="/login" class="btn-neon" role="button">ورود / ثبت نام</a>
+                        <a href="/login" class="auth-btn" role="button">ورود / ثبت نام</a>
                     @endauth
-                </nav>
-
-                <!-- Mobile Menu Button -->
-                <button class="btn btn-link d-md-none text-light p-0" id="menuToggle" style="font-size: 2rem;">
-                    <i class="bi bi-list"></i>
-                </button>
+            </nav>
+            <div class="menu-toggle" id="menuToggle">
+                <span></span>
+                <span></span>
+                <span></span>
             </div>
         </div>
     </header>
 
-    <!-- Mobile Menu -->
-    <div class="mobile-menu" id="mobileMenu">
-        <div class="d-flex justify-content-between align-items-center mb-5">
-            <div class="logo-container">
-                <div class="logo-icon" style="width: 45px; height: 45px; font-size: 1.5rem;">🎮</div>
-                <div class="logo" style="font-size: 1.7rem;">منطقه هیجان</div>
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="hero-particles" id="heroParticles"></div>
+            <div class="hero-badge">🎮 زون‌های قانونی منطقه هیجان</div>
+            <h1>دنیای بازی‌های<br>بی‌نهایت را به‌صورت قانونی تجربه کنید</h1>
+            <p>با زون‌های منطقه هیجان، دسترسی امن و قانونی به بازی‌های استور سونی، تعویض دوره‌ای بازی‌ها و نصب دیتای حضوری رایگان را تجربه کنید.</p>
+            <div class="hero-cta">
+                <a href="#plans" class="cta-primary">
+                    <span>مشاهده پلن‌ها</span>
+                    <span>⬅</span>
+                </a>
+                <a href="#video" class="cta-secondary">
+                    <span>▶</span>
+                    <span>آموزش فعال‌سازی</span>
+                </a>
             </div>
-            <button class="btn btn-link text-light p-0" id="menuClose" style="font-size: 2rem;">
-                <i class="bi bi-x"></i>
-            </button>
-        </div>
-        <nav class="d-flex flex-column gap-4">
-            <a href="/about" class="nav-link" style="margin: 0; font-size: 1.2rem;">درباره ما</a>
-            <a href="/faq" class="nav-link" style="margin: 0; font-size: 1.2rem;">سوالات متداول</a>
-            <a href="/tutorial" class="nav-link" style="margin: 0; font-size: 1.2rem;">آموزش</a>
-            @auth
-                <a href="{{ route('user.dashboard') }}" class="btn-neon mt-3" role="button">پنل کاربری</a>
-            @else
-                <a href="/login" class="btn-neon mt-3" role="button">ورود / ثبت نام</a>
-            @endauth
-        </nav>
-    </div>
+        </section>
 
-    <!-- Main Content -->
-    <div class="main-content">
-        <h1 class="main-title">پکیج‌های اشتراک بازی</h1>
-
-        <!-- 3D Carousel -->
-        <div class="carousel-3d-container">
-            <div class="carousel-3d" id="carousel">
-                <!-- Cards will be generated by JavaScript -->
+        <!-- Plans Section -->
+        <section class="section" id="plans">
+            <div class="section-header">
+                <h2 class="section-title">پلن‌های اشتراک (زون‌ها)</h2>
+                <p class="section-subtitle">سه سطح خدمات: لایت، پرو و مکس — همه با مدت‌زمان‌های ۳ ماهه، ۶ ماهه و ۱۲ ماهه</p>
             </div>
 
-            <!-- Navigation Buttons -->
-            <button class="nav-btn prev" id="prevBtn">
-                <i class="bi bi-chevron-right"></i>
-            </button>
-            <button class="nav-btn next" id="nextBtn">
-                <i class="bi bi-chevron-left"></i>
-            </button>
+            <div class="plans-grid">
+                <!-- Plan 1: Zone Light -->
+                <div class="plan-card">
+                    <span class="plan-badge">سه‌مدتی</span>
+                    <h3 class="plan-name">اشتراک «زون لایت»</h3>
+                    <div class="plan-price"></div>
+                    <p class="plan-period"></p>
 
-            <!-- Indicators -->
-            <div class="indicators" id="indicators"></div>
-        </div>
+                    <div class="plan-divider"></div>
+
+                    <ul class="plan-features">
+                        <li>پلتفرم: پلی‌استیشن ۵ و ۴</li>
+                        <li>تعداد بازی همزمان: ۲ عدد</li>
+                        <li>نوع بازی: قانونی ظرفیت ۳ (درصورت موجود بودن ظرفیت ۲)</li>
+                        <li>لیست بازی‌ها: کلیه بازی‌های استور سونی</li>
+                        <li>تعداد بازی انتخابی لیست سطح یک: ۱ عدد</li>
+                        <li>محدودیت تعویض رایگان بازی: ۱ ماه</li>
+                        <li>نصب دیتا: به صورت حضوری رایگان</li>
+                        <li>مدت‌زمان‌ها: ۳ ماهه، ۶ ماهه، ۱۲ ماهه</li>
+                    </ul>
+
+                    @auth
+                        <a href="{{ route('user.dashboard') }}" class="plan-btn" >پنل کاربری</a>
+                    @else
+                        <a href="/login" class="plan-btn" >ورود / ثبت نام</a>
+                    @endauth
+                </div>
+
+                <!-- Plan 2: Zone Pro -->
+                <div class="plan-card">
+                    <span class="plan-badge">سه‌مدتی</span>
+                    <h3 class="plan-name">اشتراک «زون پرو»</h3>
+                    <div class="plan-price"></div>
+                    <p class="plan-period"></p>
+
+                    <div class="plan-divider"></div>
+
+                    <ul class="plan-features">
+                        <li>پلتفرم: پلی‌استیشن ۵ و ۴</li>
+                        <li>تعداد بازی همزمان: ۳ عدد</li>
+                        <li>نوع بازی: قانونی ظرفیت ３ (درصورت موجود بودن ظرفیت ２)</li>
+                        <li>لیست بازی‌ها: کلیه بازی‌های استور سونی</li>
+                        <li>تعداد بازی انتخابی لیست سطح یک: ۱ عدد</li>
+                        <li>محدودیت تعویض رایگان بازی: ۱ ماه</li>
+                        <li>نصب دیتا: به صورت حضوری رایگان</li>
+                        <li>مدت‌زمان‌ها: ۳ ماهه، ۶ ماهه، ۱۲ ماهه</li>
+                    </ul>
+
+                    @auth
+                        <a href="{{ route('user.dashboard') }}" class="plan-btn" >پنل کاربری</a>
+                    @else
+                        <a href="/login" class="plan-btn" >ورود / ثبت نام</a>
+                    @endauth
+                </div>
+
+                <!-- Plan 3: Zone Max -->
+                <div class="plan-card">
+                    <span class="plan-badge">سه‌مدتی</span>
+                    <h3 class="plan-name">اشتراک «زون مکس»</h3>
+                    <div class="plan-price"></div>
+                    <p class="plan-period"></p>
+
+                    <div class="plan-divider"></div>
+
+                    <ul class="plan-features">
+                        <li>پلتفرم: پلی‌استیشن ۵ و ۴</li>
+                        <li>تعداد بازی همزمان: ۵ عدد</li>
+                        <li>نوع بازی: قانونی ظرفیت ۳ (درصورت موجود بودن ظرفیت ۲)</li>
+                        <li>لیست بازی‌ها: کلیه بازی‌های استور سونی</li>
+                        <li>تعداد بازی انتخابی لیست سطح یک: ۲ عدد</li>
+                        <li>محدودیت تعویض رایگان بازی: ۱۵ روز</li>
+                        <li>نصب دیتا: به صورت حضوری رایگان</li>
+                        <li>تخفیف خرید از سایت و فروشگاه حضوری: ۱۰٪</li>
+                        <li>بازی رایگان: ۱ از ۵ ماهانه</li>
+                        <li>مدت‌زمان‌ها: ۳ ماهه، ۶ ماهه، ۱۲ ماهه</li>
+                    </ul>
+
+                    @auth
+                        <a href="{{ route('user.dashboard') }}" class="plan-btn" >پنل کاربری</a>
+                    @else
+                        <a href="/login" class="plan-btn" >ورود / ثبت نام</a>
+                    @endauth
+                </div>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section class="section" id="features">
+            <div class="section-header">
+                <h2 class="section-title">چرا منطقه هیجان؟</h2>
+                <p class="section-subtitle">بهترین خدمات و پشتیبانی برای گیمرهای ایرانی</p>
+            </div>
+
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <h3 class="feature-title">تحویل هماهنگ</h3>
+                    <p class="feature-desc">فعالسازی سریع زون و شروع بازی‌ها</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">🔒</div>
+                    <h3 class="feature-title">امنیت کامل</h3>
+                    <p class="feature-desc">ظرفیت‌های قانونی و حفاظت از اطلاعات</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">💎</div>
+                    <h3 class="feature-title">کیفیت اورجینال</h3>
+                    <p class="feature-desc">دسترسی به بازی‌های استور رسمی سونی</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">🎯</div>
+                    <h3 class="feature-title">پشتیبانی ۲۴/۷</h3>
+                    <p class="feature-desc">تیم حرفه‌ای همیشه آماده پاسخگویی</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">💰</div>
+                    <h3 class="feature-title">قیمت بصرفه</h3>
+                    <p class="feature-desc">تضمین بهترین قیمت در سرتاسر ایران</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">🎁</div>
+                    <h3 class="feature-title">مزایای ویژه</h3>
+                    <p class="feature-desc">تخفیف ویژه زون مکس و بازیٔ رایگان دوره‌ای</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">🚀</div>
+                    <h3 class="feature-title">تعویض رایگان</h3>
+                    <p class="feature-desc">طبق پلن انتخابی هر ۱۵ روز یا هر ۱ ماه</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">✨</div>
+                    <h3 class="feature-title">نصب دیتا حضوری</h3>
+                    <p class="feature-desc">برای همه‌ی زون‌ها رایگان</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Video Section -->
+        <section class="section video-section" id="video">
+            <div class="video-content">
+                <div class="section-header">
+                    <h2 class="section-title">آموزش خرید و فعال‌سازی زون</h2>
+                    <p class="section-subtitle">در این ویدیو، مراحل انتخاب و فعال‌سازی زون را به صورت گام به گام ببینید</p>
+                </div>
+
+                <div class="video-wrapper">
+                    <!-- Aparat Embed -->
+                    <style>.h_iframe-aparat_embed_frame{position:relative;}.h_iframe-aparat_embed_frame .ratio{display:block;width:100%;height:auto;}.h_iframe-aparat_embed_frame iframe{position:absolute;top:0;left:0;width:100%;height:100%;}</style>
+                    <div class="h_iframe-aparat_embed_frame"><span style="display: block;padding-top: 57%"></span><iframe src="https://www.aparat.com/video/video/embed/videohash/dyRC8/vt/frame" allowFullScreen="true" webkitallowfullscreen="true" mozallowfullscreen="true"></iframe></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- FAQ Section -->
+        <section class="section" id="faq">
+            <div class="section-header">
+                <h2 class="section-title">سوالات متداول</h2>
+                <p class="section-subtitle">پاسخ سوالات رایج درباره زون‌های منطقه هیجان</p>
+            </div>
+
+            <div class="faq-container">
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>چگونه زون انتخابی را فعال می‌کنید؟</span>
+                        <span class="faq-icon">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        پس از انتخاب پلن، هماهنگی برای فعال‌سازی روی کنسول پلی‌استیشن شما انجام می‌شود و بازی‌ها طبق ظرفیت قانونی فعال می‌گردند. نصب دیتا حضوری و رایگان است.
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>آیا این زون‌ها با حساب ایران سازگارند؟</span>
+                        <span class="faq-icon">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        بله، زون‌ها با حساب‌های پلی‌استیشن شما سازگار هستند و بر مبنای قوانین ظرفیت قانونی راه‌اندازی می‌شوند.
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>امکان تعویض رایگان بازی‌ها چگونه است؟</span>
+                        <span class="faq-icon">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        در زون لایت و پرو هر «۱ ماه» یک بار و در زون مکس هر «۱۵ روز» یک بار می‌توانید یک بازی سطح یک را رایگان تعویض کنید.
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>در صورت مشکل چه کار کنم؟</span>
+                        <span class="faq-icon">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        تیم پشتیبانی ما به‌صورت «۲۴/۷» آماده پاسخگویی است. از طریق شماره پشتیبانی درج‌شده در پایین سایت با ما در ارتباط باشید.
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>مدت‌زمان‌های اشتراک چگونه‌اند؟</span>
+                        <span class="faq-icon">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        تمام زون‌ها با سه مدت‌زمان «۳ ماهه»، «۶ ماهه» و «۱۲ ماهه» ارائه می‌شوند.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section class="section" id="about">
+            <div class="section-header">
+                <h2 class="section-title">درباره منطقه هیجان</h2>
+                <p class="section-subtitle">بزرگترین مرجع تخصصی زون‌های قانونی پلی‌استیشن در ایران</p>
+            </div>
+
+            <div class="about-grid">
+                <div class="about-content">
+                    <h3>ما چه کسانی هستیم؟</h3>
+                    <p>
+                        منطقه هیجان از سال «۱۳۹۸» با هدف ارائه خدمات مطمئن و با کیفیت به گیمرهای ایرانی شروع به کار کرد. ما با تمرکز بر رضایت مشتری و ارائه محصولات اورجینال، توانسته‌ایم اعتماد بیش از «۷۶۳» کاربر را جلب کنیم.
+                    </p>
+                    <p>
+                        تیم ما متشکل از گیمرهای حرفه‌ای و متخصصان فنی است که همیشه آماده ارائه بهترین خدمات و پشتیبانی به شما عزیزان هستند. هدف ما ساده است: بهترین تجربه خرید و بهترین قیمت برای شما.
+                    </p>
+
+                    <div class="about-stats">
+                        <div class="stat-card">
+                            <div class="stat-number">۷۶۳</div>
+                            <div class="stat-label">کاربر فعال</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number">۲۴/۷</div>
+                            <div class="stat-label">پشتیبانی</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number">۱۰۰٪</div>
+                            <div class="stat-label">رضایت مشتری</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="about-image">
+                    <div class="about-image-placeholder">
+                        🎮
+                    </div>
+                </div>
+            </div>
+        </section>
     </div>
 
     <!-- Footer -->
-    <footer class="footer">
-        <span>© تمامی حقوق برای </span>
-        <a href="https://thrillstore.ir" target="_blank">فروشگاه هیجان</a>
-        <span> محفوظ است. طراحی و توسعه توسط </span>
-        <a href="https://wa.me/989137640338" target="_blank">امین</a>
+    <footer>
+        <div class="footer-content">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <h3>🎮 منطقه هیجان</h3>
+                    <p>مرجع خرید و فعال‌سازی زون‌ها و اشتراک‌های قانونی پلی‌استیشن در ایران. با ارائه خدمات باکیفیت و پشتیبانی «۲۴/۷»، بهترین تجربه را برای شما فراهم می‌کنیم.</p>
+                    <div class="footer-support">پشتیبانی: ۰۹۰۵۱۴۰۱۰۲۹</div>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>© ۱۴۰۴ منطقه هیجان. تمامی حقوق محفوظ است.</p>
+            </div>
+        </div>
     </footer>
 
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Scroll to Top -->
+    <div class="scroll-top" id="scrollTop">↑</div>
 
     <script>
-        // Card Data
-        const cards = [
-            {
-                title: 'پکیج برنزی',
-                price: '۱۵۰,۰۰۰',
-                duration: '۱ ماهه',
-                icon: '🥉',
-                badge: 'مناسب مبتدیان',
-                description: 'شروع حرفه‌ای شما در دنیای بازی با امکانات پایه و کیفیت عالی',
-                features: ['دسترسی به ۵۰+ بازی محبوب', 'پشتیبانی ۲۴/۷', 'کیفیت تصویر HD', 'بروزرسانی هفتگی', 'بدون محدودیت زمانی']
-            },
-            {
-                title: 'پکیج نقره‌ای',
-                price: '۲۵۰,۰۰۰',
-                duration: '۲ ماهه',
-                icon: '🥈',
-                badge: 'محبوب‌ترین',
-                description: 'گزینه ایده‌آل برای گیمرهای حرفه‌ای با امکانات گسترده',
-                features: ['دسترسی به ۱۰۰+ بازی', 'پشتیبانی اختصاصی', 'کیفیت Full HD', 'دسترسی زودهنگام به بازی‌ها', 'بدون تبلیغات']
-            },
-            {
-                title: 'پکیج طلایی',
-                price: '۴۵۰,۰۰۰',
-                duration: '۴ ماهه',
-                icon: '🥇',
-                badge: 'پرفروش',
-                description: 'تجربه کامل گیمینگ با دسترسی نامحدود و کیفیت بی‌نظیر',
-                features: ['دسترسی نامحدود به همه بازی‌ها', 'پشتیبانی VIP', 'کیفیت 4K Ultra HD', 'محتوای اختصاصی', 'ذخیره ابری نامحدود']
-            },
-            {
-                title: 'پکیج پلاتینیوم',
-                price: '۸۰۰,۰۰۰',
-                duration: '۶ ماهه',
-                icon: '💎',
-                badge: 'ویژه',
-                description: 'بالاترین سطح خدمات با امکانات پریمیوم و انحصاری',
-                features: ['همه امکانات طلایی', 'پشتیبانی اختصاصی ۲۴/۷', 'دسترسی بتا به بازی‌های جدید', 'تخفیف‌های ویژه', 'جوایز ماهانه']
-            },
-            {
-                title: 'پکیج الماس',
-                price: '۱,۲۰۰,۰۰۰',
-                duration: '۱ سال',
-                icon: '👑',
-                badge: 'VIP',
-                description: 'نهایت تجربه گیمینگ با مربی شخصی و امکانات استثنایی',
-                features: ['دسترسی کامل به تمام محتوا', 'مربی اختصاصی', 'تورنمنت‌های اختصاصی', 'پشتیبانی لحظه‌ای', 'هدایای ماهانه ارزشمند']
+        // Header Scroll Effect
+        const header = document.getElementById('header');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
             }
-        ];
-
-        let currentIndex = 0;
-        const carousel = document.getElementById('carousel');
-        const indicators = document.getElementById('indicators');
-        const totalCards = cards.length;
-
-        // Create Cards
-        function createCards() {
-            cards.forEach((card, index) => {
-                const cardEl = document.createElement('div');
-                cardEl.className = 'card-3d';
-                cardEl.innerHTML = `
-                    <div class="card-badge">${card.badge}</div>
-                    <div class="card-icon">${card.icon}</div>
-                    <h3 class="card-title">${card.title}</h3>
-                    <div class="card-price">${card.price} <small style="font-size: 1rem; color: #00ffff;">تومان</small></div>
-                    <div class="card-duration">${card.duration}</div>
-                    <div class="card-divider"></div>
-                    <p class="card-description">${card.description}</p>
-                    <ul class="card-features">
-                        ${card.features.map(f => `<li>${f}</li>`).join('')}
-                    </ul>
-                    @auth
-                        <a href="{{ route('user.dashboard') }}" class="btn-card">خرید در داشبورد</a>
-                    @else
-                        <a href="{{ route('login') }}" class="btn-card">ورود و خرید اشتراک</a>
-                    @endauth
-                `;
-                carousel.appendChild(cardEl);
-            });
-        }
-
-        // Create Indicators
-        function createIndicators() {
-            cards.forEach((_, index) => {
-                const indicator = document.createElement('div');
-                indicator.className = 'indicator' + (index === 0 ? ' active' : '');
-                indicator.addEventListener('click', () => goToSlide(index));
-                indicators.appendChild(indicator);
-            });
-        }
-
-        // Update Carousel
-        function updateCarousel() {
-            const cardElements = document.querySelectorAll('.card-3d');
-            const indicatorElements = document.querySelectorAll('.indicator');
-            const isMobile = window.innerWidth <= 768;
-
-            cardElements.forEach((card, index) => {
-                const offset = index - currentIndex;
-                const absOffset = Math.abs(offset);
-
-                let translateZ = -absOffset * 450;
-                let translateX = offset * 450;
-                let rotateY = offset * 40;
-                let opacity = absOffset === 0 ? 1 : (isMobile ? 0.4 : 0.3);
-                let scale = absOffset === 0 ? 1 : (isMobile ? 0.65 : 0.7);
-                let zIndex = totalCards - absOffset;
-
-                if (isMobile) {
-                    translateX = offset * 300;
-                    translateZ = -absOffset * 300;
-                    rotateY = offset * 25;
-                }
-
-                card.style.transform = `
-                    translateX(${translateX}px)
-                    translateZ(${translateZ}px)
-                    rotateY(${rotateY}deg)
-                    scale(${scale})
-                `;
-                card.style.opacity = opacity;
-                card.style.zIndex = zIndex;
-                card.style.pointerEvents = absOffset === 0 ? 'auto' : 'none';
-            });
-
-            indicatorElements.forEach((indicator, index) => {
-                indicator.classList.toggle('active', index === currentIndex);
-            });
-        }
-
-        // Navigation
-        function goToSlide(index) {
-            currentIndex = (index + totalCards) % totalCards;
-            updateCarousel();
-        }
-
-        function nextSlide() {
-            goToSlide(currentIndex + 1);
-        }
-
-        function prevSlide() {
-            goToSlide(currentIndex - 1);
-        }
-
-        // Event Listeners
-        document.getElementById('prevBtn').addEventListener('click', nextSlide);
-        document.getElementById('nextBtn').addEventListener('click', prevSlide);
-
-        // Auto Slide
-        let autoSlide = setInterval(nextSlide, 5000);
-
-        carousel.addEventListener('mouseenter', () => {
-            clearInterval(autoSlide);
         });
 
-        carousel.addEventListener('mouseleave', () => {
-            autoSlide = setInterval(nextSlide, 5000);
-        });
-
-        // Touch Support
-        let touchStartX = 0;
-        let touchEndX = 0;
-
-        carousel.addEventListener('touchstart', e => {
-            touchStartX = e.changedTouches[0].screenX;
-            clearInterval(autoSlide);
-        });
-
-        carousel.addEventListener('touchend', e => {
-            touchEndX = e.changedTouches[0].screenX;
-            handleSwipe();
-            autoSlide = setInterval(nextSlide, 5000);
-        });
-
-        function handleSwipe() {
-            if (touchStartX - touchEndX > 50) {
-                nextSlide();
-            }
-            if (touchEndX - touchStartX > 50) {
-                prevSlide();
-            }
-        }
-
-        // Mobile Menu
+        // Mobile Menu Toggle
         const menuToggle = document.getElementById('menuToggle');
-        const menuClose = document.getElementById('menuClose');
-        const mobileMenu = document.getElementById('mobileMenu');
-        const mobileOverlay = document.getElementById('mobileOverlay');
+        const navMenu = document.getElementById('navMenu');
 
         menuToggle.addEventListener('click', () => {
-            mobileMenu.classList.add('active');
-            mobileOverlay.classList.add('active');
+            menuToggle.classList.toggle('active');
+            navMenu.classList.toggle('active');
         });
 
-        menuClose.addEventListener('click', () => {
-            mobileMenu.classList.remove('active');
-            mobileOverlay.classList.remove('active');
+        // Close menu when clicking on a link
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', () => {
+                menuToggle.classList.remove('active');
+                navMenu.classList.remove('active');
+            });
         });
 
-        mobileOverlay.addEventListener('click', () => {
-            mobileMenu.classList.remove('active');
-            mobileOverlay.classList.remove('active');
+        // Smooth Scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    const headerHeight = header.offsetHeight;
+                    const targetPosition = target.offsetTop - headerHeight - 20;
+                    window.scrollTo({
+                        top: targetPosition,
+                        behavior: 'smooth'
+                    });
+                }
+            });
         });
 
-        // Particles
-        function createParticles() {
-            const particlesContainer = document.getElementById('particles');
-            for (let i = 0; i < 80; i++) {
-                const particle = document.createElement('div');
-                particle.className = 'particle';
-                particle.style.left = Math.random() * 100 + '%';
-                particle.style.top = Math.random() * 100 + '%';
-                particle.style.setProperty('--tx', (Math.random() - 0.5) * 300 + 'px');
-                particle.style.setProperty('--ty', (Math.random() - 0.5) * 300 + 'px');
-                particle.style.animationDelay = Math.random() * 15 + 's';
-                particlesContainer.appendChild(particle);
+        // FAQ Toggle
+        document.querySelectorAll('.faq-question').forEach(question => {
+            question.addEventListener('click', () => {
+                const faqItem = question.parentElement;
+                const isActive = faqItem.classList.contains('active');
+
+                // Close all FAQ items
+                document.querySelectorAll('.faq-item').forEach(item => {
+                    item.classList.remove('active');
+                });
+
+                // Toggle current item
+                if (!isActive) {
+                    faqItem.classList.add('active');
+                }
+            });
+        });
+
+        // Scroll to Top Button
+        const scrollTop = document.getElementById('scrollTop');
+
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 500) {
+                scrollTop.classList.add('visible');
+            } else {
+                scrollTop.classList.remove('visible');
             }
+        });
+
+        scrollTop.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+
+        // Generate Hero Particles
+        const heroParticles = document.getElementById('heroParticles');
+        for (let i = 0; i < 20; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.top = Math.random() * 100 + '%';
+            particle.style.animationDelay = Math.random() * 6 + 's';
+            particle.style.animationDuration = (Math.random() * 4 + 4) + 's';
+            heroParticles.appendChild(particle);
         }
 
-        // Window Resize Handler
-        window.addEventListener('resize', updateCarousel);
+        // Intersection Observer for Animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -100px 0px'
+        };
 
-        // Initialize
-        createCards();
-        createIndicators();
-        updateCarousel();
-        createParticles();
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        // Observe all sections and cards
+        document.querySelectorAll('.section, .plan-card, .feature-card, .faq-item').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(30px)';
+            el.style.transition = 'all 0.8s ease';
+            observer.observe(el);
+        });
+
+        // Add hover effect to plan cards
+        document.querySelectorAll('.plan-card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transition = 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)';
+            });
+        });
     </script>
 </body>
-</html>]]>
+</html>
