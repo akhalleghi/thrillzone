@@ -419,7 +419,14 @@ class PaymentController extends Controller
 منطقه هیجان";
         } else return;
 
-        SmsHelper::sendMessage($mobile, $msg);
+        SmsHelper::sendMessage($mobile, $msg, [
+            'user_id'        => $user->id ?? null,
+            'transaction_id' => $txn->id ?? null,
+            'subscription_id'=> $subscription->id ?? null,
+            'purpose'        => $status === 'success' ? 'payment_success' : 'payment_failed',
+            'track_id'       => $trackId,
+            'gateway'        => 'zibal',
+        ]);
     } catch (\Throwable $e) {
         Log::warning("SMS send error: " . $e->getMessage());
     }

@@ -13,6 +13,7 @@ use App\Http\Controllers\Admin\SwapRequestController;
 use App\Http\Controllers\Admin\BookingController;
 use App\Http\Controllers\User\DashboardController;
 use App\Http\Controllers\User\PaymentController;
+use App\Http\Controllers\User\SubscriptionController as UserSubscriptionController;
 
 
 /*
@@ -71,6 +72,9 @@ Route::middleware(['auth'])->prefix('user')->name('user.')->group(function () {
     Route::get('/wallet', fn() => view('user.wallet'))->name('wallet');
     Route::get('/transactions', fn() => view('user.transactions'))->name('transactions');
     Route::get('/profile', fn() => view('user.profile'))->name('profile');
+    Route::get('/subscriptions', [UserSubscriptionController::class, 'index'])->name('subscriptions.index');
+    Route::post('/subscriptions/{subscription}/selection', [UserSubscriptionController::class, 'saveSelection'])
+        ->name('subscriptions.selection');
 
     Route::post('/logout', function () {
         Auth::logout();
@@ -191,7 +195,6 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::post('logout', [AdminAuthController::class, 'logout'])->name('logout');
     });
 });
-
 
 
 

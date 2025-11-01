@@ -85,10 +85,21 @@
             .mobile-menu-btn { display: flex !important; }
         }
         .mobile-menu-btn {
-            display: none; background: linear-gradient(135deg, #00ffff, #ff00ff); border: none;
-            width: 50px; height: 50px; border-radius: 12px; color: #fff;
-            font-size: 1.5rem; position: fixed; bottom: 1rem; right: 1rem;
-            z-index: 1000; box-shadow: 0 5px 20px rgba(0, 255, 255, 0.4);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #00ffff, #ff00ff);
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            color: #fff;
+            font-size: 1.5rem;
+            position: fixed;
+            bottom: 1rem;
+            right: 1rem;
+            z-index: 1000;
+            box-shadow: 0 5px 20px rgba(0, 255, 255, 0.4);
         }
     </style>
 
@@ -105,6 +116,7 @@
 
         <ul class="sidebar-menu">
             <li><a href="{{ route('user.dashboard') }}" class="sidebar-link {{ request()->routeIs('user.dashboard') ? 'active' : '' }}"><i class="bi bi-speedometer2"></i> داشبورد</a></li>
+            <li><a href="{{ route('user.subscriptions.index') }}" class="sidebar-link {{ request()->routeIs('user.subscriptions.*') ? 'active' : '' }}"><i class="bi bi-grid-3x3-gap"></i> اشتراک‌های من</a></li>
             <li><a href="{{ route('user.games') }}" class="sidebar-link {{ request()->routeIs('user.games') ? 'active' : '' }}"><i class="bi bi-controller"></i> بازی‌ها</a></li>
             <li><a href="{{ route('user.wallet') }}" class="sidebar-link {{ request()->routeIs('user.wallet') ? 'active' : '' }}"><i class="bi bi-wallet2"></i> کیف پول</a></li>
             <li><a href="{{ route('user.transactions') }}" class="sidebar-link {{ request()->routeIs('user.transactions') ? 'active' : '' }}"><i class="bi bi-clock-history"></i> تراکنش‌ها</a></li>
@@ -139,6 +151,7 @@
     sidebarToggle.addEventListener('click', () => sidebar.classList.toggle('active'));
 </script>
 
+@stack('modals')
 @yield('scripts')
 </body>
 </html>

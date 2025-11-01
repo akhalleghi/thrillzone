@@ -107,7 +107,19 @@ class SubscriptionController extends Controller
             $lines[] = "از انتخاب شما سپاسگزاریم 🙏";
             $lines[] = "💥 منطقه هیجان 💥";
 
-            SmsHelper::sendMessage($mobile, implode("\n", $lines));
+            SmsHelper::sendMessage(
+                $mobile,
+                implode("\n", $lines),
+                [
+                    'user_id'        => $user->id ?? null,
+                    'transaction_id' => $txn->id ?? null,
+                    'subscription_id'=> $subscription->id ?? null,
+                    'purpose'        => 'custom_message', // یا هر نوعی مثل 'manual_send'، 'reminder'، 'otp' و غیره
+                    'track_id'       => $trackId ?? null,
+                    'gateway'        => 'zibal',
+                ]
+            );
+
         }
 
         return back()->with('success','اشتراک فعال شد.');
