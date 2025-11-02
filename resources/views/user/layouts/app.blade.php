@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('favicon-32x32.png') }}">
+    <link rel="shortcut icon" type="image/png" href="{{ asset('favicon-32x32.png') }}">
     <title>@yield('title', 'منطقه هیجان')</title>
 
     <!-- فونت وزیر -->
@@ -117,11 +119,7 @@
         <ul class="sidebar-menu">
             <li><a href="{{ route('user.dashboard') }}" class="sidebar-link {{ request()->routeIs('user.dashboard') ? 'active' : '' }}"><i class="bi bi-speedometer2"></i> داشبورد</a></li>
             <li><a href="{{ route('user.subscriptions.index') }}" class="sidebar-link {{ request()->routeIs('user.subscriptions.*') ? 'active' : '' }}"><i class="bi bi-grid-3x3-gap"></i> اشتراک‌های من</a></li>
-            <!-- <li><a href="{{ route('user.games') }}" class="sidebar-link {{ request()->routeIs('user.games') ? 'active' : '' }}"><i class="bi bi-controller"></i> بازی‌ها</a></li> -->
-            <!-- <li><a href="{{ route('user.wallet') }}" class="sidebar-link {{ request()->routeIs('user.wallet') ? 'active' : '' }}"><i class="bi bi-wallet2"></i> کیف پول</a></li> -->
             <li><a href="{{ route('user.transactions') }}" class="sidebar-link {{ request()->routeIs('user.transactions') ? 'active' : '' }}"><i class="bi bi-clock-history"></i> تراکنش‌ها</a></li>
-            <!-- <li><a href="{{ route('user.profile') }}" class="sidebar-link {{ request()->routeIs('user.profile') ? 'active' : '' }}"><i class="bi bi-person"></i> پروفایل</a></li> -->
-            <!-- <li><a href="#" class="sidebar-link"><i class="bi bi-gear"></i> تنظیمات</a></li> -->
             <li class="mt-3">
                 <form action="{{ route('user.logout') }}" method="POST">
                     @csrf
