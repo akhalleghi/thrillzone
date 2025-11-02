@@ -11,6 +11,7 @@ use App\Http\Controllers\Admin\TransactionController;
 use App\Http\Controllers\Admin\SubscriptionController;
 use App\Http\Controllers\Admin\SwapRequestController;
 use App\Http\Controllers\Admin\BookingController;
+use App\Http\Controllers\Admin\SmsLogController;
 use App\Http\Controllers\User\DashboardController;
 use App\Http\Controllers\User\PaymentController;
 use App\Http\Controllers\User\SubscriptionController as UserSubscriptionController;
@@ -69,10 +70,10 @@ Route::middleware(['auth'])->prefix('user')->name('user.')->group(function () {
 
 
     // صفحات دیگر هم می‌تونی اینجا اضافه کنی
-    Route::get('/games', fn() => view('user.games'))->name('games');
-    Route::get('/wallet', fn() => view('user.wallet'))->name('wallet');
+    // Route::get('/games', fn() => view('user.games'))->name('games');
+    // Route::get('/wallet', fn() => view('user.wallet'))->name('wallet');
     Route::get('/transactions', [UserTransactionController::class, 'index'])->name('transactions');
-    Route::get('/profile', fn() => view('user.profile'))->name('profile');
+    // Route::get('/profile', fn() => view('user.profile'))->name('profile');
     Route::get('/subscriptions', [UserSubscriptionController::class, 'index'])->name('subscriptions.index');
     Route::post('/subscriptions/{subscription}/selection', [UserSubscriptionController::class, 'saveSelection'])
         ->name('subscriptions.selection');
@@ -158,6 +159,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
         // 💰 امور مالی
         Route::get('/finance', [TransactionController::class, 'index'])->name('finance');
+        Route::get('/sms-logs', [SmsLogController::class, 'index'])->name('sms_logs.index');
 
 
         // 💳 اشتراک ها
@@ -196,5 +198,4 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::post('logout', [AdminAuthController::class, 'logout'])->name('logout');
     });
 });
-
 

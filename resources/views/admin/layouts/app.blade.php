@@ -280,6 +280,7 @@
             </a>
 
             <a href="{{ route('admin.finance') }}" class="nav-link {{ request()->routeIs('admin.finance') ? 'active' : '' }}"><i class="bi bi-cash-stack"></i> مالی</a>
+            <a href="{{ route('admin.sms_logs.index') }}" class="nav-link {{ request()->routeIs('admin.sms_logs.index') ? 'active' : '' }}"><i class="bi bi-chat-dots"></i> پیامک‌ها</a>
             <!-- <a href="{{ route('admin.settings') }}" class="nav-link {{ request()->routeIs('admin.settings') ? 'active' : '' }}"><i class="bi bi-gear"></i> تنظیمات</a> -->
         </nav>
         <div class="mt-4 p-3 card-glass">
