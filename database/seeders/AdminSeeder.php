@@ -15,7 +15,7 @@ class AdminSeeder extends Seeder
             [
                 'name'     => 'مدیر ارشد',
                 'email'    => 'admin@example.com',
-                'password' => Hash::make('Ss123456'), // حتماً بعداً عوضش کن
+                'password' => Hash::make(''), // حتماً بعداً عوضش کن
             ]
         );
     }
