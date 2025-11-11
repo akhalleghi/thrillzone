@@ -1,11 +1,11 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('favicon-32x32.png') }}">
     <link rel="shortcut icon" type="image/png" href="{{ asset('favicon-32x32.png') }}">
-    <title>منطقه هیجان - اشتراک‌ها و اشتراک‌های قانونی پلی‌استیشن</title>
+    <title>منطقه هیجان - زون‌ها و اشتراک‌های قانونی پلی‌استیشن</title>
     <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet">
     <style>
         * {
@@ -42,9 +42,9 @@
             right: 0;
             bottom: 0;
             background:
-                radial-gradient(ellipse at 20% 20%, rgba(255, 0, 77, 0.12) 0%, transparent 50%),
-                radial-gradient(ellipse at 80% 80%, rgba(200, 0, 50, 0.12) 0%, transparent 50%),
-                radial-gradient(ellipse at 50% 50%, rgba(255, 35, 0, 0.08) 0%, transparent 60%);
+                radial-gradient(ellipse at 20% 20%, rgba(0, 255, 200, 0.12) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 80%, rgba(0, 200, 255, 0.12) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 50%, rgba(0, 255, 150, 0.08) 0%, transparent 60%);
             animation: bgPulse 8s ease-in-out infinite;
         }
 
@@ -71,7 +71,7 @@
         .shape:nth-child(1) {
             width: 400px;
             height: 400px;
-            background: linear-gradient(135deg, #ff004d, #a10035);
+            background: linear-gradient(135deg, #00ffc8, #00d4aa);
             top: 10%;
             left: 10%;
             animation-delay: 0s;
@@ -80,7 +80,7 @@
         .shape:nth-child(2) {
             width: 300px;
             height: 300px;
-            background: linear-gradient(135deg, #ff1e56, #ff5500);
+            background: linear-gradient(135deg, #00d4ff, #0088ff);
             top: 60%;
             right: 15%;
             animation-delay: 3s;
@@ -89,7 +89,7 @@
         .shape:nth-child(3) {
             width: 350px;
             height: 350px;
-            background: linear-gradient(135deg, #ff2d55, #7a001f);
+            background: linear-gradient(135deg, #00ff88, #00cc77);
             bottom: 10%;
             left: 50%;
             animation-delay: 6s;
@@ -117,13 +117,13 @@
             left: 0;
             right: 0;
             z-index: 1000;
-            border-bottom: 1px solid rgba(255, 0, 77, 0.15);
+            border-bottom: 1px solid rgba(0, 255, 200, 0.15);
             transition: all 0.3s ease;
         }
 
         header.scrolled {
             padding: 0.8rem 5%;
-            box-shadow: 0 10px 40px rgba(255, 0, 77, 0.1);
+            box-shadow: 0 10px 40px rgba(0, 255, 200, 0.1);
         }
 
         .header-content {
@@ -147,29 +147,21 @@
         }
 
         .logo-icon {
-            width: 58px;
-            height: 58px;
-            background: linear-gradient(135deg, #ff004d 0%, #a10035 100%);
-            border-radius: 14px;
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #00ffc8 0%, #00d4aa 100%);
+            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 6px;
-            box-shadow: 0 0 30px rgba(255, 0, 77, 0.5);
+            font-size: 26px;
+            box-shadow: 0 0 30px rgba(0, 255, 200, 0.5);
             animation: logoGlow 3s ease-in-out infinite;
         }
 
-        .logo-icon img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-            border-radius: 10px;
-            background: #000;
-        }
-
         @keyframes logoGlow {
-            0%, 100% { box-shadow: 0 0 30px rgba(255, 0, 77, 0.5); }
-            50% { box-shadow: 0 0 50px rgba(255, 0, 77, 0.8); }
+            0%, 100% { box-shadow: 0 0 30px rgba(0, 255, 200, 0.5); }
+            50% { box-shadow: 0 0 50px rgba(0, 255, 200, 0.8); }
         }
 
         .logo-text {
@@ -201,12 +193,12 @@
             left: 0;
             width: 0;
             height: 2px;
-            background: linear-gradient(90deg, #ff004d, #a10035);
+            background: linear-gradient(90deg, #00ffc8, #00d4aa);
             transition: width 0.3s ease;
         }
 
         .nav-link:hover {
-            color: #ff004d;
+            color: #00ffc8;
         }
 
         .nav-link:hover::after {
@@ -214,7 +206,7 @@
         }
 
         .auth-btn {
-            background: linear-gradient(135deg, #ff004d 0%, #a10035 100%);
+            background: linear-gradient(135deg, #00ffc8 0%, #00d4aa 100%);
             color: #000;
             padding: 11px 30px;
             border: none;
@@ -225,7 +217,7 @@
             transition: all 0.3s ease;
             text-decoration: none;
             display: inline-block;
-            box-shadow: 0 5px 20px rgba(255, 0, 77, 0.3);
+            box-shadow: 0 5px 20px rgba(0, 255, 200, 0.3);
             position: relative;
             overflow: hidden;
         }
@@ -250,7 +242,7 @@
 
         .auth-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 30px rgba(255, 0, 77, 0.5);
+            box-shadow: 0 8px 30px rgba(0, 255, 200, 0.5);
         }
 
         .menu-toggle {
@@ -264,7 +256,7 @@
         .menu-toggle span {
             width: 25px;
             height: 3px;
-            background: #ff004d;
+            background: #00ffc8;
             border-radius: 2px;
             transition: all 0.3s ease;
         }
@@ -299,7 +291,7 @@
             position: absolute;
             width: 4px;
             height: 4px;
-            background: #ff004d;
+            background: #00ffc8;
             border-radius: 50%;
             animation: particleFloat 6s infinite ease-in-out;
         }
@@ -316,12 +308,12 @@
 
         .hero-badge {
             display: inline-block;
-            background: rgba(255, 0, 77, 0.15);
-            border: 1px solid rgba(255, 0, 77, 0.4);
+            background: rgba(0, 255, 200, 0.15);
+            border: 1px solid rgba(0, 255, 200, 0.4);
             padding: 10px 24px;
             border-radius: 25px;
             font-size: 0.85rem;
-            color: #ff004d;
+            color: #00ffc8;
             margin-bottom: 30px;
             font-weight: 600;
             animation: fadeInDown 1s ease;
@@ -344,7 +336,7 @@
             margin-bottom: 25px;
             font-weight: 900;
             line-height: 1.15;
-            background: linear-gradient(135deg, #ffffff 0%, #ff004d 100%);
+            background: linear-gradient(135deg, #ffffff 0%, #00ffc8 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -381,7 +373,7 @@
         }
 
         .cta-primary {
-            background: linear-gradient(135deg, #ff004d 0%, #a10035 100%);
+            background: linear-gradient(135deg, #00ffc8 0%, #00d4aa 100%);
             color: #000;
             padding: 16px 40px;
             border: none;
@@ -394,19 +386,19 @@
             display: inline-flex;
             align-items: center;
             gap: 10px;
-            box-shadow: 0 8px 30px rgba(255, 0, 77, 0.4);
+            box-shadow: 0 8px 30px rgba(0, 255, 200, 0.4);
         }
 
         .cta-primary:hover {
             transform: translateY(-3px);
-            box-shadow: 0 12px 40px rgba(255, 0, 77, 0.6);
+            box-shadow: 0 12px 40px rgba(0, 255, 200, 0.6);
         }
 
         .cta-secondary {
             background: rgba(255, 255, 255, 0.05);
             color: #fff;
             padding: 16px 40px;
-            border: 2px solid rgba(255, 0, 77, 0.3);
+            border: 2px solid rgba(0, 255, 200, 0.3);
             border-radius: 12px;
             font-size: 1.1rem;
             font-weight: 700;
@@ -419,8 +411,8 @@
         }
 
         .cta-secondary:hover {
-            background: rgba(255, 0, 77, 0.1);
-            border-color: #ff004d;
+            background: rgba(0, 255, 200, 0.1);
+            border-color: #00ffc8;
             transform: translateY(-3px);
         }
 
@@ -477,7 +469,7 @@
             left: 0;
             right: 0;
             height: 4px;
-            background: linear-gradient(90deg, transparent, #ff004d, transparent);
+            background: linear-gradient(90deg, transparent, #00ffc8, transparent);
             opacity: 0;
             transition: opacity 0.5s ease;
         }
@@ -489,7 +481,7 @@
             left: 50%;
             width: 300px;
             height: 300px;
-            background: radial-gradient(circle, rgba(255, 0, 77, 0.15) 0%, transparent 70%);
+            background: radial-gradient(circle, rgba(0, 255, 200, 0.15) 0%, transparent 70%);
             transform: translate(-50%, -50%) scale(0);
             transition: transform 0.6s ease;
             border-radius: 50%;
@@ -501,8 +493,8 @@
 
         .plan-card:hover {
             transform: translateY(-10px) scale(1.02);
-            border-color: rgba(255, 0, 77, 0.4);
-            box-shadow: 0 25px 70px rgba(255, 0, 77, 0.2);
+            border-color: rgba(0, 255, 200, 0.4);
+            box-shadow: 0 25px 70px rgba(0, 255, 200, 0.2);
         }
 
         .plan-card:hover::before {
@@ -517,8 +509,8 @@
 
         .plan-badge {
             display: inline-block;
-            background: rgba(255, 0, 77, 0.15);
-            color: #ff004d;
+            background: rgba(0, 255, 200, 0.15);
+            color: #00ffc8;
             padding: 6px 14px;
             border-radius: 8px;
             font-size: 0.75rem;
@@ -542,7 +534,7 @@
         .plan-divider {
             width: 100%;
             height: 1px;
-            background: linear-gradient(90deg, transparent, rgba(255, 0, 77, 0.3), transparent);
+            background: linear-gradient(90deg, transparent, rgba(0, 255, 200, 0.3), transparent);
             margin: 25px 0;
         }
 
@@ -568,21 +560,11 @@
             padding-right: 35px;
         }
 
-        .plan-features li.plan-feature-unavailable {
-            color: #666;
-            opacity: 0.6;
-        }
-
-        .plan-features li.plan-feature-unavailable::before {
-            content: '×';
-            color: #ff1e56;
-        }
-
         .plan-features li::before {
             content: '✓';
             position: absolute;
             right: 0;
-            color: #ff004d;
+            color: #00ffc8;
             font-weight: bold;
             font-size: 1.1rem;
             transition: transform 0.3s ease;
@@ -627,10 +609,10 @@
         }
 
         .plan-btn:hover {
-            background: linear-gradient(135deg, #ff004d 0%, #a10035 100%);
+            background: linear-gradient(135deg, #00ffc8 0%, #00d4aa 100%);
             color: #000;
             border-color: transparent;
-            box-shadow: 0 10px 35px rgba(255, 0, 77, 0.4);
+            box-shadow: 0 10px 35px rgba(0, 255, 200, 0.4);
             transform: translateY(-2px);
         }
 
@@ -652,16 +634,16 @@
         }
 
         .feature-card:hover {
-            border-color: rgba(255, 0, 77, 0.3);
+            border-color: rgba(0, 255, 200, 0.3);
             transform: translateY(-8px);
-            box-shadow: 0 15px 50px rgba(255, 0, 77, 0.15);
+            box-shadow: 0 15px 50px rgba(0, 255, 200, 0.15);
         }
 
         .feature-icon {
             width: 70px;
             height: 70px;
             margin: 0 auto 25px;
-            background: linear-gradient(135deg, rgba(255, 0, 77, 0.15) 0%, rgba(140, 0, 35, 0.15) 100%);
+            background: linear-gradient(135deg, rgba(0, 255, 200, 0.15) 0%, rgba(0, 212, 170, 0.15) 100%);
             border-radius: 16px;
             display: flex;
             align-items: center;
@@ -672,7 +654,7 @@
 
         .feature-card:hover .feature-icon {
             transform: scale(1.1) rotate(5deg);
-            box-shadow: 0 10px 30px rgba(255, 0, 77, 0.3);
+            box-shadow: 0 10px 30px rgba(0, 255, 200, 0.3);
         }
 
         .feature-title {
@@ -691,7 +673,7 @@
         /* Video Section */
         .video-section {
             background: rgba(15, 15, 15, 0.6);
-            border: 1px solid rgba(255, 0, 77, 0.1);
+            border: 1px solid rgba(0, 255, 200, 0.1);
             border-radius: 30px;
             padding: 60px 50px;
             position: relative;
@@ -705,7 +687,7 @@
             right: -50%;
             width: 200%;
             height: 200%;
-            background: radial-gradient(circle, rgba(255, 0, 77, 0.05) 0%, transparent 70%);
+            background: radial-gradient(circle, rgba(0, 255, 200, 0.05) 0%, transparent 70%);
             animation: rotate 20s linear infinite;
         }
 
@@ -748,14 +730,14 @@
         .play-button {
             width: 80px;
             height: 80px;
-            background: linear-gradient(135deg, #ff004d 0%, #a10035 100%);
+            background: linear-gradient(135deg, #00ffc8 0%, #00d4aa 100%);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 30px;
             color: #000;
-            box-shadow: 0 10px 40px rgba(255, 0, 77, 0.5);
+            box-shadow: 0 10px 40px rgba(0, 255, 200, 0.5);
             transition: all 0.3s ease;
             animation: pulse 2s ease-in-out infinite;
         }
@@ -763,11 +745,11 @@
         @keyframes pulse {
             0%, 100% {
                 transform: scale(1);
-                box-shadow: 0 10px 40px rgba(255, 0, 77, 0.5);
+                box-shadow: 0 10px 40px rgba(0, 255, 200, 0.5);
             }
             50% {
                 transform: scale(1.1);
-                box-shadow: 0 15px 60px rgba(255, 0, 77, 0.8);
+                box-shadow: 0 15px 60px rgba(0, 255, 200, 0.8);
             }
         }
 
@@ -791,7 +773,7 @@
         }
 
         .faq-item:hover {
-            border-color: rgba(255, 0, 77, 0.3);
+            border-color: rgba(0, 255, 200, 0.3);
         }
 
         .faq-question {
@@ -808,12 +790,12 @@
         }
 
         .faq-question:hover {
-            color: #ff004d;
+            color: #00ffc8;
         }
 
         .faq-icon {
             font-size: 1.5rem;
-            color: #ff004d;
+            color: #00ffc8;
             transition: transform 0.3s ease;
         }
 
@@ -868,21 +850,21 @@
         .stat-card {
             text-align: center;
             padding: 25px;
-            background: rgba(255, 0, 77, 0.05);
-            border: 1px solid rgba(255, 0, 77, 0.2);
+            background: rgba(0, 255, 200, 0.05);
+            border: 1px solid rgba(0, 255, 200, 0.2);
             border-radius: 16px;
             transition: all 0.3s ease;
         }
 
         .stat-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 10px 30px rgba(255, 0, 77, 0.2);
+            box-shadow: 0 10px 30px rgba(0, 255, 200, 0.2);
         }
 
         .stat-number {
             font-size: 2.5rem;
             font-weight: 900;
-            color: #ff004d;
+            color: #00ffc8;
             margin-bottom: 8px;
         }
 
@@ -909,13 +891,6 @@
             font-size: 4rem;
         }
 
-        .about-image-placeholder iframe {
-            width: 100%;
-            height: 100%;
-            border: 0;
-            border-radius: 20px;
-        }
-
         /* Footer */
         footer {
             background: rgba(0, 0, 0, 0.8);
@@ -930,36 +905,16 @@
         }
 
         /* حذف لینک‌ها/آیکن‌ها در فوتر طبق درخواست */
-        .footer-grid {
-            display: grid;
-            grid-template-columns: minmax(0, 1fr) auto;
-            align-items: center;
-            gap: 30px;
-            margin-bottom: 30px;
-        }
+        .footer-grid { display: grid; grid-template-columns: 1fr; gap: 30px; margin-bottom: 30px; }
         .footer-brand h3 { font-size: 1.5rem; font-weight: 800; margin-bottom: 15px; color: #fff; }
         .footer-brand p { color: #888; line-height: 1.7; margin-bottom: 12px; }
-        .footer-support { font-size: 1.1rem; color: #ff004d; font-weight: 700; }
-        .enamad-badge { display: flex; justify-content: flex-start; }
-        .enamad-badge a { display: inline-flex; padding: 10px; border-radius: 12px; background: rgba(255, 255, 255, 0.04); overflow: hidden; }
-        .enamad-badge img { width: 120px; height: auto; display: block; }
+        .footer-support { font-size: 1.1rem; color: #00ffc8; font-weight: 700; }
         .footer-bottom {
             text-align: center;
             padding-top: 30px;
             border-top: 1px solid rgba(255, 255, 255, 0.05);
             color: #666;
             font-size: 0.9rem;
-        }
-
-        @media (max-width: 768px) {
-            .footer-grid {
-                grid-template-columns: 1fr;
-                text-align: center;
-            }
-            .enamad-badge {
-                justify-content: center;
-                margin-top: 15px;
-            }
         }
 
         /* Scroll to Top */
@@ -969,7 +924,7 @@
             left: 30px;
             width: 50px;
             height: 50px;
-            background: linear-gradient(135deg, #ff004d 0%, #a10035 100%);
+            background: linear-gradient(135deg, #00ffc8 0%, #00d4aa 100%);
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -980,7 +935,7 @@
             opacity: 0;
             pointer-events: none;
             transition: all 0.3s ease;
-            box-shadow: 0 5px 20px rgba(255, 0, 77, 0.4);
+            box-shadow: 0 5px 20px rgba(0, 255, 200, 0.4);
             z-index: 999;
         }
 
@@ -991,7 +946,7 @@
 
         .scroll-top:hover {
             transform: translateY(-5px);
-            box-shadow: 0 8px 30px rgba(255, 0, 77, 0.6);
+            box-shadow: 0 8px 30px rgba(0, 255, 200, 0.6);
         }
 
         /* Responsive */
@@ -1030,7 +985,7 @@
                 justify-content: center;
                 gap: 30px;
                 transition: right 0.3s ease;
-                border-left: 1px solid rgba(255, 0, 77, 0.2);
+                border-left: 1px solid rgba(0, 255, 200, 0.2);
             }
 
             .nav-menu.active {
@@ -1100,7 +1055,7 @@
 
         .shimmer {
             animation: shimmer 2s infinite;
-            background: linear-gradient(to right, transparent 0%, rgba(255, 0, 77, 0.1) 50%, transparent 100%);
+            background: linear-gradient(to right, transparent 0%, rgba(0, 255, 200, 0.1) 50%, transparent 100%);
             background-size: 1000px 100%;
         }
         footer, .footer-bottom, .footer-content {
@@ -1124,9 +1079,7 @@
     <header id="header">
         <div class="header-content">
             <div class="logo">
-                <div class="logo-icon">
-                    <img src="{{ asset('images/thrill-logo.png') }}" alt="منطقه هیجان">
-                </div>
+                <div class="logo-icon">🎮</div>
                 <div class="logo-text">منطقه هیجان</div>
             </div>
             <nav class="nav-menu" id="navMenu">
@@ -1154,9 +1107,9 @@
         <!-- Hero Section -->
         <section class="hero">
             <div class="hero-particles" id="heroParticles"></div>
-            <div class="hero-badge">🎮 اشتراک‌های قانونی منطقه هیجان</div>
+            <div class="hero-badge">🎮 زون‌های قانونی منطقه هیجان</div>
             <h1>دنیای بازی‌های<br>بی‌نهایت را به‌صورت قانونی تجربه کنید</h1>
-            <p>با اشتراک های منطقه هیجان، دسترسی امن و قانونی به بازی‌های استور سونی، تعویض دوره‌ای بازی‌ها و نصب دیتای حضوری رایگان را تجربه کنید.</p>
+            <p>با زون‌های منطقه هیجان، دسترسی امن و قانونی به بازی‌های استور سونی، تعویض دوره‌ای بازی‌ها و نصب دیتای حضوری رایگان را تجربه کنید.</p>
             <div class="hero-cta">
                 <a href="#plans" class="cta-primary">
                     <span>مشاهده پلن‌ها</span>
@@ -1172,7 +1125,7 @@
         <!-- Plans Section -->
         <section class="section" id="plans">
             <div class="section-header">
-                <h2 class="section-title">اشتراک های منطقه ی هیجان</h2>
+                <h2 class="section-title">پلن‌های اشتراک (زون‌ها)</h2>
                 <p class="section-subtitle">سه سطح خدمات: لایت، پرو و مکس — همه با مدت‌زمان‌های ۳ ماهه، ۶ ماهه و ۱۲ ماهه</p>
             </div>
 
@@ -1180,7 +1133,7 @@
                 <!-- Plan 1: Zone Light -->
                 <div class="plan-card">
                     <span class="plan-badge">سه‌مدتی</span>
-                    <h3 class="plan-name">اشتراک «Zone Lite»</h3>
+                    <h3 class="plan-name">اشتراک «زون لایت»</h3>
                     <div class="plan-price"></div>
                     <p class="plan-period"></p>
 
@@ -1194,10 +1147,6 @@
                         <li>تعداد بازی انتخابی لیست سطح یک: ۱ عدد</li>
                         <li>محدودیت تعویض رایگان بازی: ۱ ماه</li>
                         <li>نصب دیتا: به صورت حضوری رایگان</li>
-
-                        <li class="plan-feature-unavailable">تخفیف خرید از سایت و فروشگاه حضوری: ۱۰٪</li>
-
-                        <li class="plan-feature-unavailable">بازی رایگان: ۱ از ۵ ماهانه</li>
                         <li>مدت‌زمان‌ها: ۳ ماهه، ۶ ماهه، ۱۲ ماهه</li>
                     </ul>
 
@@ -1211,7 +1160,7 @@
                 <!-- Plan 2: Zone Pro -->
                 <div class="plan-card">
                     <span class="plan-badge">سه‌مدتی</span>
-                    <h3 class="plan-name">اشتراک «Zone Pro»</h3>
+                    <h3 class="plan-name">اشتراک «زون پرو»</h3>
                     <div class="plan-price"></div>
                     <p class="plan-period"></p>
 
@@ -1225,10 +1174,6 @@
                         <li>تعداد بازی انتخابی لیست سطح یک: ۱ عدد</li>
                         <li>محدودیت تعویض رایگان بازی: ۱ ماه</li>
                         <li>نصب دیتا: به صورت حضوری رایگان</li>
-
-                        <li class="plan-feature-unavailable">تخفیف خرید از سایت و فروشگاه حضوری: ۱۰٪</li>
-
-                        <li class="plan-feature-unavailable">بازی رایگان: ۱ از ۵ ماهانه</li>
                         <li>مدت‌زمان‌ها: ۳ ماهه، ۶ ماهه، ۱۲ ماهه</li>
                     </ul>
 
@@ -1242,7 +1187,7 @@
                 <!-- Plan 3: Zone Max -->
                 <div class="plan-card">
                     <span class="plan-badge">سه‌مدتی</span>
-                    <h3 class="plan-name">اشتراک «Zone Max»</h3>
+                    <h3 class="plan-name">اشتراک «زون مکس»</h3>
                     <div class="plan-price"></div>
                     <p class="plan-period"></p>
 
@@ -1281,7 +1226,7 @@
                 <div class="feature-card">
                     <div class="feature-icon">⚡</div>
                     <h3 class="feature-title">تحویل هماهنگ</h3>
-                    <p class="feature-desc">فعالسازی سریع اشتراک و شروع بازی‌ها</p>
+                    <p class="feature-desc">فعالسازی سریع زون و شروع بازی‌ها</p>
                 </div>
 
                 <div class="feature-card">
@@ -1298,7 +1243,7 @@
 
                 <div class="feature-card">
                     <div class="feature-icon">🎯</div>
-                    <h3 class="feature-title">پشتیبانی دائمی</h3>
+                    <h3 class="feature-title">پشتیبانی ۲۴/۷</h3>
                     <p class="feature-desc">تیم حرفه‌ای همیشه آماده پاسخگویی</p>
                 </div>
 
@@ -1311,7 +1256,7 @@
                 <div class="feature-card">
                     <div class="feature-icon">🎁</div>
                     <h3 class="feature-title">مزایای ویژه</h3>
-                    <p class="feature-desc">تخفیف ویژه اشتراک مکس و بازیٔ رایگان دوره‌ای</p>
+                    <p class="feature-desc">تخفیف ویژه زون مکس و بازیٔ رایگان دوره‌ای</p>
                 </div>
 
                 <div class="feature-card">
@@ -1323,7 +1268,7 @@
                 <div class="feature-card">
                     <div class="feature-icon">✨</div>
                     <h3 class="feature-title">نصب دیتا حضوری</h3>
-                    <p class="feature-desc">برای همه‌ی اشتراک‌ها رایگان</p>
+                    <p class="feature-desc">برای همه‌ی زون‌ها رایگان</p>
                 </div>
             </div>
         </section>
@@ -1332,8 +1277,8 @@
         <section class="section video-section" id="video">
             <div class="video-content">
                 <div class="section-header">
-                    <h2 class="section-title">آموزش خرید و فعالسازی اشتراک</h2>
-                    <p class="section-subtitle">در این ویدیو، مراحل انتخاب و فعال‌سازی اشتراک خود را به صورت گام به گام ببینید</p>
+                    <h2 class="section-title">آموزش خرید و فعال‌سازی زون</h2>
+                    <p class="section-subtitle">در این ویدیو، مراحل انتخاب و فعال‌سازی زون را به صورت گام به گام ببینید</p>
                 </div>
 
                 <div class="video-wrapper">
@@ -1348,13 +1293,13 @@
         <section class="section" id="faq">
             <div class="section-header">
                 <h2 class="section-title">سوالات متداول</h2>
-                <p class="section-subtitle">پاسخ سوالات رایج درباره اشتراک‌های منطقه هیجان</p>
+                <p class="section-subtitle">پاسخ سوالات رایج درباره زون‌های منطقه هیجان</p>
             </div>
 
             <div class="faq-container">
                 <div class="faq-item">
                     <div class="faq-question">
-                        <span>چگونه اشتراک انتخابی را فعال می‌کنید؟</span>
+                        <span>چگونه زون انتخابی را فعال می‌کنید؟</span>
                         <span class="faq-icon">+</span>
                     </div>
                     <div class="faq-answer">
@@ -1364,11 +1309,11 @@
 
                 <div class="faq-item">
                     <div class="faq-question">
-                        <span>آیا این اشتراک‌ها با حساب ایران سازگارند؟</span>
+                        <span>آیا این زون‌ها با حساب ایران سازگارند؟</span>
                         <span class="faq-icon">+</span>
                     </div>
                     <div class="faq-answer">
-                        بله، اشتراک‌ها با حساب‌های پلی‌استیشن شما سازگار هستند و بر مبنای قوانین ظرفیت قانونی راه‌اندازی می‌شوند.
+                        بله، زون‌ها با حساب‌های پلی‌استیشن شما سازگار هستند و بر مبنای قوانین ظرفیت قانونی راه‌اندازی می‌شوند.
                     </div>
                 </div>
 
@@ -1378,7 +1323,7 @@
                         <span class="faq-icon">+</span>
                     </div>
                     <div class="faq-answer">
-                        در اشتراک لایت و پرو هر «۱ ماه» یک بار و در اشتراک مکس هر «۱۵ روز» یک بار می‌توانید یک بازی سطح یک را رایگان تعویض کنید.
+                        در زون لایت و پرو هر «۱ ماه» یک بار و در زون مکس هر «۱۵ روز» یک بار می‌توانید یک بازی سطح یک را رایگان تعویض کنید.
                     </div>
                 </div>
 
@@ -1388,7 +1333,7 @@
                         <span class="faq-icon">+</span>
                     </div>
                     <div class="faq-answer">
-                        تیم پشتیبانی ما به‌صورت «دائمی» آماده پاسخگویی است. از طریق شماره پشتیبانی درج‌شده در پایین سایت با ما در ارتباط باشید.
+                        تیم پشتیبانی ما به‌صورت «۲۴/۷» آماده پاسخگویی است. از طریق شماره پشتیبانی درج‌شده در پایین سایت با ما در ارتباط باشید.
                     </div>
                 </div>
 
@@ -1398,7 +1343,7 @@
                         <span class="faq-icon">+</span>
                     </div>
                     <div class="faq-answer">
-                        تمام اشتراک‌ها با سه مدت‌زمان «۳ ماهه»، «۶ ماهه» و «۱۲ ماهه» ارائه می‌شوند.
+                        تمام زون‌ها با سه مدت‌زمان «۳ ماهه»، «۶ ماهه» و «۱۲ ماهه» ارائه می‌شوند.
                     </div>
                 </div>
             </div>
@@ -1408,7 +1353,7 @@
         <section class="section" id="about">
             <div class="section-header">
                 <h2 class="section-title">درباره منطقه هیجان</h2>
-                <p class="section-subtitle"> مرجع تخصصی اشتراک های قانونی پلی‌استیشن</p>
+                <p class="section-subtitle">بزرگترین مرجع تخصصی زون‌های قانونی پلی‌استیشن در ایران</p>
             </div>
 
             <div class="about-grid">
@@ -1427,7 +1372,7 @@
                             <div class="stat-label">کاربر فعال</div>
                         </div>
                         <div class="stat-card">
-                            <div class="stat-number">دائمی</div>
+                            <div class="stat-number">۲۴/۷</div>
                             <div class="stat-label">پشتیبانی</div>
                         </div>
                         <div class="stat-card">
@@ -1439,7 +1384,7 @@
 
                 <div class="about-image">
                     <div class="about-image-placeholder">
-                        <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d217.12868105755763!2d55.68099289484856!3d29.456290453010464!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2s!4v1762618292298!5m2!1sen!2s" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                        🎮
                     </div>
                 </div>
             </div>
@@ -1452,18 +1397,15 @@
             <div class="footer-grid">
                 <div class="footer-brand">
                     <h3>🎮 منطقه هیجان</h3>
-                    <p>مرجع خرید و فعال‌سازی اشتراک‌های قانونی پلی‌استیشن در ایران. با ارائه خدمات باکیفیت و پشتیبانی «دائمی»، بهترین تجربه را برای شما فراهم می‌کنیم.</p>
+                    <p>مرجع خرید و فعال‌سازی زون‌ها و اشتراک‌های قانونی پلی‌استیشن در ایران. با ارائه خدمات باکیفیت و پشتیبانی «۲۴/۷»، بهترین تجربه را برای شما فراهم می‌کنیم.</p>
                     <div class="footer-support">پشتیبانی: ۰۹۰۵۱۴۰۱۰۲۹</div>
-                </div>
-                <div class="enamad-badge">
-                    <a referrerpolicy='origin' target='_blank' href='https://trustseal.enamad.ir/?id=516785&Code=89iDJBwRSQD3wgQdL1VAECmTIW72DY75'><img referrerpolicy='origin' src='https://trustseal.enamad.ir/logo.aspx?id=516785&Code=89iDJBwRSQD3wgQdL1VAECmTIW72DY75' alt='' style='cursor:pointer' code='89iDJBwRSQD3wgQdL1VAECmTIW72DY75'></a>
                 </div>
             </div>
 
             <div class="footer-bottom">
   <p>© ۱۴۰۴ منطقه هیجان. تمامی حقوق محفوظ است. | طراحی و توسعه با ♥️ توسط 
     <a href="https://wa.me/989137640338" target="_blank" 
-       style="color:#ff004d; text-decoration:none; font-weight:700; cursor:pointer;">
+       style="color:#00ffc8; text-decoration:none; font-weight:700; cursor:pointer;">
        امین
     </a>
   </p>
@@ -1601,5 +1543,3 @@
     </script>
 </body>
 </html>
-
-

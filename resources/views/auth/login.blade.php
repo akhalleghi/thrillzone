@@ -34,7 +34,8 @@
         .login-card:hover { transform: translateY(-6px); box-shadow: 0 0 60px rgba(255, 0, 255, 0.4); }
 
         .logo { text-align: center; margin-bottom: 1.5rem; }
-        .logo-icon { width: 80px; height: 80px; background: linear-gradient(135deg, #00ffff, #ff00ff); border-radius: 20px; display: inline-flex; align-items: center; justify-content: center; font-size: 2.5rem; color: white; box-shadow: 0 0 30px rgba(0, 255, 255, 0.5); margin-bottom: 1rem; animation: pulse 3s infinite ease-in-out; }
+        .logo-icon { width: 80px; height: 80px; background: linear-gradient(135deg, #00ffff, #ff00ff); border-radius: 20px; display: inline-flex; align-items: center; justify-content: center; font-size: 2.5rem; color: white; box-shadow: 0 0 30px rgba(0, 255, 255, 0.5); margin-bottom: 1rem; animation: pulse 3s infinite ease-in-out; padding: 8px; }
+        .logo-icon img { width: 100%; height: 100%; object-fit: contain; display: block; border-radius: 14px; }
         @keyframes pulse { 0%, 100% { transform: scale(1); box-shadow: 0 0 20px rgba(0,255,255,0.3); } 50% { transform: scale(1.1); box-shadow: 0 0 40px rgba(255,0,255,0.6); } }
         .logo-text { font-size: 1.8rem; font-weight: bold; background: linear-gradient(90deg, #00ffff, #ff00ff, #00ffaa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 
@@ -62,7 +63,9 @@
 
 <div class="login-card text-center">
     <div class="logo-container">
-        <div class="logo-icon">🎮</div>
+                    <div class="logo-icon">
+                        <img src="{{ asset('storage/thrill-logo.png') }}" alt="منطقه هیجان">
+                    </div>
         <h1 class="logo-text">منطقه هیجان</h1>
         <p class="welcome-text">خوش آمدید! لطفا وارد شوید</p>
     </div>
