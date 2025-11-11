@@ -996,29 +996,29 @@
 
         .whatsapp-float {
             position: fixed;
-            bottom: 24px;
-            right: 24px;
-            width: 58px;
-            height: 58px;
+            bottom: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
             border-radius: 50%;
-            background: linear-gradient(135deg, #c80000ff, #e60000ff);
-            color: #fff;
+            background: linear-gradient(135deg, #ff004d 0%, #a10035 100%);
+            color: #000;
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 15px 35px rgba(0, 200, 83, 0.35);
+            box-shadow: 0 5px 20px rgba(255, 0, 77, 0.4);
             z-index: 1200;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            transition: all 0.3s ease;
         }
 
         .whatsapp-float:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 20px 40px rgba(0, 230, 118, 0.45);
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(255, 0, 77, 0.6);
         }
 
         .whatsapp-float svg {
-            width: 26px;
-            height: 26px;
+            width: 24px;
+            height: 24px;
             fill: currentColor;
         }
 
