@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
     <meta charset="UTF-8">
@@ -1155,7 +1155,7 @@
         <section class="hero">
             <div class="hero-particles" id="heroParticles"></div>
             <div class="hero-badge">🎮 اشتراک‌های قانونی منطقه هیجان</div>
-            <h1>دنیای بازی‌های<br>بی‌نهایت را به‌صورت قانونی تجربه کنید</h1>
+            <h1>دنیای بازی‌های<br>پلی استیشن را به‌صورت قانونی و نامحدود تجربه کنید</h1> 
             <p>با اشتراک های منطقه هیجان، دسترسی امن و قانونی به بازی‌های استور سونی، تعویض دوره‌ای بازی‌ها و نصب دیتای حضوری رایگان را تجربه کنید.</p>
             <div class="hero-cta">
                 <a href="#plans" class="cta-primary">
@@ -1338,8 +1338,7 @@
 
                 <div class="video-wrapper">
                     <!-- Aparat Embed -->
-                    <style>.h_iframe-aparat_embed_frame{position:relative;}.h_iframe-aparat_embed_frame .ratio{display:block;width:100%;height:auto;}.h_iframe-aparat_embed_frame iframe{position:absolute;top:0;left:0;width:100%;height:100%;}</style>
-                    <div class="h_iframe-aparat_embed_frame"><span style="display: block;padding-top: 57%"></span><iframe src="https://www.aparat.com/video/video/embed/videohash/dyRC8/vt/frame" allowFullScreen="true" webkitallowfullscreen="true" mozallowfullscreen="true"></iframe></div>
+                    <style>.h_iframe-aparat_embed_frame{position:relative;}.h_iframe-aparat_embed_frame .ratio{display:block;width:100%;height:auto;}.h_iframe-aparat_embed_frame iframe{position:absolute;top:0;left:0;width:100%;height:100%;}</style><div class="h_iframe-aparat_embed_frame"><span style="display: block;padding-top: 57%"></span><iframe src="https://www.aparat.com/video/video/embed/videohash/nfw748j/vt/frame"  allowFullScreen="true" webkitallowfullscreen="true" mozallowfullscreen="true"></iframe></div>
                 </div>
             </div>
         </section>
@@ -1457,6 +1456,9 @@
                 </div>
                 <div class="enamad-badge">
                     <a referrerpolicy='origin' target='_blank' href='https://trustseal.enamad.ir/?id=516785&Code=89iDJBwRSQD3wgQdL1VAECmTIW72DY75'><img referrerpolicy='origin' src='https://trustseal.enamad.ir/logo.aspx?id=516785&Code=89iDJBwRSQD3wgQdL1VAECmTIW72DY75' alt='' style='cursor:pointer' code='89iDJBwRSQD3wgQdL1VAECmTIW72DY75'></a>
+                    <a href="https://zibal.ir/" target="_blank" rel="noopener">
+                        <img src="{{ asset('images/Zibal-Logo.png') }}" alt="Zibal Logo">
+                    </a>
                 </div>
             </div>
 
