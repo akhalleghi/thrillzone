@@ -994,6 +994,34 @@
             box-shadow: 0 8px 30px rgba(255, 0, 77, 0.6);
         }
 
+        .whatsapp-float {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            width: 58px;
+            height: 58px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #c80000ff, #e60000ff);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 15px 35px rgba(0, 200, 83, 0.35);
+            z-index: 1200;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .whatsapp-float:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px rgba(0, 230, 118, 0.45);
+        }
+
+        .whatsapp-float svg {
+            width: 26px;
+            height: 26px;
+            fill: currentColor;
+        }
+
         /* Responsive */
         @media (max-width: 1200px) {
             .plans-grid {
@@ -1477,6 +1505,11 @@
 
     <!-- Scroll to Top -->
     <div class="scroll-top" id="scrollTop">↑</div>
+    <a href="https://wa.me/989132789505" class="whatsapp-float" target="_blank" rel="noopener" aria-label="چت واتس‌اپ">
+        <svg viewBox="0 0 32 32" aria-hidden="true">
+            <path d="M16 2.7c-6.97 0-12.63 5.66-12.63 12.63 0 2.22.58 4.39 1.69 6.31L3 29l7.57-1.98c1.85 1 3.94 1.52 6.06 1.52 6.97 0 12.63-5.66 12.63-12.63S22.97 2.7 16 2.7zm0 22.9c-1.86 0-3.7-.5-5.3-1.44l-.38-.23-3.84 1 1.03-3.74-.25-.39A9.85 9.85 0 0 1 6.16 15C6.16 9.97 10.97 5.7 16 5.7s9.84 4.27 9.84 9.3-4.81 9.3-9.84 9.3zm5.27-6.93c-.29-.15-1.71-.85-1.98-.95-.27-.1-.47-.15-.67.15-.2.29-.77.95-.94 1.14-.17.19-.35.22-.64.07-.29-.15-1.23-.45-2.35-1.43-.87-.78-1.46-1.74-1.63-2.03-.17-.29-.02-.45.13-.6.13-.13.29-.35.44-.52.15-.17.2-.29.3-.48.1-.19.05-.36-.02-.52-.07-.15-.67-1.62-.92-2.22-.24-.58-.5-.5-.67-.5-.17 0-.36 0-.55.02-.19.02-.52.08-.79.36-.27.29-1.04 1.02-1.04 2.48s1.07 2.88 1.22 3.08c.15.19 2.11 3.22 5.1 4.38.71.31 1.26.5 1.69.64.71.23 1.36.2 1.87.12.57-.08 1.71-.7 1.95-1.37.24-.67.24-1.24.17-1.37-.07-.13-.26-.21-.55-.36z"/>
+        </svg>
+    </a>
 
     <script>
         // Header Scroll Effect
