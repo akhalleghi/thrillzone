@@ -174,7 +174,7 @@
     <div class="d-flex align-items-center justify-content-between flex-wrap mb-4 gap-2">
         <div>
             <h3 class="section-title mb-0">بازی‌های منطقه هیجان</h3>
-            <p class="text-secondary mb-0">تمام بازی‌های فعال را بدون نیاز به دسترسی ادمین مشاهده و جستجو کنید.</p>
+            <p class="text-secondary mb-0">در این قسمت میتوانید تمامی بازی های موجود و فعال در حال حاضر  برای انتخاب را مشاهده نمایید</p>
         </div>
         <span class="text-muted small">تعداد کل: {{ $games->total() }}</span>
     </div>
