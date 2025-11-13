@@ -16,6 +16,7 @@ use App\Http\Controllers\User\DashboardController;
 use App\Http\Controllers\User\PaymentController;
 use App\Http\Controllers\User\SubscriptionController as UserSubscriptionController;
 use App\Http\Controllers\User\TransactionController as UserTransactionController;
+use App\Http\Controllers\User\GameController as UserGameController;
 
 
 /*
@@ -70,7 +71,7 @@ Route::middleware(['auth'])->prefix('user')->name('user.')->group(function () {
 
 
     // صفحات دیگر هم می‌تونی اینجا اضافه کنی
-    // Route::get('/games', fn() => view('user.games'))->name('games');
+    Route::get('/games', [UserGameController::class, 'index'])->name('games');
     // Route::get('/wallet', fn() => view('user.wallet'))->name('wallet');
     Route::get('/transactions', [UserTransactionController::class, 'index'])->name('transactions');
     // Route::get('/profile', fn() => view('user.profile'))->name('profile');
@@ -198,4 +199,3 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::post('logout', [AdminAuthController::class, 'logout'])->name('logout');
     });
 });
-
