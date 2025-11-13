@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('favicon-32x32.png') }}">
     <link rel="shortcut icon" type="image/png" href="{{ asset('favicon-32x32.png') }}">
-    <title>منطقه هیجان - اشتراک‌ها و اشتراک‌های قانونی پلی‌استیشن</title>
+    <title>منطقه هیجان - خرید اشتراک‌های قانونی پلی‌استیشن</title>
     <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet">
     <style>
         * {
@@ -449,6 +449,345 @@
             max-width: 600px;
             margin: 0 auto;
             line-height: 1.7;
+        }
+
+        /* Level One Games */
+        .level-one-section {
+            background: rgba(8, 8, 8, 0.92);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 36px;
+            padding: 60px;
+            margin-bottom: 120px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6);
+        }
+
+        .level-one-section::before,
+        .level-one-section::after {
+            content: '';
+            position: absolute;
+            width: 320px;
+            height: 320px;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.15;
+            z-index: 0;
+        }
+
+        .level-one-section::before {
+            background: linear-gradient(135deg, #ff004d, #ff6f00);
+            top: -120px;
+            right: -80px;
+        }
+
+        .level-one-section::after {
+            background: linear-gradient(135deg, #a10035, #240016);
+            bottom: -140px;
+            left: -60px;
+        }
+
+        .level-one-section > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        .level-one-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 30px;
+            margin-bottom: 50px;
+            flex-wrap: wrap;
+        }
+
+        .level-one-actions {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 18px;
+        }
+
+        .level-one-intro {
+            max-width: 720px;
+        }
+
+        .level-one-eyebrow {
+            font-size: 0.95rem;
+            letter-spacing: 4px;
+            color: #ff4d7a;
+            margin-bottom: 18px;
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            text-transform: uppercase;
+        }
+
+        .level-one-eyebrow::before {
+            content: '';
+            width: 34px;
+            height: 2px;
+            background: currentColor;
+        }
+
+        .level-one-title {
+            font-size: 2.8rem;
+            font-weight: 900;
+            margin-bottom: 16px;
+            color: #fff;
+        }
+
+        .level-one-text {
+            color: #b5b5b5;
+            line-height: 1.8;
+            font-size: 1.15rem;
+        }
+
+        .level-one-cta {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px 32px;
+            border-radius: 14px;
+            background: linear-gradient(135deg, #ff004d 0%, #ff6f00 100%);
+            color: #000;
+            font-weight: 800;
+            text-decoration: none;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 15px 35px rgba(255, 0, 77, 0.35);
+            white-space: nowrap;
+        }
+
+        .level-one-cta-icon {
+            font-size: 1.2rem;
+            transition: transform 0.3s ease;
+        }
+
+        .level-one-cta:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 25px 45px rgba(255, 0, 77, 0.45);
+        }
+
+        .level-one-cta:hover .level-one-cta-icon {
+            transform: translateX(-6px);
+        }
+
+        .level-games-wrapper {
+            position: relative;
+            margin-top: 30px;
+        }
+
+        .level-slider-stage {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .level-games-slider {
+            display: flex;
+            gap: 24px;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            padding-bottom: 6px;
+            scrollbar-width: none;
+            direction: ltr;
+        }
+
+        .level-games-slider::-webkit-scrollbar {
+            display: none;
+        }
+
+        .level-slider-fade {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+        }
+
+        .level-slider-fade::before,
+        .level-slider-fade::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 120px;
+            z-index: 2;
+            background: linear-gradient(to right, rgba(8, 8, 8, 0.92), transparent);
+        }
+
+        .level-slider-fade::before {
+            left: 0;
+        }
+
+        .level-slider-fade::after {
+            right: 0;
+            transform: scaleX(-1);
+        }
+
+        .level-slider-controls {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
+
+        .level-slider-btn {
+            width: 46px;
+            height: 46px;
+            border-radius: 50%;
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            background: rgba(0, 0, 0, 0.4);
+            color: #fff;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .level-slider-btn:hover:not(:disabled) {
+            border-color: #ff004d;
+            color: #ff004d;
+            transform: translateY(-2px);
+        }
+
+        .level-slider-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        .level-game-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 24px;
+            padding: 22px;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+            transition: transform 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
+            width: 280px;
+            min-width: 280px;
+            scroll-snap-align: start;
+            scroll-snap-stop: always;
+            flex: 0 0 280px;
+            direction: rtl;
+        }
+
+        .level-game-card:hover {
+            transform: translateY(-8px);
+            border-color: rgba(255, 0, 77, 0.4);
+            box-shadow: 0 25px 60px rgba(255, 0, 77, 0.2);
+        }
+
+        .level-game-cover {
+            position: relative;
+            border-radius: 20px;
+            overflow: hidden;
+            height: 0;
+            padding-top: 56.25%; /* 16:9 fallback */
+            background: radial-gradient(circle at 40% 40%, rgba(255, 0, 77, 0.25), transparent 70%);
+        }
+
+        .level-game-cover img {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.4s ease;
+            display: block;
+        }
+
+        .level-game-card:hover .level-game-cover img {
+            transform: scale(1.05);
+        }
+
+        .level-badge {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background: rgba(0, 0, 0, 0.7);
+            color: #ff7a9c;
+            padding: 6px 14px;
+            border-radius: 999px;
+            font-size: 0.9rem;
+            border: 1px solid rgba(255, 122, 156, 0.3);
+        }
+
+        .level-game-title {
+            font-size: 1.25rem;
+            line-height: 1.4;
+            margin-bottom: 8px;
+            color: #fff;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            min-height: calc(1.4em * 2);
+            word-break: break-word;
+            overflow-wrap: anywhere;
+            transition: font-size 0.2s ease;
+        }
+
+        .level-game-title.is-medium {
+            font-size: 1.1rem;
+        }
+
+        .level-game-title.is-small {
+            font-size: 1rem;
+        }
+
+        .level-game-genre {
+            color: #9c9c9c;
+            font-size: 0.95rem;
+            margin-bottom: 16px;
+        }
+
+        .level-game-genre.muted {
+            color: #666;
+        }
+
+        .level-game-meta {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .game-pill {
+            padding: 6px 14px;
+            border-radius: 999px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .pill-original {
+            background: rgba(255, 0, 77, 0.12);
+            color: #ff4f7d;
+            border: 1px solid rgba(255, 79, 125, 0.4);
+        }
+
+        .pill-free {
+            background: rgba(0, 255, 191, 0.1);
+            color: #58ffd4;
+            border: 1px solid rgba(88, 255, 212, 0.4);
+        }
+
+        .pill-active {
+            background: rgba(255, 255, 255, 0.04);
+            color: #9cc3ff;
+            border: 1px solid rgba(156, 195, 255, 0.2);
+        }
+
+        .level-one-empty {
+            padding: 80px 30px;
+            text-align: center;
+            border-radius: 24px;
+            border: 1px dashed rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.02);
+            color: #aaa;
+            font-size: 1.1rem;
+            font-weight: 600;
         }
 
         /* Plans Grid */
@@ -1099,6 +1438,46 @@
                 justify-content: center;
             }
 
+            .level-one-section {
+                padding: 40px 24px;
+            }
+
+            .level-one-header {
+                flex-direction: column;
+                align-items: flex-start;
+                text-align: right;
+            }
+
+            .level-one-cta {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .level-one-actions {
+                width: 100%;
+            }
+
+            .level-slider-controls {
+                width: 100%;
+                justify-content: center;
+                margin-top: 10px;
+            }
+
+            .level-games-slider {
+                gap: 16px;
+                scroll-snap-type: x proximity;
+            }
+
+            .level-slider-fade {
+                display: none;
+            }
+
+            .level-game-card {
+                width: calc(100% - 32px);
+                min-width: calc(100% - 32px);
+                flex: 0 0 calc(100% - 32px);
+            }
+
             .section-title {
                 font-size: 2rem;
             }
@@ -1139,6 +1518,7 @@
     </style>
 </head>
 <body>
+    @php($levelOneGames = $levelOneGames ?? collect())
     <!-- Animated Background -->
     <div class="animated-bg">
         <div class="floating-shapes">
@@ -1159,6 +1539,7 @@
             </div>
             <nav class="nav-menu" id="navMenu">
                 <a href="#plans" class="nav-link">پلن‌ها</a>
+                <a href="#level-one-games" class="nav-link">بازی ها</a>
                 <a href="#features" class="nav-link">ویژگی‌ها</a>
                 <a href="#video" class="nav-link">آموزش</a>
                 <a href="#faq" class="nav-link">سوالات</a>
@@ -1196,6 +1577,8 @@
                 </a>
             </div>
         </section>
+
+        
 
         <!-- Plans Section -->
         <section class="section" id="plans">
@@ -1296,6 +1679,80 @@
                     @endauth
                 </div>
             </div>
+        </section>
+
+
+        <!-- Level One Games Section -->
+        <section class="section level-one-section" id="level-one-games" data-level-slider>
+            <div class="level-one-header">
+                <div class="level-one-intro">
+                    <p class="level-one-eyebrow">منطقه هیجان · سطح ۱</p>
+                    <h2 class="level-one-title">لیست بازی‌های برتر سطح یک</h2>
+                    <p class="level-one-text">
+                        با داشتن اشتراک فعال همیشه به تازه‌ترین آپدیت‌های سطح یک دسترسی دارید.
+                    </p>
+                </div>
+                <div class="level-one-actions">
+                    
+
+                    @auth
+                        <a href="{{ route('user.dashboard') }}" class="level-one-cta">
+                        <span>مشاهده در پنل کاربری</span>
+                        <span class="level-one-cta-icon">←</span>
+                    </a>
+                    @else
+                    <a href="/login" class="level-one-cta">
+                        <span>خرید اشتراک و دسترسی</span>
+                        <span class="level-one-cta-icon">←</span>
+                    </a>
+                    @endauth
+
+                    @if($levelOneGames->isNotEmpty())
+                        <div class="level-slider-controls">
+                            <button type="button" class="level-slider-btn" data-prev aria-label="اسکرول به بازی قبلی">
+                                <span aria-hidden="true">&larr;</span>
+                            </button>
+                            <button type="button" class="level-slider-btn" data-next aria-label="اسکرول به بازی بعدی">
+                                <span aria-hidden="true">&rarr;</span>
+                            </button>
+                        </div>
+                    @endif
+                </div>
+            </div>
+
+            @if($levelOneGames->isEmpty())
+                <div class="level-one-empty">
+                    هنوز بازی سطح یک ثبت نشده است. خیلی زود لیست به‌روز می‌شود.
+                </div>
+            @else
+                <div class="level-games-wrapper">
+                    <div class="level-slider-stage">
+                        <div class="level-slider-fade" aria-hidden="true"></div>
+                        <div class="level-games-slider" data-level-track>
+                            @foreach($levelOneGames as $game)
+                                <article class="level-game-card">
+                                    <div class="level-game-cover">
+                                        <img src="{{ $game->cover_url }}" alt="{{ $game->name }}">
+                                        <span class="level-badge">سطح ۱</span>
+                                    </div>
+                                    <div class="level-game-info">
+                                        <h3 class="level-game-title">{{ $game->name }}</h3>
+                                        <p class="level-game-genre {{ $game->genre ? '' : 'muted' }}">
+                                            {{ $game->genre ?? 'ژانر ثبت نشده' }}
+                                        </p>
+                                        <div class="level-game-meta">
+                                            <span class="game-pill {{ $game->type === 'original' ? 'pill-original' : 'pill-free' }}">
+                                                {{ $game->type === 'original' ? 'اورجینال' : 'فری پلی' }}
+                                            </span>
+                                            <span class="game-pill pill-active">فعال</span>
+                                        </div>
+                                    </div>
+                                </article>
+                            @endforeach
+                        </div>
+                    </div>
+                </div>
+            @endif
         </section>
 
         <!-- Features Section -->
@@ -1603,6 +2060,70 @@
             heroParticles.appendChild(particle);
         }
 
+        // Level One Slider Controls
+        document.querySelectorAll('[data-level-slider]').forEach(section => {
+            const track = section.querySelector('[data-level-track]');
+            const prev = section.querySelector('[data-prev]');
+            const next = section.querySelector('[data-next]');
+
+            if (!track || !prev || !next) {
+                return;
+            }
+
+            const getGap = () => {
+                const styles = getComputedStyle(track);
+                return parseFloat(styles.gap || styles.columnGap || '0') || 0;
+            };
+
+            const getStep = () => {
+                const card = track.querySelector('.level-game-card');
+                if (!card) {
+                    return track.clientWidth;
+                }
+                return card.getBoundingClientRect().width + getGap();
+            };
+
+            const scrollToOffset = (offset) => {
+                const maxScroll = track.scrollWidth - track.clientWidth;
+                const target = Math.min(Math.max(0, offset), maxScroll);
+                track.scrollTo({ left: target, behavior: 'smooth' });
+            };
+
+            const updateButtons = () => {
+                const maxScroll = track.scrollWidth - track.clientWidth;
+                const current = track.scrollLeft;
+                const tolerance = 3;
+                prev.disabled = current <= tolerance;
+                next.disabled = current >= (maxScroll - tolerance);
+            };
+
+            prev.addEventListener('click', () => {
+                scrollToOffset(track.scrollLeft - getStep());
+            });
+
+            next.addEventListener('click', () => {
+                scrollToOffset(track.scrollLeft + getStep());
+            });
+
+            track.addEventListener('scroll', updateButtons, { passive: true });
+            window.addEventListener('resize', () => {
+                requestAnimationFrame(updateButtons);
+            });
+
+            updateButtons();
+        });
+
+        // Normalize long game titles
+        document.querySelectorAll('.level-game-title').forEach(title => {
+            const length = title.textContent.trim().length;
+            title.classList.remove('is-medium', 'is-small');
+            if (length > 38 && length <= 55) {
+                title.classList.add('is-medium');
+            } else if (length > 55) {
+                title.classList.add('is-small');
+            }
+        });
+
         // Intersection Observer for Animations
         const observerOptions = {
             threshold: 0.1,
@@ -1636,5 +2157,3 @@
     </script>
 </body>
 </html>
-
-

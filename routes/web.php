@@ -17,6 +17,7 @@ use App\Http\Controllers\User\PaymentController;
 use App\Http\Controllers\User\SubscriptionController as UserSubscriptionController;
 use App\Http\Controllers\User\TransactionController as UserTransactionController;
 use App\Http\Controllers\User\GameController as UserGameController;
+use App\Models\Game;
 
 
 /*
@@ -96,8 +97,14 @@ Route::middleware(['auth'])->prefix('user')->name('user.')->group(function () {
 |--------------------------------------------------------------------------
 */
 Route::get('/', function () {
-    // فقط صفحه index.blade.php را نمایش بده
-    return view('index');
+    // لیست بازی‌های سطح یک فعال را برای صفحه اصلی می‌آوریم
+    $levelOneGames = Game::query()
+        ->where('level', 1)
+        ->where('status', 'active')
+        ->latest()
+        ->get();
+
+    return view('index', compact('levelOneGames'));
 })->name('home');
 
 Route::get('/tutorial', function () {return view('video');})->name('tutorial');
