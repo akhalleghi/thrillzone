@@ -109,7 +109,7 @@ Route::get('/', function () {
 
 Route::get('/tutorial', function () {return view('video');})->name('tutorial');
 Route::get('/faq', function () {return view('faq');})->name('faq');
-Route::get('/about', function () {return view('about');})->name('about');
+Route::get('/rules', function () {return view('rules');})->name('rules');
 
 
 

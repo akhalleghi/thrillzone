@@ -277,6 +277,39 @@
     #couponMessage.text-success { color: #00ffae !important; }
     #couponMessage.text-danger { color: #ff6b6b !important; }
 
+    .rules-confirm-box {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(61,245,255,0.3);
+      border-radius: 12px;
+      width: 100%;
+      padding: 0.85rem 1rem !important;
+      color: rgba(255,255,255,0.85);
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 0.65rem;
+      text-align: right;
+      direction: rtl;
+    }
+    .rules-confirm-box .form-check-input {
+      width: 20px;
+      height: 20px;
+      margin: 0;
+    }
+    .rules-confirm-box .form-check-label {
+      margin: 0;
+      flex: 1;
+      text-align: right;
+    }
+    .rules-confirm-box a {
+      color: var(--c-cyan);
+      text-decoration: none;
+      font-weight: 600;
+    }
+    .rules-confirm-box a:hover {
+      text-decoration: underline;
+    }
+
     /* تنظیم جای دکمه بستن مدال در حالت راست‌به‌چپ */
 .modal-header {
   display: flex;
@@ -543,6 +576,13 @@
           </div>
         </div>
 
+        <div class="rules-confirm-box form-check text-start mt-3">
+          <input class="form-check-input" type="checkbox" id="rulesAgree">
+          <label dir="rtl" class="form-check-label small" for="rulesAgree">
+            با <a href="{{ route('rules') }}" target="_blank" rel="noopener">قوانین و مقررات</a> موافقم.
+          </label>
+        </div>
+
         <button class="btn btn-neon mt-3" id="confirmPlanBtn" disabled>
           <i class="bi bi-wallet2 me-1"></i> پرداخت و فعال‌سازی
         </button>
@@ -566,6 +606,15 @@ document.addEventListener('show.bs.modal', () => {
 const plans = @json($plans);
 let selected = { planId: null, months: null, price: 0, discount: 0, final: 0 };
 const toFa = n => new Intl.NumberFormat('fa-IR').format(Number(n || 0));
+const confirmBtn = document.getElementById('confirmPlanBtn');
+const rulesCheckbox = document.getElementById('rulesAgree');
+
+function updateConfirmButtonState() {
+  const ready = selected.planId && selected.months && rulesCheckbox.checked;
+  confirmBtn.disabled = !ready;
+}
+
+rulesCheckbox.addEventListener('change', updateConfirmButtonState);
 
 /* --- انتخاب پلن --- */
 function selectPlan(planId) {
@@ -573,13 +622,15 @@ function selectPlan(planId) {
   document.querySelectorAll('.plan-card').forEach(c => c.classList.remove('active'));
   document.getElementById(`plan-card-${planId}`).classList.add('active');
 
-  document.getElementById('confirmPlanBtn').disabled = true;
+  confirmBtn.disabled = true;
   document.getElementById('invoiceBox').classList.add('d-none');
   document.getElementById('inv-discount').classList.add('d-none');
   document.getElementById('inv-final').classList.add('d-none');
   const msg = document.getElementById('couponMessage');
   msg.textContent = '';
   msg.className = 'small';
+  rulesCheckbox.checked = false;
+  updateConfirmButtonState();
 }
 
 /* --- انتخاب مدت‌زمان --- */
@@ -605,7 +656,7 @@ document.addEventListener('click', e => {
   document.getElementById(`price-${planId}`).textContent = `${toFa(price)} تومان`;
   updateInvoice(plan.name, months, price);
 
-  document.getElementById('confirmPlanBtn').disabled = false;
+  updateConfirmButtonState();
 
   // پاک‌سازی پیام کوپن
   const msg = document.getElementById('couponMessage');
@@ -677,16 +728,15 @@ document.getElementById('applyCouponBtn').addEventListener('click', async () => 
 });
 
 /* --- ارسال امن به درگاه پرداخت --- */
-document.getElementById('confirmPlanBtn').addEventListener('click', () => {
-  const btn = document.getElementById('confirmPlanBtn');
-  btn.disabled = true;
-  btn.innerHTML = '<i class="bi bi-hourglass-split"></i> در حال انتقال...';
+confirmBtn.addEventListener('click', () => {
+  confirmBtn.disabled = true;
+  confirmBtn.innerHTML = '<i class="bi bi-hourglass-split"></i> در حال انتقال...';
 
   // اعتبارسنجی نهایی قبل از ارسال
   if (!selected.planId || !selected.months) {
     alert('لطفاً پلن و مدت زمان اشتراک را انتخاب کنید.');
-    btn.disabled = false;
-    btn.innerHTML = '<i class="bi bi-wallet2 me-1"></i> پرداخت و فعال‌سازی';
+    confirmBtn.disabled = false;
+    confirmBtn.innerHTML = '<i class="bi bi-wallet2 me-1"></i> پرداخت و فعال‌سازی';
     return;
   }
 

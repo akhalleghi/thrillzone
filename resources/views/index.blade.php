@@ -1544,6 +1544,7 @@
                 <a href="#video" class="nav-link">آموزش</a>
                 <a href="#faq" class="nav-link">سوالات</a>
                 <a href="#about" class="nav-link">درباره ما</a>
+                <a href="/rules" class="nav-link">قوانین و مقررات</a>
                 @auth
                         <a href="{{ route('user.dashboard') }}" class="auth-btn" role="button">پنل کاربری</a>
                     @else
