@@ -403,6 +403,9 @@
                                                         </div>
                                                     </div>
                                                     <div class="row g-3">
+                                                        @php
+                                                            $allSelectableGames = $level1Games->concat($otherGames)->unique('id');
+                                                        @endphp
                                                         @if($level1Count > 0)
                                                             @for($i = 0; $i < $level1Count; $i++)
                                                                 @php
@@ -412,7 +415,7 @@
                                                                     <label class="form-label text-info">انتخاب بازی سطح ۱ ({{ $i + 1 }})</label>
                                                                     <select class="form-select game-select" name="games[level1][]" data-placeholder="انتخاب بازی سطح ۱" required>
                                                                         <option value="">-- انتخاب --</option>
-                                                                        @foreach($level1Games as $game)
+                                                                        @foreach($allSelectableGames as $game)
                                                                             <option value="{{ $game->id }}" data-cover="{{ $game->cover ? $game->cover_url : $gamePlaceholder }}" {{ $selectedName === $game->name ? 'selected' : '' }}>{{ $game->name }}</option>
                                                                         @endforeach
                                                                     </select>
@@ -758,6 +761,5 @@
         })();
     </script>
 @endsection
-
 
 
