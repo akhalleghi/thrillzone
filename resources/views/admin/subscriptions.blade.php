@@ -18,7 +18,27 @@
   .table-wrapper{position:relative}
   .table-scroll{overflow:auto}
   @media (max-width: 992px){ .table-wrapper{display:none} }
-  
+  .account-details-modal .modal-content{
+    background: linear-gradient(135deg, rgba(18,24,54,0.96), rgba(30,16,66,0.94));
+    border:1px solid rgba(255,255,255,0.15);
+    color: var(--text-color,#f8f9ff);
+    box-shadow: 0 25px 60px rgba(0,0,0,0.5);
+    backdrop-filter: blur(10px);
+  }
+  .account-details-modal .modal-header,
+  .account-details-modal .modal-footer{
+    background: rgba(255,255,255,0.03);
+    border-color: rgba(255,255,255,0.12);
+  }
+  .account-details-modal .modal-header .btn-close{
+    filter: invert(1);
+    opacity: .7;
+  }
+  .account-details-modal textarea{
+    background: rgba(255,255,255,0.08);
+    border-color: rgba(255,255,255,0.2);
+    color: inherit;
+  }
 </style>
 <style>
   .table-scroll-x{overflow-x:auto}
@@ -85,6 +105,15 @@
 
 @if(session('success')) <div class="alert alert-success">{{ session('success') }}</div> @endif
 @if(session('error'))   <div class="alert alert-danger">{{ session('error') }}</div> @endif
+@if($errors->any())
+  <div class="alert alert-warning">
+    <ul class="mb-0">
+      @foreach($errors->all() as $error)
+        <li>{{ $error }}</li>
+      @endforeach
+    </ul>
+  </div>
+@endif
 
 <div class="card-glass">
   {{-- نسخه دسکتاپ: جدول --}}
@@ -114,6 +143,7 @@
         @forelse($subscriptions as $i => $s)
           @php
             $waitingReady = $s->is_waiting_ready;
+            $accountModalId = 'accountModal-' . $s->id;
           @endphp
           <tr>
             <td>{{ $subscriptions->firstItem() + $i }}</td>
@@ -190,6 +220,12 @@
 
             {{-- عملیات --}}
             <td class="text-nowrap">
+              <button type="button"
+                      class="btn btn-sm btn-outline-info me-1 mb-1"
+                      data-bs-toggle="modal"
+                      data-bs-target="#{{ $accountModalId }}">
+                <i class="bi bi-person-lines-fill"></i> جزئیات اکانت
+              </button>
               <!-- <a href="{{ route('admin.subscriptions.show',$s) }}"
                  class="btn btn-sm btn-outline-info me-1">
                 <i class="bi bi-receipt"></i> رسید
@@ -224,6 +260,7 @@
   @forelse($subscriptions as $i => $s)
     @php
       $waitingReady = $s->is_waiting_ready;
+      $accountModalId = 'accountModal-' . $s->id;
     @endphp
     <div class="sub-card mb-3">
       {{-- هدر کارت --}}
@@ -313,6 +350,12 @@
 
       {{-- دکمه‌ها --}}
       <div class="text-end mt-2">
+        <button type="button"
+                class="btn btn-sm btn-outline-info me-1 mb-1"
+                data-bs-toggle="modal"
+                data-bs-target="#{{ $accountModalId }}">
+          <i class="bi bi-person-lines-fill"></i> جزئیات اکانت
+        </button>
         {{-- <a href="{{ route('admin.subscriptions.show',$s) }}" class="btn btn-sm btn-outline-info me-1">
           <i class="bi bi-receipt"></i> رسید
         </a> --}}
@@ -337,6 +380,45 @@
     <div class="text-center text-muted py-4">موردی یافت نشد.</div>
   @endforelse
 </div>
+@foreach($subscriptions as $modalSubscription)
+  @php
+    $modalId = 'accountModal-' . $modalSubscription->id;
+    $oldContextId = old('context_subscription_id');
+    $isActiveModal = $oldContextId && (int) $oldContextId === $modalSubscription->id;
+    $modalTextareaValue = $isActiveModal ? old('account_details') : $modalSubscription->account_details;
+  @endphp
+  <div class="modal fade account-details-modal" id="{{ $modalId }}" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">جزئیات اکانت اشتراک</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="بستن"></button>
+        </div>
+        <form method="POST" action="{{ route('admin.subscriptions.account_details', $modalSubscription) }}">
+          @csrf
+          <input type="hidden" name="context_subscription_id" value="{{ $modalSubscription->id }}">
+          <div class="modal-body">
+            <div class="mb-3">
+              <label class="form-label">اطلاعات ورود / توضیحات نصب</label>
+              <textarea
+                name="account_details"
+                class="form-control"
+                rows="7"
+                placeholder="نام کاربری، پسورد، توضیحات نصب و ... را اینجا ثبت کنید.">{{ $modalTextareaValue ?? '' }}</textarea>
+              @if($isActiveModal && $errors->has('account_details'))
+                <div class="text-danger small mt-1">{{ $errors->first('account_details') }}</div>
+              @endif
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">بستن</button>
+            <button type="submit" class="btn btn-primary">ذخیره جزئیات</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+@endforeach
 
 
   <div class="mt-3">

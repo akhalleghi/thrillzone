@@ -24,6 +24,7 @@ class Subscription extends Model
         'next_swap_at',
         'active_games',
         'subscription_code',
+        'account_details',
     ];
 
     protected $casts = [

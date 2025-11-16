@@ -181,6 +181,9 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::post('/subscriptions/{subscription}/finish', [SubscriptionController::class, 'finish'])
             ->name('subscriptions.finish');
 
+        Route::post('/subscriptions/{subscription}/account-details', [SubscriptionController::class, 'updateAccountDetails'])
+            ->name('subscriptions.account_details');
+
         // نمایش رسید/جزئیات
         Route::get('/subscriptions/{subscription}', [SubscriptionController::class, 'show'])
             ->name('subscriptions.show'); // برای مودال/صفحه جزئیات

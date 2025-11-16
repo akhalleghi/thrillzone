@@ -140,6 +140,21 @@ class SubscriptionController extends Controller
         return back()->with('success','اشتراک خاتمه یافت.');
     }
 
+    public function updateAccountDetails(Request $request, Subscription $subscription)
+    {
+        $data = $request->validate([
+            'account_details' => ['nullable', 'string', 'max:5000'],
+        ]);
+
+        $details = isset($data['account_details']) ? trim($data['account_details']) : '';
+
+        $subscription->update([
+            'account_details' => $details !== '' ? $details : null,
+        ]);
+
+        return back()->with('success','جزئیات اکانت ذخیره شد.');
+    }
+
     // نمایش جزئیات/رسید
     public function show(Subscription $subscription)
     {
