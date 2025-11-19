@@ -143,6 +143,14 @@
             background: rgba(15,23,56,.95);
             border: 1px solid rgba(255,255,255,.15);
             box-shadow: 0 20px 60px rgba(0,0,0,.45);
+            display: flex;
+            flex-direction: column;
+        }
+        .subscription-modal .modal-content form {
+            display: flex;
+            flex-direction: column;
+            flex: 1 1 auto;
+            min-height: 0;
         }
         .subscription-modal .modal-header,
         .subscription-modal .modal-footer {
@@ -167,9 +175,33 @@
         }
         .subscription-modal .modal-body {
             background: rgba(16,21,52,.6);
+            overflow-y: auto;
+            flex: 1 1 auto;
+            min-height: 0;
         }
         .subscription-modal .modal-footer {
             backdrop-filter: blur(6px);
+        }
+        @media (max-width: 575.98px) {
+            .subscription-modal .modal-dialog {
+                margin: .75rem;
+                height: calc(100% - 1.5rem);
+                display: flex;
+                align-items: center;
+            }
+            .subscription-modal .modal-content {
+                min-height: 100%;
+                max-height: 100%;
+                width: 100%;
+            }
+            .subscription-modal .modal-body {
+                padding-bottom: 4.5rem;
+            }
+            .subscription-modal .modal-footer {
+                position: sticky;
+                bottom: 0;
+                z-index: 2;
+            }
         }
         .select2-container--bootstrap-5 .select2-selection__placeholder,
         .select2-container--bootstrap-5 .select2-results__option {
@@ -761,5 +793,3 @@
         })();
     </script>
 @endsection
-
-
