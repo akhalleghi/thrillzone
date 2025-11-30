@@ -5,38 +5,48 @@
 @section('extra-styles')
     <style>
         .card-glass {
-            background: rgba(16,21,52,.88);
-            border: 1px solid rgba(255,255,255,.08);
-            border-radius: 16px;
+            background: rgba(8,8,8,.92);
+            border: 1px solid rgba(255,0,77,.18);
+            border-radius: 20px;
             padding: 1.5rem;
-            box-shadow: 0 20px 60px rgba(0,0,0,.35);
+            box-shadow: 0 30px 90px rgba(0,0,0,.6);
             backdrop-filter: blur(18px);
         }
         .section-title {
-            background: linear-gradient(135deg,#00f5ff,#ff4dff);
+            background: linear-gradient(135deg,var(--c-primary),var(--c-secondary));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             font-weight: 800;
         }
         .neon-btn {
-            background: linear-gradient(135deg,#00f5ff,#ff4dff);
+            background: linear-gradient(135deg,var(--c-primary),var(--c-secondary));
             border: none;
             border-radius: 12px;
-            color: #06163c;
+            color: #000;
             font-weight: 700;
             padding: .65rem 1.5rem;
-            box-shadow: 0 0 25px rgba(0,255,255,.35);
-            transition: .2s;
+            box-shadow: 0 15px 35px rgba(255,0,77,.4);
+            transition: .25s ease;
         }
         .neon-btn:hover {
-            box-shadow: 0 0 35px rgba(255,0,255,.45);
-            transform: translateY(-1px);
+            box-shadow: 0 22px 45px rgba(255,0,77,.5);
+            transform: translateY(-2px);
+        }
+        .btn-outline-light {
+            border-color: rgba(255,255,255,.25);
+            color: rgba(255,255,255,.85);
+        }
+        .btn-outline-light:hover {
+            background: rgba(255,255,255,.1);
+            color: #fff;
         }
         .form-control,
         .form-select {
-            background: rgba(6,10,35,.65);
-            border: 1px solid rgba(255,255,255,.1);
+            background: rgba(0,0,0,.6);
+            border: 1px solid rgba(255,0,77,.25);
             color: #fff;
+            border-radius: 14px;
+            box-shadow: inset 0 0 15px rgba(0,0,0,.4);
         }
         .form-control::placeholder {
             color: rgba(255,255,255,.45);
@@ -51,18 +61,18 @@
             --bs-table-bg: transparent;
             --bs-table-striped-bg: rgba(255,255,255,.03);
             --bs-table-striped-color: #fff;
-            --bs-table-hover-bg: rgba(0,0,0,.2);
+            --bs-table-hover-bg: rgba(255,0,77,.08);
             --bs-table-hover-color: #fff;
         }
         .table thead th {
-            border-bottom: 1px solid rgba(255,255,255,.12);
-            color: #9fe3ff;
+            border-bottom: 1px solid rgba(255,0,77,.25);
+            color: rgba(255,255,255,.85);
             font-size: .9rem;
             white-space: nowrap;
         }
         .table td,
         .table th {
-            border-color: rgba(255,255,255,.07);
+            border-color: rgba(255,255,255,.05);
             vertical-align: middle;
             font-size: .95rem;
         }
@@ -71,7 +81,8 @@
             height: 40px;
             border-radius: 8px;
             object-fit: cover;
-            border: 1px solid rgba(255,255,255,.08);
+            border: 1px solid rgba(255,0,77,.2);
+            box-shadow: 0 10px 30px rgba(0,0,0,.45);
         }
         .badge-soft {
             border-radius: 999px;
@@ -79,9 +90,10 @@
             font-size: .78rem;
             font-weight: 600;
             border: 1px solid rgba(255,255,255,.12);
+            backdrop-filter: blur(4px);
         }
-        .badge-type-original { background: rgba(0,255,255,.18); color: #7bfffb; }
-        .badge-type-free { background: rgba(40,167,69,.18); color: #9affb1; }
+        .badge-type-original { background: rgba(255,0,77,.2); color: #ff4d79; }
+        .badge-type-free { background: rgba(255,111,0,.22); color: #ffb347; }
         .badge-type-default { background: rgba(255,255,255,.1); color: #fff; }
         .empty-state {
             text-align: center;
@@ -89,16 +101,17 @@
         }
         .empty-state .icon {
             font-size: 3rem;
-            color: #2ddfff;
+            color: var(--c-primary);
             margin-bottom: 1rem;
         }
         .mobile-cards { display: none; }
         .game-card {
-            background: rgba(255,255,255,.06);
-            border: 1px solid rgba(255,255,255,.08);
-            border-radius: 14px;
-            padding: 1rem;
+            background: rgba(0,0,0,.55);
+            border: 1px solid rgba(255,0,77,.18);
+            border-radius: 18px;
+            padding: 1.1rem;
             margin-bottom: 1rem;
+            box-shadow: 0 20px 70px rgba(0,0,0,.55);
         }
         .game-card .card-row {
             display: flex;
@@ -110,9 +123,9 @@
             color: rgba(255,255,255,.6);
         }
         .pagination-glass .page-item .page-link {
-            background: rgba(10,15,40,.7);
-            border: 1px solid rgba(255,255,255,.1);
-            color: #cde8ff;
+            background: rgba(0,0,0,.6);
+            border: 1px solid rgba(255,0,77,.2);
+            color: rgba(255,255,255,.85);
             border-radius: 12px;
             padding: .4rem .85rem;
             display: flex;
@@ -120,12 +133,12 @@
             gap: .35rem;
         }
         .pagination-glass .page-item .page-link:hover {
-            color: #00f5ff;
-            border-color: rgba(0,245,255,.5);
+            color: #ff4d79;
+            border-color: rgba(255,0,77,.45);
         }
         .pagination-glass .page-item.active .page-link {
-            background: linear-gradient(135deg,#00f5ff,#ff4dff);
-            color: #06163c;
+            background: linear-gradient(135deg,var(--c-primary),var(--c-secondary));
+            color: #000;
             border-color: transparent;
         }
         .pagination-glass .page-item.disabled .page-link {

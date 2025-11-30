@@ -15,29 +15,55 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css">
     <style>
+        .text-info { color: #ff4d79 !important; }
+        .bg-primary {
+            background-color: rgba(255,0,77,.15) !important;
+            border: 1px solid rgba(255,0,77,.25) !important;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg,var(--c-primary),var(--c-secondary));
+            border: none;
+            color: #000;
+            font-weight: 700;
+            box-shadow: 0 10px 30px rgba(255,0,77,.35);
+            transition: transform .2s ease, box-shadow .2s ease;
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 16px 40px rgba(255,0,77,.45);
+        }
+        .btn-outline-info {
+            color: #ff4d79;
+            border-color: rgba(255,0,77,.5);
+        }
+        .btn-outline-info:hover {
+            background: rgba(255,0,77,.2);
+            color: #fff;
+            border-color: rgba(255,0,77,.8);
+        }
         .card-glass {
-            background: rgba(16,21,52,.88);
-            border: 1px solid rgba(255,255,255,.08);
-            border-radius: 16px;
+            background: rgba(8,8,8,0.92);
+            border: 1px solid rgba(255,0,77,0.18);
+            border-radius: 20px;
             padding: 1.5rem;
-            box-shadow: 0 20px 60px rgba(0,0,0,.35);
+            box-shadow: 0 30px 90px rgba(0,0,0,.65);
             backdrop-filter: blur(18px);
         }
         .section-title {
-            background: linear-gradient(135deg,#00f5ff,#ff4dff);
+            background: linear-gradient(135deg,var(--c-primary),var(--c-secondary));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             font-weight: 800;
         }
         .table thead th {
-            border-bottom: 1px solid rgba(255,255,255,.12);
-            color: #9fe3ff;
+            border-bottom: 1px solid rgba(255,0,77,.25);
+            color: rgba(255,255,255,.85);
             font-size: .9rem;
             white-space: nowrap;
         }
         .table td,
         .table th {
-            border-color: rgba(255,255,255,.07);
+            border-color: rgba(255,255,255,.05);
             vertical-align: middle;
             font-size: .95rem;
         }
@@ -47,12 +73,13 @@
             display: inline-flex;
             align-items: center;
             gap: .4rem;
-            background: rgba(13,110,253,.18);
+            background: linear-gradient(135deg, rgba(255,0,77,.25), rgba(161,0,53,.2));
             border-radius: 999px;
             padding: .25rem .65rem;
             margin: .15rem .15rem .15rem 0;
             font-size: .85rem;
             white-space: nowrap;
+            color: #fff;
         }
         .game-pill img {
             width: 28px;
@@ -66,10 +93,11 @@
             font-size: .78rem;
             font-weight: 600;
             border: 1px solid rgba(255,255,255,.12);
+            backdrop-filter: blur(6px);
         }
-        .badge-waiting { background: rgba(255,193,7,.18); color: #ffd966; }
-        .badge-active { background: rgba(25,135,84,.22); color: #63ffb4; }
-        .badge-ended { background: rgba(220,53,69,.18); color: #ff7b9b; }
+        .badge-waiting { background: rgba(255,167,0,.15); color: #ffb347; }
+        .badge-active { background: rgba(255,0,77,.2); color: #ff4d79; }
+        .badge-ended { background: rgba(255,255,255,.08); color: rgba(255,255,255,.6); }
         .timer {
             font-variant-numeric: tabular-nums;
             direction: ltr;
@@ -92,15 +120,16 @@
         }
         .empty-state .icon {
             font-size: 3rem;
-            color: #2ddfff;
+            color: var(--c-primary);
             margin-bottom: 1rem;
         }
         .sub-card {
-            background: rgba(255,255,255,.06);
-            border: 1px solid rgba(255,255,255,.08);
-            border-radius: 16px;
-            padding: 1rem;
+            background: rgba(0,0,0,.55);
+            border: 1px solid rgba(255,0,77,.18);
+            border-radius: 18px;
+            padding: 1.2rem;
             margin-bottom: 1rem;
+            box-shadow: 0 20px 70px rgba(0,0,0,.55);
         }
         .mobile-actions {
             display: flex;
@@ -115,8 +144,8 @@
             border-radius: 6px;
         }
         .select2-container--bootstrap-5 .select2-selection {
-            background-color: #101a3f;
-            border: 1px solid rgba(255,255,255,.18);
+            background-color: rgba(0,0,0,.7);
+            border: 1px solid rgba(255,0,77,.3);
             color: #fff;
             min-height: 2.8rem;
             display: flex;
@@ -127,22 +156,22 @@
             padding-right: .75rem;
         }
         .select2-container--bootstrap-5 .select2-dropdown {
-            background-color: #0f1738;
-            border: 1px solid rgba(255,255,255,.18);
+            background-color: #050505;
+            border: 1px solid rgba(255,0,77,.25);
             color: #fff;
             z-index: 1061;
         }
         .select2-container--bootstrap-5 .select2-results__option--highlighted {
-            background: rgba(13,110,253,.35);
+            background: rgba(255,0,77,.25);
             color: #fff;
         }
         @media (max-width: 992px) {
             .table-wrapper { display: none; }
         }
         .subscription-modal .modal-content {
-            background: rgba(15,23,56,.95);
-            border: 1px solid rgba(255,255,255,.15);
-            box-shadow: 0 20px 60px rgba(0,0,0,.45);
+            background: linear-gradient(135deg, rgba(5,5,5,.95), rgba(20,2,15,.9));
+            border: 1px solid rgba(255,0,77,.25);
+            box-shadow: 0 35px 90px rgba(0,0,0,.65);
             display: flex;
             flex-direction: column;
         }
@@ -154,8 +183,8 @@
         }
         .subscription-modal .modal-header,
         .subscription-modal .modal-footer {
-            border-color: rgba(255,255,255,.12);
-            background: rgba(255,255,255,.02);
+            border-color: rgba(255,0,77,.2);
+            background: rgba(255,0,77,.05);
         }
         .subscription-modal .modal-header {
             align-items: center;
@@ -174,7 +203,7 @@
             opacity: 1;
         }
         .subscription-modal .modal-body {
-            background: rgba(16,21,52,.6);
+            background: rgba(0,0,0,.4);
             overflow-y: auto;
             flex: 1 1 auto;
             min-height: 0;

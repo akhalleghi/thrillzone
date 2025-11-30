@@ -15,29 +15,39 @@
 
 @section('extra-styles')
     <style>
+        .text-info { color: #ff4d79 !important; }
+        .btn-outline-info {
+            color: #ff4d79;
+            border-color: rgba(255,0,77,.5);
+        }
+        .btn-outline-info:hover {
+            background: rgba(255,0,77,.2);
+            color: #fff;
+            border-color: rgba(255,0,77,.8);
+        }
         .card-glass {
-            background: rgba(16,21,52,.88);
-            border: 1px solid rgba(255,255,255,.08);
-            border-radius: 16px;
+            background: rgba(8,8,8,0.92);
+            border: 1px solid rgba(255,0,77,0.18);
+            border-radius: 20px;
             padding: 1.5rem;
-            box-shadow: 0 20px 60px rgba(0,0,0,.35);
+            box-shadow: 0 30px 90px rgba(0,0,0,.6);
             backdrop-filter: blur(18px);
         }
         .section-title {
-            background: linear-gradient(135deg,#00f5ff,#ff4dff);
+            background: linear-gradient(135deg,var(--c-primary),var(--c-secondary));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             font-weight: 800;
         }
         .table thead th {
-            border-bottom: 1px solid rgba(255,255,255,.12);
-            color: #9fe3ff;
+            border-bottom: 1px solid rgba(255,0,77,.25);
+            color: rgba(255,255,255,.85);
             font-size: .9rem;
             white-space: nowrap;
         }
         .table td,
         .table th {
-            border-color: rgba(255,255,255,.07);
+            border-color: rgba(255,255,255,.05);
             vertical-align: middle;
             font-size: .95rem;
         }
@@ -49,27 +59,29 @@
             font-size: .78rem;
             font-weight: 600;
             border: 1px solid rgba(255,255,255,.12);
+            backdrop-filter: blur(6px);
         }
-        .badge-success-soft { background: rgba(25,135,84,.22); color: #63ffb4; }
-        .badge-pending-soft { background: rgba(255,193,7,.20); color: #ffd966; }
-        .badge-failed-soft { background: rgba(220,53,69,.22); color: #ff94a8; }
-        .badge-refunded-soft { background: rgba(13,110,253,.22); color: #91bfff; }
+        .badge-success-soft { background: rgba(0,255,156,.15); color: #4dffca; }
+        .badge-pending-soft { background: rgba(255,167,0,.18); color: #ffb347; }
+        .badge-failed-soft { background: rgba(255,0,77,.18); color: #ff4d79; }
+        .badge-refunded-soft { background: rgba(255,255,255,.12); color: rgba(255,255,255,.7); }
         .empty-state {
             text-align: center;
             padding: 3rem 1rem;
         }
         .empty-state .icon {
             font-size: 3rem;
-            color: #2ddfff;
+            color: var(--c-primary);
             margin-bottom: 1rem;
         }
         .mobile-cards { display: none; }
         .transaction-card {
-            background: rgba(255,255,255,.06);
-            border: 1px solid rgba(255,255,255,.08);
-            border-radius: 14px;
-            padding: 1rem;
+            background: rgba(0,0,0,.55);
+            border: 1px solid rgba(255,0,77,.2);
+            border-radius: 18px;
+            padding: 1.1rem;
             margin-bottom: 1rem;
+            box-shadow: 0 20px 70px rgba(0,0,0,.55);
         }
         .transaction-card .card-row {
             display: flex;
@@ -81,12 +93,26 @@
             color: rgba(255,255,255,.6);
         }
         .receipt-json {
-            background: rgba(0,0,0,.25);
+            background: rgba(0,0,0,.35);
             border-radius: 12px;
             padding: .75rem;
             max-height: 260px;
             overflow: auto;
             font-size: .86rem;
+            border: 1px solid rgba(255,0,77,.25);
+        }
+        .transaction-modal .modal-content {
+            background: linear-gradient(135deg, rgba(5,5,5,.95), rgba(25,0,15,.9));
+            border: 1px solid rgba(255,0,77,.25);
+            box-shadow: 0 35px 90px rgba(0,0,0,.65);
+        }
+        .transaction-modal .modal-header,
+        .transaction-modal .modal-footer {
+            border-color: rgba(255,0,77,.2);
+            background: rgba(255,0,77,.05);
+        }
+        .transaction-modal .modal-title {
+            color: #fff;
         }
         @media (max-width: 992px) {
             .table-wrapper { display: none; }
@@ -269,9 +295,9 @@
         </div>
     @endif
 
-    <div class="modal fade" id="userTransactionModal" tabindex="-1" aria-hidden="true">
+    <div class="modal fade transaction-modal" id="userTransactionModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-lg modal-dialog-scrollable">
-            <div class="modal-content text-light" style="background: rgba(15,23,56,.96); border: 1px solid rgba(255,255,255,.12);">
+            <div class="modal-content text-light">
                 <div class="modal-header">
                     <h5 class="modal-title">جزئیات تراکنش</h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="بستن"></button>
