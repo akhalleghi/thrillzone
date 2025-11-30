@@ -273,6 +273,10 @@
             <i class="bi bi-shuffle me-1"></i> درخواست های تعویض
             </a>
 
+            <a href="{{ route('admin.upgrade_requests.index') }}" class="nav-link {{ request()->routeIs('admin.upgrade_requests.*') ? 'active' : '' }}">
+            <i class="bi bi-arrow-up-right-square"></i> درخواست‌های ارتقا
+            </a>
+
             <a href="{{ route('admin.bookings.index') }}" class="nav-link {{ request()->routeIs('admin.bookings.index') ? 'active' : '' }}">
             <i class="bi bi-clock-history"></i> مدیریت نوبت دهی
             </a>

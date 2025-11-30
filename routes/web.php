@@ -17,6 +17,8 @@ use App\Http\Controllers\User\PaymentController;
 use App\Http\Controllers\User\SubscriptionController as UserSubscriptionController;
 use App\Http\Controllers\User\TransactionController as UserTransactionController;
 use App\Http\Controllers\User\GameController as UserGameController;
+use App\Http\Controllers\User\UpgradeRequestController;
+use App\Http\Controllers\Admin\UpgradeRequestController as AdminUpgradeRequestController;
 use App\Models\Game;
 
 
@@ -79,6 +81,8 @@ Route::middleware(['auth'])->prefix('user')->name('user.')->group(function () {
     Route::get('/subscriptions', [UserSubscriptionController::class, 'index'])->name('subscriptions.index');
     Route::post('/subscriptions/{subscription}/selection', [UserSubscriptionController::class, 'saveSelection'])
         ->name('subscriptions.selection');
+    Route::get('/upgrade-requests', [UpgradeRequestController::class, 'index'])->name('upgrade_requests.index');
+    Route::post('/upgrade-requests', [UpgradeRequestController::class, 'store'])->name('upgrade_requests.store');
 
     Route::post('/logout', function () {
         Auth::logout();
@@ -192,6 +196,11 @@ Route::prefix('admin')->name('admin.')->group(function () {
         // 🔁 درخواست تعویض
         Route::get('/swap-requests', [SwapRequestController::class, 'index'])->name('swap_requests.index');
         Route::post('/swap-requests/{swapRequest}/done', [SwapRequestController::class, 'markDone'])->name('swap_requests.done');
+
+        // درخواست‌های ارتقا
+        Route::get('/upgrade-requests', [AdminUpgradeRequestController::class, 'index'])->name('upgrade_requests.index');
+        Route::post('/upgrade-requests/{upgradeRequest}/approve', [AdminUpgradeRequestController::class, 'approve'])->name('upgrade_requests.approve');
+        Route::post('/upgrade-requests/{upgradeRequest}/reject', [AdminUpgradeRequestController::class, 'reject'])->name('upgrade_requests.reject');
 
         // ⌚ مدیریت نوبت دهی
         Route::get('/bookings', [BookingController::class,'index'])->name('bookings.index');

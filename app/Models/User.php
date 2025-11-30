@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use App\Models\UpgradeRequest;
 
 class User extends Authenticatable
 {
@@ -14,4 +15,9 @@ class User extends Authenticatable
 
 
     protected $hidden = [];
+
+    public function upgradeRequests()
+    {
+        return $this->hasMany(UpgradeRequest::class);
+    }
 }

@@ -24,6 +24,7 @@ class DatabaseSeeder extends Seeder
         $this->call([
             TransactionSeeder::class,
             SubscriptionSeeder::class,
+            TestUpgradeSubscriptionSeeder::class,
         ]);
 
     }

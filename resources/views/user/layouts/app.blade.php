@@ -163,6 +163,7 @@
         <ul class="sidebar-menu">
             <li><a href="{{ route('user.dashboard') }}" class="sidebar-link {{ request()->routeIs('user.dashboard') ? 'active' : '' }}"><i class="bi bi-speedometer2"></i> داشبورد</a></li>
             <li><a href="{{ route('user.subscriptions.index') }}" class="sidebar-link {{ request()->routeIs('user.subscriptions.*') ? 'active' : '' }}"><i class="bi bi-grid-3x3-gap"></i> اشتراک‌های من</a></li>
+            <li><a href="{{ route('user.upgrade_requests.index') }}" class="sidebar-link {{ request()->routeIs('user.upgrade_requests.*') ? 'active' : '' }}"><i class="bi bi-arrow-up-right-square"></i> درخواست ارتقا</a></li>
             <li><a href="{{ route('user.transactions') }}" class="sidebar-link {{ request()->routeIs('user.transactions') ? 'active' : '' }}"><i class="bi bi-clock-history"></i> تراکنش‌ها</a></li>
             <li><a href="{{ route('user.games') }}" class="sidebar-link {{ request()->routeIs('user.games') ? 'active' : '' }}"><i class="bi bi-controller"></i> لیست بازی ها</a></li>
             <li class="mt-3">
