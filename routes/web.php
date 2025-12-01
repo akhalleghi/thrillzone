@@ -182,6 +182,9 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::post('/subscriptions/{subscription}/activate', [SubscriptionController::class, 'activate'])
             ->name('subscriptions.activate');
 
+        Route::post('/subscriptions/{subscription}/games', [SubscriptionController::class, 'updateGames'])
+            ->name('subscriptions.games');
+
         Route::post('/subscriptions/{subscription}/finish', [SubscriptionController::class, 'finish'])
             ->name('subscriptions.finish');
 

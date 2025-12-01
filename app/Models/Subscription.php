@@ -57,13 +57,17 @@ class Subscription extends Model
     {
         $games = $this->active_games ?? [];
 
-        if (!is_array($games) || empty($games)) {
+        if (!is_array($games)) {
             return '-';
         }
 
-        $preview = array_slice($games, 0, 3);
+        $games = array_values(array_filter($games, fn ($item) => $item !== null && $item !== ''));
 
-        return implode(', ', $preview) . (count($games) > 3 ? ' ...' : '');
+        if (empty($games)) {
+            return '-';
+        }
+
+        return implode(', ', $games);
     }
 
     public function getRemainingSecondsAttribute(): ?int

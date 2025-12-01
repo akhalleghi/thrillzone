@@ -144,6 +144,7 @@
           @php
             $waitingReady = $s->is_waiting_ready;
             $accountModalId = 'accountModal-' . $s->id;
+            $gamesModalId = 'gamesModal-' . $s->id;
           @endphp
           <tr>
             <td>{{ $subscriptions->firstItem() + $i }}</td>
@@ -220,31 +221,56 @@
 
             {{-- عملیات --}}
             <td class="text-nowrap">
-              <button type="button"
-                      class="btn btn-sm btn-outline-info me-1 mb-1"
-                      data-bs-toggle="modal"
-                      data-bs-target="#{{ $accountModalId }}">
-                <i class="bi bi-person-lines-fill"></i> جزئیات اکانت
-              </button>
-              <!-- <a href="{{ route('admin.subscriptions.show',$s) }}"
-                 class="btn btn-sm btn-outline-info me-1">
-                <i class="bi bi-receipt"></i> رسید
-              </a> -->
-              @if($s->status==='waiting')
-                <form class="d-inline" method="POST" action="{{ route('admin.subscriptions.activate',$s) }}">
-                  @csrf
-                  <button class="btn btn-sm btn-outline-success">
-                    <i class="bi bi-play"></i> فعال‌سازی
-                  </button>
-                </form>
-              @elseif($s->status==='active')
-                <form class="d-inline" method="POST" action="{{ route('admin.subscriptions.finish',$s) }}">
-                  @csrf
-                  <button class="btn btn-sm btn-outline-danger">
-                    <i class="bi bi-stop"></i> خاتمه
-                  </button>
-                </form>
-              @endif
+              <div class="dropdown">
+                <button
+                  class="btn btn-sm btn-outline-secondary dropdown-toggle"
+                  type="button"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false">
+                  <i class="bi bi-list"></i>
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end text-start">
+                  <li>
+                    <button type="button"
+                            class="dropdown-item d-flex align-items-center gap-2"
+                            data-bs-toggle="modal"
+                            data-bs-target="#{{ $accountModalId }}">
+                      <i class="bi bi-person-lines-fill"></i>
+                      <span>اطلاعات حساب کاربری</span>
+                    </button>
+                  </li>
+                  <li>
+                    <button type="button"
+                            class="dropdown-item d-flex align-items-center gap-2"
+                            data-bs-toggle="modal"
+                            data-bs-target="#{{ $gamesModalId }}">
+                      <i class="bi bi-controller"></i>
+                      <span>تغییر بازی‌ها</span>
+                    </button>
+                  </li>
+                  @if($s->status==='waiting')
+                    <li>
+                      <form method="POST" action="{{ route('admin.subscriptions.activate',$s) }}">
+                        @csrf
+                        <button class="dropdown-item d-flex align-items-center gap-2 text-success">
+                          <i class="bi bi-play"></i>
+                          <span>فعال‌سازی اشتراک</span>
+                        </button>
+                      </form>
+                    </li>
+                  @elseif($s->status==='active')
+                    <li>
+                      <form method="POST" action="{{ route('admin.subscriptions.finish',$s) }}">
+                        @csrf
+                        <button class="dropdown-item d-flex align-items-center gap-2 text-danger">
+                          <i class="bi bi-stop"></i>
+                          <span>خاتمه</span>
+                        </button>
+                      </form>
+                    </li>
+                  @endif
+                </ul>
+              </div>
             </td>
           </tr>
         @empty
@@ -261,6 +287,7 @@
     @php
       $waitingReady = $s->is_waiting_ready;
       $accountModalId = 'accountModal-' . $s->id;
+      $gamesModalId = 'gamesModal-' . $s->id;
     @endphp
     <div class="sub-card mb-3">
       {{-- هدر کارت --}}
@@ -356,6 +383,12 @@
                 data-bs-target="#{{ $accountModalId }}">
           <i class="bi bi-person-lines-fill"></i> جزئیات اکانت
         </button>
+        <button type="button"
+                class="btn btn-sm btn-outline-primary me-1 mb-1"
+                data-bs-toggle="modal"
+                data-bs-target="#{{ $gamesModalId }}">
+          <i class="bi bi-controller"></i> تغییر بازی‌ها
+        </button>
         {{-- <a href="{{ route('admin.subscriptions.show',$s) }}" class="btn btn-sm btn-outline-info me-1">
           <i class="bi bi-receipt"></i> رسید
         </a> --}}
@@ -415,6 +448,80 @@
             <button type="submit" class="btn btn-primary">ذخیره جزئیات</button>
           </div>
         </form>
+      </div>
+    </div>
+  </div>
+@endforeach
+
+@foreach($subscriptions as $gamesSubscription)
+  @php
+    $gamesModalId = 'gamesModal-' . $gamesSubscription->id;
+    $selectedGames = collect($gamesSubscription->active_games ?? []);
+    $level1Count = max(0, (int) optional($gamesSubscription->plan)->level1_selection);
+    $totalSlots  = max(0, (int) optional($gamesSubscription->plan)->concurrent_games);
+    $otherCount  = max(0, $totalSlots - $level1Count);
+  @endphp
+  <div class="modal fade account-details-modal" id="{{ $gamesModalId }}" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">تغییر بازی‌های اشتراک</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="بستن"></button>
+        </div>
+        @if(!$gamesSubscription->plan)
+          <div class="modal-body">
+            <div class="alert alert-warning mb-0">پلن این اشتراک یافت نشد.</div>
+          </div>
+        @elseif($totalSlots === 0)
+          <div class="modal-body">
+            <div class="alert alert-warning mb-0">این پلن هیچ اسلات فعالی برای بازی ندارد.</div>
+          </div>
+        @else
+          <form method="POST" action="{{ route('admin.subscriptions.games', $gamesSubscription) }}">
+            @csrf
+            <div class="modal-body">
+              <div class="mb-3 d-flex align-items-center justify-content-between flex-wrap gap-2">
+                <div>
+                  <div class="fw-bold">{{ $gamesSubscription->plan->name }}</div>
+                  <div class="text-muted small">تعداد اسلات: {{ $totalSlots }} | سطح ۱: {{ $level1Count }} | سایر: {{ $otherCount }}</div>
+                </div>
+                <div class="text-end">
+                  <span class="badge bg-secondary">{{ $gamesSubscription->subscription_code }}</span>
+                </div>
+              </div>
+              <div class="row g-3">
+                @for($i = 0; $i < $level1Count; $i++)
+                  @php $selectedName = $selectedGames->get($i); @endphp
+                  <div class="col-md-6">
+                    <label class="form-label">بازی سطح ۱ ({{ $i + 1 }})</label>
+                    <select class="form-select" name="games[level1][]" required>
+                      <option value="">-- انتخاب بازی سطح ۱ --</option>
+                      @foreach($level1Games as $game)
+                        <option value="{{ $game->id }}" {{ $selectedName === $game->name ? 'selected' : '' }}>{{ $game->name }}</option>
+                      @endforeach
+                    </select>
+                  </div>
+                @endfor
+                @for($i = 0; $i < $otherCount; $i++)
+                  @php $selectedName = $selectedGames->get($level1Count + $i); @endphp
+                  <div class="col-md-6">
+                    <label class="form-label">بازی دیگر ({{ $i + 1 }})</label>
+                    <select class="form-select" name="games[other][]" required>
+                      <option value="">-- انتخاب بازی --</option>
+                      @foreach($otherGames as $game)
+                        <option value="{{ $game->id }}" {{ $selectedName === $game->name ? 'selected' : '' }}>{{ $game->name }}</option>
+                      @endforeach
+                    </select>
+                  </div>
+                @endfor
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">انصراف</button>
+              <button type="submit" class="btn btn-primary">ذخیره بازی‌ها</button>
+            </div>
+          </form>
+        @endif
       </div>
     </div>
   </div>

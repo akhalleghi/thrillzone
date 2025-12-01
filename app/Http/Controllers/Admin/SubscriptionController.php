@@ -7,8 +7,10 @@ use App\Helpers\SmsHelper;
 use App\Models\Subscription;
 use App\Models\User;
 use App\Models\Plan;
+use App\Models\Game;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Illuminate\Validation\Rule;
 
 class SubscriptionController extends Controller
 {
@@ -43,8 +45,10 @@ class SubscriptionController extends Controller
             ->withQueryString();
 
         $plans = Plan::query()->orderBy('name')->get(['id','name']);
+        $level1Games = Game::query()->where('level', 1)->orderBy('name')->get(['id','name','cover']);
+        $otherGames  = Game::query()->where('level','!=',1)->orderBy('name')->get(['id','name','cover']);
 
-        return view('admin.subscriptions', compact('subscriptions','q','status','planId','from','to','plans'));
+        return view('admin.subscriptions', compact('subscriptions','q','status','planId','from','to','plans','level1Games','otherGames'));
     }
 
     // فعال‌سازی دستی: شروع=الان، پایان=الان+duration_months
@@ -138,6 +142,86 @@ class SubscriptionController extends Controller
         ]);
 
         return back()->with('success','اشتراک خاتمه یافت.');
+    }
+
+    public function updateGames(Request $request, Subscription $subscription)
+    {
+        $subscription->loadMissing('plan');
+        $plan = $subscription->plan;
+
+        if (!$plan) {
+            return back()->with('error', 'پلن این اشتراک یافت نشد.')->withInput();
+        }
+
+        $level1Count = max(0, (int) $plan->level1_selection);
+        $totalSlots  = max(0, (int) $plan->concurrent_games);
+        $otherCount  = max(0, $totalSlots - $level1Count);
+
+        if ($totalSlots <= 0) {
+            return back()->with('error', 'این پلن اسلات فعالی برای انتخاب بازی ندارد.')->withInput();
+        }
+
+        $rules = [];
+
+        if ($level1Count > 0) {
+            $rules['games.level1']   = ['required', 'array', 'size:' . $level1Count];
+            $rules['games.level1.*'] = ['required', 'integer', Rule::exists('games', 'id')];
+        } else {
+            $rules['games.level1'] = ['nullable', 'array', 'max:0'];
+        }
+
+        if ($otherCount > 0) {
+            $rules['games.other']   = ['required', 'array', 'size:' . $otherCount];
+            $rules['games.other.*'] = ['required', 'integer', Rule::exists('games', 'id')];
+        } else {
+            $rules['games.other'] = ['nullable', 'array', 'max:0'];
+        }
+
+        $data = $request->validate($rules, [
+            'games.level1.required' => 'انتخاب بازی‌های سطح ۱ الزامی است.',
+            'games.level1.size'     => "باید دقیقاً {$level1Count} بازی سطح ۱ انتخاب شود.",
+            'games.other.required'  => 'انتخاب سایر بازی‌ها الزامی است.',
+            'games.other.size'      => "باید دقیقاً {$otherCount} بازی از سایر سطوح انتخاب شود.",
+        ]);
+
+        $level1Ids = $level1Count > 0 ? array_map('intval', $data['games']['level1'] ?? []) : [];
+        $otherIds  = $otherCount > 0 ? array_map('intval', $data['games']['other'] ?? []) : [];
+
+        $allGameIds = array_merge($level1Ids, $otherIds);
+        if (count($allGameIds) !== count(array_unique($allGameIds))) {
+            return back()->with('error', 'یک بازی را بیش از یک‌بار انتخاب کرده‌اید.')->withInput();
+        }
+
+        $games = Game::query()
+            ->whereIn('id', $allGameIds)
+            ->get(['id', 'name', 'level']);
+
+        if ($games->count() !== count($allGameIds)) {
+            return back()->with('error', 'یکی از بازی‌های انتخابی در سیستم یافت نشد.')->withInput();
+        }
+
+        $level1Valid = $games->whereIn('id', $level1Ids)->every(fn($g) => (int) $g->level === 1);
+        $otherValid  = $games->whereIn('id', $otherIds)->every(fn($g) => (int) $g->level !== 1);
+
+        if (!$level1Valid || !$otherValid) {
+            return back()->with('error', 'بازی‌های انتخابی با سطح مورد نیاز پلن همخوانی ندارند.')->withInput();
+        }
+
+        $selectedGameNames = [];
+        foreach ($level1Ids as $id) {
+            $selectedGameNames[] = (string) $games->firstWhere('id', $id)?->name;
+        }
+        foreach ($otherIds as $id) {
+            $selectedGameNames[] = (string) $games->firstWhere('id', $id)?->name;
+        }
+
+        $subscription->update([
+            'active_games'      => array_values($selectedGameNames),
+            'games_selected_at' => now(),
+            'requested_at'      => now(),
+        ]);
+
+        return back()->with('success', 'بازی‌های اشتراک با موفقیت به‌روزرسانی شد.');
     }
 
     public function updateAccountDetails(Request $request, Subscription $subscription)
