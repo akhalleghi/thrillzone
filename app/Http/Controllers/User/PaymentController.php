@@ -288,6 +288,7 @@ class PaymentController extends Controller
     private function parseSwapLimitToDays(?string $swap): ?int
     {
         if (!$swap) return null;
+        if ($swap === 'none') return null;
         $num = (int) preg_replace('/\D/', '', $swap);
         if ($num <= 0) return null;
 

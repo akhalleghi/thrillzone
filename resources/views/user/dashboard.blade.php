@@ -487,9 +487,13 @@
           @foreach($plans as $plan)
             @php
               $swap = $plan->swap_limit;
-              $num = (int) preg_replace('/\D/', '', $swap);
-              $unit = str_ends_with($swap, 'm') ? 'ماه' : 'روز';
-              $swapText = $swap ? \Morilog\Jalali\CalendarUtils::convertNumbers($num) . " {$unit} یک‌بار" : '—';
+              if ($swap === 'none') {
+                  $swapText = 'بدون قابلیت تعویض';
+              } else {
+                  $num = (int) preg_replace('/\D/', '', $swap);
+                  $unit = str_ends_with($swap, 'm') ? 'ماه' : 'روز';
+                  $swapText = $swap ? \Morilog\Jalali\CalendarUtils::convertNumbers($num) . " {$unit} یک‌بار" : '—';
+              }
 
               $installText = collect($plan->install_options ?? [])->map(function($opt){
                   return $opt === 'inperson' ? 'به‌صورت حضوری در محل فروشگاه' :

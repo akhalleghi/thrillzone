@@ -233,6 +233,7 @@
             <div class="col-md-4">
               <label class="form-label">محدودیت تعویض بازی</label>
               <select name="swap_limit" class="form-select">
+                <option value="none">بدون قابلیت تعویض</option>
                 <option value="10d">۱۰ روزه</option>
                 <option value="15d">۱۵ روزه</option>
                 <option value="1m">۱ ماهه</option>
@@ -418,6 +419,7 @@
             <div class="col-md-4">
               <label class="form-label">محدودیت تعویض بازی</label>
               <select name="swap_limit" id="edit_swap_limit" class="form-select">
+                <option value="none">بدون قابلیت تعویض</option>
                 <option value="10d">۱۰ روزه</option>
                 <option value="15d">۱۵ روزه</option>
                 <option value="1m">۱ ماهه</option>

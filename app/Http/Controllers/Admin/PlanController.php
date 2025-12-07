@@ -85,7 +85,7 @@ class PlanController extends Controller
             'concurrent_games' => ['required', 'integer', 'between:1,30'],
             'all_ps_store' => ['nullable', 'boolean'],
             'level1_selection' => ['required', 'integer', 'between:1,30'],
-            'swap_limit' => ['required', 'in:10d,15d,1m,2m'],
+            'swap_limit' => ['required', 'in:10d,15d,1m,2m,none'],
             'install_options' => ['nullable', 'array'],
             'game_type' => ['nullable', 'string', 'max:150'],
             'has_discount' => ['nullable', 'boolean'],
