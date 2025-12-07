@@ -352,7 +352,8 @@
                                 <td>
                                     <div class="d-flex flex-column">
                                         <span class="fw-semibold">{{ $subscription->subscription_code ?? '---' }}</span>
-                                        <span class="text-secondary small">{{ $subscription->duration_months }} ماهه</span>
+                                        @php $durLabel = (int)$subscription->duration_months === 0 ? 'آفلاین - نامحدود' : ($subscription->duration_months . ' ماهه'); @endphp
+                                        <span class="text-secondary small">{{ $durLabel }}</span>
                                     </div>
                                 </td>
                                 <td>{{ $planName }}</td>
@@ -574,7 +575,8 @@
                         <div class="header mb-2">
                             <div>
                                 <div class="fw-semibold">{{ $subscription->subscription_code ?? '---' }}</div>
-                                <div class="text-secondary small">{{ $planName }} | {{ $subscription->duration_months }} ماهه</div>
+                                @php $durLabel = (int)$subscription->duration_months === 0 ? 'آفلاین - نامحدود' : ($subscription->duration_months . ' ماهه'); @endphp
+                                <div class="text-secondary small">{{ $planName }} | {{ $durLabel }}</div>
                             </div>
                             <span class="{{ $statusClass }}">{{ $statusLabel }}</span>
                         </div>

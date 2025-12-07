@@ -43,13 +43,19 @@ class UpgradeRequestController extends Controller
         $subscription = Subscription::with('plan')->findOrFail($upgradeRequest->subscription_id);
         $plan = Plan::findOrFail($upgradeRequest->requested_plan_id);
 
-        $duration = (int) ($upgradeRequest->requested_duration ?? 0);
-        $allowedDurations = collect($plan->durations ?? [])->map(fn ($d) => (int) $d)->filter(fn ($d) => $d > 0);
-        if ($duration <= 0 || !$allowedDurations->contains($duration)) {
-            return back()->with('error', 'مدت انتخاب شده برای این پلن معتبر نیست.');
+        $durationRaw = $upgradeRequest->requested_duration;
+        $isOfflineUnlimited = $durationRaw === 'offline_unlimited' || (int)($durationRaw ?? 0) === 0;
+        $duration = $isOfflineUnlimited ? 0 : (int) ($durationRaw ?? 0);
+
+        $allowedDurations = collect($plan->durations ?? [])->map(function ($d) {
+            return $d === 'offline_unlimited' ? 0 : (int) $d;
+        });
+        if (!$allowedDurations->contains($duration)) {
+            return back()->with('error', '??? ?????? ??? ???? ??? ??? ????? ????.');
         }
 
-        $price = $plan->priceFor($duration) ?? $subscription->price;
+        $priceKey = $duration === 0 ? 'offline_unlimited' : $duration;
+        $price = $plan->priceFor($priceKey) ?? $subscription->price;
 
         DB::transaction(function () use ($upgradeRequest, $subscription, $plan, $duration, $price) {
             $now = Carbon::now();
@@ -60,7 +66,7 @@ class UpgradeRequestController extends Controller
             $subscription->status = 'active';
             $subscription->purchased_at = $now;
             $subscription->activated_at = $now;
-            $subscription->ends_at = $now->copy()->addMonths($duration);
+            $subscription->ends_at = $duration > 0 ? $now->copy()->addMonths($duration) : null;
             $subscription->requested_at = $now;
             $subscription->games_selected_at = $now;
             $subscription->active_games = $upgradeRequest->selected_games ?? [];

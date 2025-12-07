@@ -102,9 +102,11 @@ class PlanController extends Controller
             'dur_3' => ['nullable', 'boolean'],
             'dur_6' => ['nullable', 'boolean'],
             'dur_12' => ['nullable', 'boolean'],
+            'dur_offline_unlimited' => ['nullable', 'boolean'],
             'price_3' => ['nullable', 'integer', 'min:0'],
             'price_6' => ['nullable', 'integer', 'min:0'],
             'price_12' => ['nullable', 'integer', 'min:0'],
+            'price_offline_unlimited' => ['nullable', 'integer', 'min:0'],
         ], [
             'name.required' => 'نام پلن را وارد کنید',
             'capability.in' => 'گزینه‌ی قابلیت اجرا معتبر نیست',
@@ -148,6 +150,10 @@ class PlanController extends Controller
         if ($request->boolean('dur_12')) {
             $durations[] = 12;
             $prices['12'] = (int)$request->input('price_12', 0);
+        }
+        if ($request->boolean('dur_offline_unlimited')) {
+            $durations[] = 'offline_unlimited';
+            $prices['offline_unlimited'] = (int)$request->input('price_offline_unlimited', 0);
         }
 
         if (empty($durations)) {

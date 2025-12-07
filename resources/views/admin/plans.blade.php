@@ -66,7 +66,8 @@
                         <td>
                             @php $durs=$plan->durations??[]; @endphp
                             @foreach($durs as $d)
-                                <span class="badge bg-info me-1">{{ $d }}م: {{ number_format($plan->priceFor($d)) }}</span>
+                                @php $durLabel = $d === 'offline_unlimited' ? 'آفلاین - نامحدود' : ($d . ' ماهه'); @endphp
+                                <span class="badge bg-info me-1">{{ $durLabel }}: {{ number_format($plan->priceFor($d)) }}</span>
                             @endforeach
                         </td>
                         <td>
@@ -126,7 +127,8 @@
                     <div class="col-12 mt-1"><b>مدت‌ها/قیمت:</b>
                         @php $durs=$plan->durations??[]; @endphp
                         @foreach($durs as $d)
-                            <span class="badge bg-info me-1">{{ $d }}م: {{ number_format($plan->priceFor($d)) }}</span>
+                            @php $durLabel = $d === 'offline_unlimited' ? 'آفلاین - نامحدود' : ($d . ' ماهه'); @endphp
+                            <span class="badge bg-info me-1">{{ $durLabel }}: {{ number_format($plan->priceFor($d)) }}</span>
                         @endforeach
                     </div>
                     <div class="col-6 mt-1"><b>تخفیف:</b>
@@ -327,6 +329,12 @@
                   <span class="form-check-label">۱۲ ماهه</span>
                 </label>
                 <input id="price12_create" name="price_12" class="form-control w-auto d-none" placeholder="قیمت ۱۲ ماهه" inputmode="numeric">
+
+                <label class="form-check">
+                  <input class="form-check-input dur-toggle" type="checkbox" name="dur_offline_unlimited" value="1" data-target="#price_offline_unlimited_create">
+                  <span class="form-check-label">آفلاین - نامحدود</span>
+                </label>
+                <input id="price_offline_unlimited_create" name="price_offline_unlimited" class="form-control w-auto d-none" placeholder="قیمت آفلاین - نامحدود" inputmode="numeric">
               </div>
               <small class="muted d-block mt-2">هر مدت زمانی که تیک می‌خورد، فیلد قیمتش ظاهر می‌شود.</small>
             </div>
@@ -517,6 +525,12 @@
                   <span class="form-check-label">۱۲ ماهه</span>
                 </label>
                 <input id="price12_edit" name="price_12" class="form-control w-auto d-none" placeholder="قیمت ۱۲ ماهه" inputmode="numeric">
+
+                <label class="form-check">
+                  <input class="form-check-input dur-toggle" type="checkbox" name="dur_offline_unlimited" value="1" data-target="#price_offline_unlimited_edit" id="edit_dur_offline_unlimited">
+                  <span class="form-check-label">آفلاین - نامحدود</span>
+                </label>
+                <input id="price_offline_unlimited_edit" name="price_offline_unlimited" class="form-control w-auto d-none" placeholder="قیمت آفلاین - نامحدود" inputmode="numeric">
               </div>
             </div>
 
@@ -632,13 +646,21 @@
     const d3  = document.getElementById('edit_dur3');
     const d6  = document.getElementById('edit_dur6');
     const d12 = document.getElementById('edit_dur12');
+    const dOffline = document.getElementById('edit_dur_offline_unlimited');
     const p3  = document.getElementById('price3_edit');
     const p6  = document.getElementById('price6_edit');
     const p12 = document.getElementById('price12_edit');
+    const pOffline = document.getElementById('price_offline_unlimited_edit');
 
     d3.checked = durs.includes(3);  p3.value  = prices['3']  ?? '';  p3.classList.toggle('d-none', !d3.checked);
     d6.checked = durs.includes(6);  p6.value  = prices['6']  ?? '';  p6.classList.toggle('d-none', !d6.checked);
     d12.checked= durs.includes(12); p12.value = prices['12'] ?? '';  p12.classList.toggle('d-none', !d12.checked);
+    if (dOffline && pOffline) {
+      const hasOffline = durs.includes('offline_unlimited');
+      dOffline.checked = hasOffline;
+      pOffline.value = prices['offline_unlimited'] ?? '';
+      pOffline.classList.toggle('d-none', !hasOffline);
+    }
 
     // active
     document.getElementById('edit_active').checked = !!plan.active;

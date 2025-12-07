@@ -153,7 +153,8 @@
               <div class="fw-bold">{{ $s->user->name ?? '—' }}</div>
               <div class="text-muted">{{ $s->user->phone ?? '—' }}</div>
             </td>
-            <td>{{ $s->duration_months }} ماهه</td>
+            @php $durLabel = (int)$s->duration_months === 0 ? 'آفلاین - نامحدود' : ($s->duration_months . ' ماهه'); @endphp
+            <td>{{ $durLabel }}</td>
             <td>{{ $s->plan->name ?? '—' }}</td>
             <td>{{ $s->purchased_at ? Jalalian::fromCarbon($s->purchased_at)->format('Y/m/d H:i') : '—' }}</td>
             <td>{{ $s->requested_at ? Jalalian::fromCarbon($s->requested_at)->format('Y/m/d H:i') : '—' }}</td>
@@ -317,7 +318,8 @@
       {{-- جزئیات اشتراک --}}
       <div class="row g-2 small">
         <div class="col-6"><b>پلن:</b> {{ $s->plan->name ?? '—' }}</div>
-        <div class="col-6"><b>مدت:</b> {{ $s->duration_months }} ماهه</div>
+        @php $durLabel = (int)$s->duration_months === 0 ? 'آفلاین - نامحدود' : ($s->duration_months . ' ماهه'); @endphp
+        <div class="col-6"><b>مدت:</b> {{ $durLabel }}</div>
         <div class="col-6"><b>خرید:</b> 
           {{ $s->purchased_at ? Jalalian::fromCarbon($s->purchased_at)->format('Y/m/d H:i') : '—' }}
         </div>

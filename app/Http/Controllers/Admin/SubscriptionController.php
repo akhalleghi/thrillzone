@@ -67,8 +67,9 @@ class SubscriptionController extends Controller
             $selectionDelayDays = $selectionDeadline->diffInDays($selectionCompletedAt);
         }
 
-        $endsAt = (clone $activatedAt)->addMonths($subscription->duration_months);
-        if ($selectionDelayDays > 0) {
+        $durationMonths = (int) ($subscription->duration_months ?? 0);
+        $endsAt = $durationMonths > 0 ? (clone $activatedAt)->addMonths($durationMonths) : null;
+        if ($selectionDelayDays > 0 && $endsAt) {
             $endsAt->subDays($selectionDelayDays);
 
             if ($endsAt->lessThanOrEqualTo($activatedAt)) {
@@ -90,28 +91,28 @@ class SubscriptionController extends Controller
         ]);
 
         $subscription->loadMissing(['user', 'plan']);
-
         $userName    = trim($subscription->user->name ?? 'کاربر');
-        $planName    = $subscription->plan->name ?? 'اشتراک';
+        $planName    = $subscription->plan->name ?? 'پلن';
         $mobile      = $subscription->user->phone ?? null;
-        $usableDays  = max(1, (int) $activatedAt->diffInDays($endsAt));
+        $usableDays  = $endsAt ? max(1, (int) $activatedAt->diffInDays($endsAt)) : null;
 
         if ($mobile) {
             $lines = [
-                "{$userName} عزیز 📣",
-                "اشتراک 🌟 {$planName} 🌟",
-                "با موفقیت فعال شد ✅",
-                "از امروز به مدت ⏰ {$usableDays} روز در دسترس شماست.",
+                "{$userName} عزیز",
+                "اشتراک {$planName} فعال شد.",
+                "هر زمان سوالی داشتید با ما در تماس باشید.",
+                $usableDays !== null
+                    ? "مدت قابل استفاده: حداقل {$usableDays} روز."
+                    : "مدت قابل استفاده: نامحدود.",
             ];
 
             if ($selectionDelayDays > 0) {
-                $lines[] = "توجه: به دلیل تأخیر در انتخاب بازی‌ها {$selectionDelayDays} روز از مدت اشتراک شما کسر شد.";
+                $lines[] = "توضیح: به‌دلیل تأخیر در انتخاب بازی، {$selectionDelayDays} روز از مدت کم شد.";
             }
+            $lines[] = "لطفاً قوانین را مطالعه کنید.";
+            $lines[] = "با تشکر، تیم پشتیبانی.";
 
-            $lines[] = "از انتخاب شما سپاسگزاریم 🙏";
-            $lines[] = "💥 منطقه هیجان 💥";
-
-            SmsHelper::sendMessage(
+SmsHelper::sendMessage(
                 $mobile,
                 implode("\n", $lines),
                 [

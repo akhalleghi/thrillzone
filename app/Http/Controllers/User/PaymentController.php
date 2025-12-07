@@ -24,16 +24,27 @@ class PaymentController extends Controller
 
         $validated = $request->validate([
             'plan_id' => 'required|integer|exists:plans,id',
-            'months'  => 'required|integer|min:1|max:24',
+            'months'  => ['required', function($attribute, $value, $fail) {
+                if ($value === 'offline_unlimited') {
+                    return;
+                }
+                if (!is_numeric($value) || (int)$value < 1 || (int)$value > 24) {
+                    $fail('??? ???? ?????? ????? ????.');
+                }
+            }],
             'coupon_code' => 'nullable|string|max:50',
         ]);
 
         $planId = $validated['plan_id'];
-        $months = $validated['months'];
+        $monthsInput = $validated['months'];
+        $isOfflineUnlimited = $monthsInput === 'offline_unlimited';
+        $months = $isOfflineUnlimited ? 0 : (int)$monthsInput;
         $code   = trim($validated['coupon_code'] ?? '');
 
         $plan = Plan::findOrFail($planId);
-        $basePrice = (int) ($plan->prices[$months] ?? 0);
+        $basePrice = $isOfflineUnlimited
+            ? (int) ($plan->prices['offline_unlimited'] ?? 0)
+            : (int) ($plan->prices[$months] ?? 0);
         if ($basePrice <= 0) {
             return back()->with('error', 'مدت زمان انتخابی برای این پلن معتبر نیست.');
         }
@@ -65,7 +76,7 @@ class PaymentController extends Controller
                 'amount'      => $amountRial,
                 'callbackUrl' => $callbackUrl,
                 'orderId'     => (string) $txn->id,
-                'description' => "خرید اشتراک {$months} ماهه - کاربر {$user->name}",
+                'description' => "دوره اشتراک: " . ($isOfflineUnlimited ? 'آفلاین - نامحدود' : "{$months} ماهه") . " - کاربر {$user->name}",
             ])->json();
         } catch (\Throwable $e) {
             Log::error('Zibal connection error: ' . $e->getMessage());
@@ -130,8 +141,9 @@ class PaymentController extends Controller
                 ->with('error', 'پلن مربوط به این تراکنش یافت نشد.');
         }
 
-        $months = (int) ($txn->months ?? 1);
-        if ($months <= 0) $months = 1;
+        $months = (int) ($txn->months ?? 0);
+        if ($months < 0) $months = 0;
+        $isOfflineUnlimited = $months === 0;
 
         $price = (int) $txn->amount;
         $swapEveryDays = $this->parseSwapLimitToDays($plan->swap_limit);
@@ -199,19 +211,25 @@ class PaymentController extends Controller
 
     try {
         if ($status === 'success' && $subscription && $plan) {
+            $durationRaw = (int) ($subscription->duration_months ?? 0);
+            $durationLabel = $durationRaw > 0
+                ? $this->toPersianDigits($durationRaw) . ' ماهه'
+                : 'آفلاین - نامحدود';
+
             $msg = "🎉 {$fullName} عزیز
 اشتراک «{$plan->name}» با موفقیت ثبت شد.
-شماره اشتراک: {$subscription->subscription_code}
+کد اشتراک: {$subscription->subscription_code}
+مدت: {$durationLabel}
 
-⏰لطفا حداکثر تا ۲ روز آینده از قسمت «اشتراک‌های من» بازی‌های خود را انتخاب کنید؛ تأخیر باعث کسر زمان اشتراک می‌شود.
-🙏 از انتخاب شما سپاسگزاریم 💙
+⏰ لطفاً حداکثر تا ۲ روز آینده از بخش «اشتراک‌های من» بازی‌های خود را انتخاب کنید.
+🙏 از اعتماد شما سپاسگزاریم
 منطقه هیجان";
             $this->notifyAdminsAboutPurchase($subscription, $plan);
         } elseif ($status === 'failed') {
             $msg = "❌ {$fullName} عزیز
-خرید شما ناموفق بود.
+پرداخت شما ناموفق بود.
 کد پیگیری: {$trackId}
-📱 از پنل کاربری می‌توانید دوباره اقدام کنید.
+در صورت کسر وجه، طی ۷۲ ساعت برگشت داده می‌شود.
 منطقه هیجان";
         } else return;
 
@@ -234,7 +252,7 @@ class PaymentController extends Controller
         $durationMonths = (int) ($subscription->duration_months ?? 0);
         $durationLabel = $durationMonths > 0
             ? $this->toPersianDigits($durationMonths) . ' ماهه'
-            : 'نامشخص';
+            : 'آفلاین - نامحدود';
 
         $message = "سلام مدیر 😊🚀
 سفارش با شماره اشتراک {$this->toPersianDigits($subscription->subscription_code)}

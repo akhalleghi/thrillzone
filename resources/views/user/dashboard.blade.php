@@ -559,8 +559,13 @@
                   <label>مدت زمان اشتراک:</label>
                   <div class="duration-buttons" data-plan="{{ $plan->id }}">
                     @foreach($plan->durations ?? [] as $duration)
-                      <button type="button" class="duration-btn" data-plan="{{ $plan->id }}" data-months="{{ $duration }}">
-                        {{ \Morilog\Jalali\CalendarUtils::convertNumbers($duration) }} ماه
+                      @php
+                        $durationLabel = $duration === 'offline_unlimited'
+                          ? 'آفلاین - نامحدود'
+                          : \Morilog\Jalali\CalendarUtils::convertNumbers($duration) . ' ماه';
+                      @endphp
+                      <button type="button" class="duration-btn" data-plan="{{ $plan->id }}" data-months="{{ $duration }}" data-label="{{ $durationLabel }}">
+                        {{ $durationLabel }}
                       </button>
                     @endforeach
                   </div>
@@ -629,7 +634,7 @@ document.addEventListener('show.bs.modal', () => {
 <script>
 /* --- متغیرهای اصلی --- */
 const plans = @json($plans);
-let selected = { planId: null, months: null, price: 0, discount: 0, final: 0 };
+let selected = { planId: null, months: null, monthLabel: '', price: 0, discount: 0, final: 0 };
 const toFa = n => new Intl.NumberFormat('fa-IR').format(Number(n || 0));
 const confirmBtn = document.getElementById('confirmPlanBtn');
 const rulesCheckbox = document.getElementById('rulesAgree');
@@ -643,7 +648,7 @@ rulesCheckbox.addEventListener('change', updateConfirmButtonState);
 
 /* --- انتخاب پلن --- */
 function selectPlan(planId) {
-  selected = { planId, months: null, price: 0, discount: 0, final: 0 };
+  selected = { planId, months: null, monthLabel: '', price: 0, discount: 0, final: 0 };
   document.querySelectorAll('.plan-card').forEach(c => c.classList.remove('active'));
   document.getElementById(`plan-card-${planId}`).classList.add('active');
 
@@ -664,6 +669,7 @@ document.addEventListener('click', e => {
   if (!btn) return;
   const planId = btn.dataset.plan;
   const months = btn.dataset.months;
+  const monthLabel = btn.dataset.label || (months + ' ماه');
 
   btn.closest('.duration-buttons').querySelectorAll('.duration-btn')
       .forEach(b => b.classList.remove('active'));
@@ -674,12 +680,13 @@ document.addEventListener('click', e => {
 
   selected.planId = planId;
   selected.months = months;
+  selected.monthLabel = monthLabel;
   selected.price = price;
   selected.final = price;
   selected.discount = 0;
 
   document.getElementById(`price-${planId}`).textContent = `${toFa(price)} تومان`;
-  updateInvoice(plan.name, months, price);
+  updateInvoice(plan.name, monthLabel, price);
 
   updateConfirmButtonState();
 
@@ -692,10 +699,10 @@ document.addEventListener('click', e => {
 });
 
 /* --- به‌روزرسانی فاکتور --- */
-function updateInvoice(planName, months, price) {
+function updateInvoice(planName, monthLabel, price) {
   document.getElementById('invoiceBox').classList.remove('d-none');
   document.getElementById('inv-plan').textContent = planName;
-  document.getElementById('inv-months').textContent = toFa(months) + ' ماه';
+  document.getElementById('inv-months').textContent = monthLabel;
   document.getElementById('inv-price').textContent = toFa(price) + ' تومان';
 }
 

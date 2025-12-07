@@ -51,7 +51,8 @@
             <td>{{ $req->user->name ?? '—' }}</td>
             <td>{{ $req->user->phone ?? '—' }}</td>
             <td>{{ $req->subscription->plan->name ?? '—' }}</td>
-            <td>{{ $req->subscription->duration_months ?? '—' }} ماهه</td>
+            @php $durLabel = (int)($req->subscription->duration_months ?? 0) === 0 ? 'آفلاین - نامحدود' : (($req->subscription->duration_months ?? '—') . ' ماهه'); @endphp
+            <td>{{ $durLabel }}</td>
             <td>
               @if(!empty($req->requested_games))
                 {{ is_array($req->requested_games) ? implode('، ', $req->requested_games) : $req->requested_games }}
@@ -102,7 +103,8 @@
 
         <div class="small text-muted mb-1">
           <b>پلن:</b> {{ $req->subscription->plan->name ?? '—' }}<br>
-          <b>مدت:</b> {{ $req->subscription->duration_months }} ماهه<br>
+          @php $durLabel = (int)($req->subscription->duration_months ?? 0) === 0 ? 'آفلاین - نامحدود' : (($req->subscription->duration_months ?? '—') . ' ماهه'); @endphp
+          <b>مدت:</b> {{ $durLabel }}<br>
           <b>بازی‌های درخواستی:</b>
           <span class="text-light">
             {{ is_array($req->requested_games) ? implode('، ', $req->requested_games) : ($req->requested_games ?: '—') }}
