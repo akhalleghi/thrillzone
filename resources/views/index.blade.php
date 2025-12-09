@@ -5,9 +5,65 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('favicon-32x32.png') }}">
     <link rel="shortcut icon" type="image/png" href="{{ asset('favicon-32x32.png') }}">
+    <meta name="title" content="خرید اکانت قانونی پلی‌استیشن | اشتراک PS5 و PS4 | Thrillzone">
+    <meta name="description" content="تریل زون؛ مرجع فروش اکانت قانونی پلی‌استیشن، اشتراک پلاس اکسترا و پریمیوم، گیفت کارت و بازی دیجیتال PS5 و PS4 با تحویل فوری و پشتیبانی تخصصی.">
+    <meta name="keywords" content="خرید اکانت قانونی پلی استیشن, اشتراک پلی استیشن, پلی استیشن پلاس, ps5, ps4, بازی دیجیتال, گیفت کارت, اکانت قانونی, thrillzone">
+    <meta name="robots" content="index, follow">
+    <meta name="googlebot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+    <meta name="author" content="Thrillzone">
+    <meta name="theme-color" content="#000000">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    <meta name="language" content="fa-IR">
+    <link rel="canonical" href="{{ url()->current() }}">
+    <link rel="alternate" href="{{ url()->current() }}" hreflang="fa-IR">
+    <meta property="og:locale" content="fa_IR">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="خرید اکانت قانونی پلی‌استیشن | اشتراک PS5 و PS4 | Thrillzone">
+    <meta property="og:description" content="فروش اکانت قانونی پلی‌استیشن، اشتراک پلاس اکسترا و پریمیوم، بازی دیجیتال و گیفت کارت با تحویل فوری در Thrillzone. پشتیبانی تخصصی و پیشنهادهای ویژه گیمرها.">
+    <meta property="og:url" content="{{ url()->current() }}">
+    <meta property="og:site_name" content="Thrillzone">
+    <meta property="og:image" content="{{ asset('images/thrill-logo.png') }}">
+    <meta property="og:image:alt" content="لوگوی Thrillzone">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="خرید اکانت قانونی پلی‌استیشن | اشتراک PS5 و PS4 | Thrillzone">
+    <meta name="twitter:description" content="خرید اشتراک پلی‌استیشن پلاس، بازی دیجیتال و اکانت قانونی PS5/PS4 با تحویل سریع و پشتیبانی آنلاین در Thrillzone.">
+    <meta name="twitter:image" content="{{ asset('images/thrill-logo.png') }}">
+    <script type="application/ld+json">
+        {!! json_encode([
+            '@context' => 'https://schema.org',
+            '@type' => 'Organization',
+            'name' => 'Thrillzone',
+            'url' => url('/'),
+            'logo' => asset('images/thrill-logo.png'),
+            'sameAs' => [
+                'https://www.instagram.com/thrillzone',
+                'https://t.me/thrillzone'
+            ],
+            'contactPoint' => [[
+                '@type' => 'ContactPoint',
+                'contactType' => 'customer support',
+                'areaServed' => 'IR',
+                'availableLanguage' => ['fa', 'en']
+            ]]
+        ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) !!}
+    </script>
+    <script type="application/ld+json">
+        {!! json_encode([
+            '@context' => 'https://schema.org',
+            '@type' => 'WebSite',
+            'name' => 'Thrillzone',
+            'url' => url('/'),
+            'inLanguage' => 'fa-IR',
+            'potentialAction' => [
+                '@type' => 'SearchAction',
+                'target' => url('/') . '/search?q={search_term_string}',
+                'query-input' => 'required name=search_term_string'
+            ]
+        ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) !!}
+    </script>
     <title>منطقه هیجان - خرید اشتراک‌های قانونی پلی‌استیشن</title>
-    <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet">
-    <style>
+        <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet">
+<style>
         * {
             margin: 0;
             padding: 0;
