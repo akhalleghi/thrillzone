@@ -506,6 +506,9 @@
 
               $firstDuration = $plan->durations[0] ?? null;
               $firstPrice = $firstDuration ? ($plan->prices[$firstDuration] ?? 0) : 0;
+              $hasSwapPrefix = $swap !== 'none';
+              $isOfflineUnlimited = in_array('offline_unlimited', $plan->durations ?? []);
+              $freeGamesLabel = $isOfflineUnlimited ? 'بازی رایگان:' : 'بازی رایگان ماهانه:';
             @endphp
 
             <div class="col-12 col-md-6 col-xl-4">
@@ -526,7 +529,7 @@
                   <li><i class="bi bi-joystick text-info"></i> بازی‌های همزمان مجاز: <span class="text-light">{{ \Morilog\Jalali\CalendarUtils::convertNumbers($plan->concurrent_games) }}</span></li>
                   <li><i class="bi bi-grid-3x3-gap text-info"></i> تعداد بازی قابل انتخاب سطح ۱: <span class="text-light">{{ \Morilog\Jalali\CalendarUtils::convertNumbers($plan->level1_selection) }}</span></li>
                   <li><i class="bi bi-collection text-info"></i> لیست بازی‌ها: <span class="text-light">{{ $gamesText }}</span></li>
-                  <li><i class="bi bi-arrow-repeat text-info"></i> محدودیت تعویض رایگان: <span class="text-light">هر {{ $swapText }}</span></li>
+                  <li><i class="bi bi-arrow-repeat text-info"></i> محدودیت تعویض رایگان: <span class="text-light">{{ $hasSwapPrefix ? "هر " : "" }}{{ $swapText }}</span></li>
                   <li><i class="bi bi-hdd-network text-info"></i> نحوه نصب دیتا:
                     @forelse($installText as $txt)
                       <span class="badge bg-info bg-opacity-10 text-info me-1">{{ $txt }}</span>
@@ -541,11 +544,11 @@
                       <span class="text-danger">ندارد</span>
                     @endif
                   </li>
-                  <li><i class="bi bi-gift text-info"></i> بازی رایگان ماهانه:
+                  <li><i class="bi bi-gift text-info"></i> {{ $freeGamesLabel }}
                     @if($plan->has_free_games)
                       <span class="text-light">{{ \Morilog\Jalali\CalendarUtils::convertNumbers($plan->free_games_count) }} عدد</span>
                     @else
-                      <span class="text-muted">ندارد</span>
+                      <span class="text-danger">ندارد</span>
                     @endif
                   </li>
                   <li><i class="bi bi-cpu text-info"></i> پلتفرم‌ها:
