@@ -39,6 +39,57 @@
     border-color: rgba(255,255,255,0.2);
     color: inherit;
   }
+  .time-manage-modal .modal-content{
+    background: linear-gradient(135deg, rgba(18,24,54,0.96), rgba(30,16,66,0.94));
+    border:1px solid rgba(255,255,255,0.15);
+    color: var(--text-color,#f8f9ff);
+    box-shadow: 0 25px 60px rgba(0,0,0,0.5);
+    backdrop-filter: blur(10px);
+  }
+  .time-manage-modal .modal-header,
+  .time-manage-modal .modal-footer{
+    background: rgba(255,255,255,0.03);
+    border-color: rgba(255,255,255,0.12);
+  }
+  .time-manage-modal .modal-header .btn-close{
+    filter: invert(1);
+    opacity: .7;
+  }
+  .time-manage-summary{
+    background: rgba(255,255,255,.06);
+    border:1px solid rgba(255,255,255,.12);
+    border-radius:12px;
+    padding:.8rem;
+  }
+  .time-manage-summary .label{
+    font-size:.8rem;
+    color:rgba(255,255,255,.7);
+    margin-bottom:.35rem;
+  }
+  .time-manage-summary .value{
+    font-weight:700;
+    font-variant-numeric: tabular-nums;
+  }
+  .time-manage-preview{
+    background: rgba(255,255,255,.04);
+    border:1px dashed rgba(255,255,255,.25);
+    border-radius:12px;
+    padding:.9rem;
+  }
+  .time-manage-preview .label{
+    font-size:.8rem;
+    color:rgba(255,255,255,.7);
+  }
+  .time-manage-preview .value{
+    margin-top:.35rem;
+    font-weight:800;
+    font-variant-numeric: tabular-nums;
+  }
+  .time-manage-quick{
+    display:flex;
+    flex-wrap:wrap;
+    gap:.4rem;
+  }
 </style>
 <style>
   .table-scroll-x{overflow-x:auto}
@@ -145,6 +196,7 @@
             $waitingReady = $s->is_waiting_ready;
             $accountModalId = 'accountModal-' . $s->id;
             $gamesModalId = 'gamesModal-' . $s->id;
+            $timeModalId = 'timeModal-' . $s->id;
           @endphp
           <tr>
             <td>{{ $subscriptions->firstItem() + $i }}</td>
@@ -180,12 +232,17 @@
               @endif
             </td>
             <td>{{ $s->activated_at ? Jalalian::fromCarbon($s->activated_at)->format('Y/m/d H:i') : '—' }}</td>
-            <td>{{ $s->ends_at ? Jalalian::fromCarbon($s->ends_at)->format('Y/m/d H:i') : '—' }}</td>
+            <td>
+              <span class="ends-at-text" data-subscription-id="{{ $s->id }}">
+                {{ $s->ends_at ? Jalalian::fromCarbon($s->ends_at)->format('Y/m/d H:i') : '—' }}
+              </span>
+            </td>
 
             {{-- زمان باقی‌مانده --}}
             <td>
               @if($s->status === 'active' && $s->ends_at)
                 <span class="timer countdown"
+                      data-subscription-id="{{ $s->id }}"
                       data-end="{{ $s->ends_at->toIso8601String() }}">...</span>
               @elseif($s->status === 'ended')
                 <span class="text-muted">خاتمه یافته</span>
@@ -249,6 +306,17 @@
                       <span>تغییر بازی‌ها</span>
                     </button>
                   </li>
+                  @if(($s->status==='active' && $s->ends_at) || $s->status==='waiting')
+                    <li>
+                      <button type="button"
+                              class="dropdown-item d-flex align-items-center gap-2"
+                              data-bs-toggle="modal"
+                              data-bs-target="#{{ $timeModalId }}">
+                        <i class="bi bi-clock-history"></i>
+                        <span>مدیریت زمان</span>
+                      </button>
+                    </li>
+                  @endif
                   @if($s->status==='waiting')
                     <li>
                       <form method="POST" action="{{ route('admin.subscriptions.activate',$s) }}">
@@ -289,6 +357,7 @@
       $waitingReady = $s->is_waiting_ready;
       $accountModalId = 'accountModal-' . $s->id;
       $gamesModalId = 'gamesModal-' . $s->id;
+      $timeModalId = 'timeModal-' . $s->id;
     @endphp
     <div class="sub-card mb-3">
       {{-- هدر کارت --}}
@@ -391,6 +460,14 @@
                 data-bs-target="#{{ $gamesModalId }}">
           <i class="bi bi-controller"></i> تغییر بازی‌ها
         </button>
+        @if(($s->status==='active' && $s->ends_at) || $s->status==='waiting')
+          <button type="button"
+                  class="btn btn-sm btn-outline-secondary me-1 mb-1"
+                  data-bs-toggle="modal"
+                  data-bs-target="#{{ $timeModalId }}">
+            <i class="bi bi-clock-history"></i> مدیریت زمان
+          </button>
+        @endif
         {{-- <a href="{{ route('admin.subscriptions.show',$s) }}" class="btn btn-sm btn-outline-info me-1">
           <i class="bi bi-receipt"></i> رسید
         </a> --}}
@@ -498,7 +575,7 @@
                     <label class="form-label">بازی سطح ۱ ({{ $i + 1 }})</label>
                     <select class="form-select" name="games[level1][]" required>
                       <option value="">-- انتخاب بازی سطح ۱ --</option>
-                      @foreach($level1Games as $game)
+                      @foreach($level1And2Games as $game)
                         <option value="{{ $game->id }}" {{ $selectedName === $game->name ? 'selected' : '' }}>{{ $game->name }}</option>
                       @endforeach
                     </select>
@@ -529,6 +606,78 @@
   </div>
 @endforeach
 
+@foreach($subscriptions as $timeSubscription)
+  @php
+    $timeModalId = 'timeModal-' . $timeSubscription->id;
+    $timeBaseAt = $timeSubscription->status === 'waiting'
+      ? ($timeSubscription->selection_deadline ?? $timeSubscription->purchased_at ?? $timeSubscription->created_at)
+      : $timeSubscription->ends_at;
+    $timeBaseAtIso = $timeBaseAt?->toIso8601String();
+    $timeBaseAtLabel = $timeBaseAt ? Jalalian::fromCarbon($timeBaseAt)->format('Y/m/d H:i') : '—';
+    $timeRemainingDays = $timeBaseAt ? max(0, now()->diffInDays($timeBaseAt, false)) : null;
+  @endphp
+  @if(($timeSubscription->status === 'active' && $timeSubscription->ends_at) || $timeSubscription->status === 'waiting')
+    <div class="modal fade time-manage-modal" id="{{ $timeModalId }}" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">مدیریت زمان اشتراک</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="بستن"></button>
+          </div>
+          <form method="POST" action="{{ route('admin.subscriptions.time', $timeSubscription) }}" class="time-manage-form">
+            @csrf
+            <div class="modal-body">
+              <div class="row g-2">
+                <div class="col-6">
+                  <div class="time-manage-summary">
+                    <div class="label">زمان پایان فعلی</div>
+                    <div class="value">{{ $timeBaseAtLabel }}</div>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="time-manage-summary">
+                    <div class="label">روز باقی‌مانده</div>
+                    <div class="value">{{ $timeRemainingDays !== null ? $timeRemainingDays : '0' }}</div>
+                  </div>
+                </div>
+              </div>
+              <div class="mt-3">
+                <label class="form-label">تغییر زمان (روز)</label>
+                <input type="number" class="form-control time-adjust-days" name="adjust_days" min="-3650" max="3650" step="1" value="0" required data-base-end="{{ $timeBaseAtIso }}">
+              </div>
+              <div class="time-manage-quick mt-2">
+                <button type="button" class="btn btn-sm btn-outline-secondary" data-add-days="1">+1</button>
+                <button type="button" class="btn btn-sm btn-outline-secondary" data-add-days="7">+7</button>
+                <button type="button" class="btn btn-sm btn-outline-secondary" data-add-days="30">+30</button>
+                <button type="button" class="btn btn-sm btn-outline-secondary" data-add-days="-1">-1</button>
+                <button type="button" class="btn btn-sm btn-outline-secondary" data-add-days="-7">-7</button>
+              </div>
+              <div class="time-manage-preview mt-3">
+                <div class="label">زمان نهایی پیش از ذخیره</div>
+                <div class="value time-final-preview">{{ $timeBaseAtLabel }}</div>
+              </div>
+              <div class="form-check mt-3">
+                <input class="form-check-input time-send-sms-toggle" type="checkbox" value="1" name="send_sms" id="sendSms-{{ $timeSubscription->id }}">
+                <label class="form-check-label" for="sendSms-{{ $timeSubscription->id }}">
+                  ارسال پیامک
+                </label>
+              </div>
+              <div class="mt-2 d-none time-sms-wrapper">
+                <label class="form-label">متن پیامک</label>
+                <textarea name="sms_message" class="form-control time-sms-message" rows="4" maxlength="1000" placeholder="متن دلخواه پیامک را وارد کنید."></textarea>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">انصراف</button>
+              <button type="submit" class="btn btn-primary">ذخیره تغییرات</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  @endif
+@endforeach
+
 
   <div class="mt-3">
     {{ $subscriptions->links('pagination::bootstrap-5') }}
@@ -551,6 +700,74 @@
     const ss = String(s).padStart(2,'0');
     return (d>0? d+'d ':'') + `${hh}:${mm}:${ss}`;
   }
+
+  function formatFinalDate(dateObj){
+    try{
+      return new Intl.DateTimeFormat('fa-IR-u-ca-persian', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: false
+      }).format(dateObj);
+    }catch(e){
+      return dateObj.toLocaleString('fa-IR');
+    }
+  }
+
+  function updateTimePreview(form){
+    const input = form.querySelector('.time-adjust-days');
+    const preview = form.querySelector('.time-final-preview');
+    if (!input || !preview) return;
+    const baseEnd = input.getAttribute('data-base-end');
+    if (!baseEnd) return;
+    const days = parseInt(input.value || '0', 10);
+    const safeDays = Number.isNaN(days) ? 0 : days;
+    const baseMs = new Date(baseEnd).getTime();
+    const finalDate = new Date(baseMs + (safeDays * 86400000));
+    preview.textContent = formatFinalDate(finalDate);
+  }
+
+  document.querySelectorAll('.time-manage-form').forEach(form=>{
+    updateTimePreview(form);
+
+    const smsToggle = form.querySelector('.time-send-sms-toggle');
+    const smsWrapper = form.querySelector('.time-sms-wrapper');
+    const smsMessage = form.querySelector('.time-sms-message');
+    if (smsToggle && smsWrapper && smsMessage) {
+      const syncSmsVisibility = ()=>{
+        const checked = smsToggle.checked;
+        smsWrapper.classList.toggle('d-none', !checked);
+        smsMessage.required = checked;
+      };
+      syncSmsVisibility();
+      smsToggle.addEventListener('change', syncSmsVisibility);
+    }
+
+    form.addEventListener('input', (e)=>{
+      if (e.target.classList.contains('time-adjust-days')) {
+        updateTimePreview(form);
+      }
+    });
+
+    form.querySelectorAll('[data-add-days]').forEach(btn=>{
+      btn.addEventListener('click', ()=>{
+        const input = form.querySelector('.time-adjust-days');
+        if (!input) return;
+        const delta = parseInt(btn.getAttribute('data-add-days') || '0', 10);
+        const current = parseInt(input.value || '0', 10);
+        input.value = String((Number.isNaN(current) ? 0 : current) + (Number.isNaN(delta) ? 0 : delta));
+        updateTimePreview(form);
+      });
+    });
+
+    form.addEventListener('submit', (e)=>{
+      if (!window.confirm('آیا مطمئن هستید؟')) {
+        e.preventDefault();
+      }
+    });
+  });
 
   function tick(){
     const now = new Date().getTime();

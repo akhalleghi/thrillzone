@@ -46,9 +46,10 @@ class SubscriptionController extends Controller
 
         $plans = Plan::query()->orderBy('name')->get(['id','name']);
         $level1Games = Game::query()->where('level', 1)->orderBy('name')->get(['id','name','cover']);
+        $level1And2Games = Game::query()->whereIn('level', [1, 2])->orderBy('name')->get(['id','name','cover']);
         $otherGames  = Game::query()->where('level','!=',1)->orderBy('name')->get(['id','name','cover']);
 
-        return view('admin.subscriptions', compact('subscriptions','q','status','planId','from','to','plans','level1Games','otherGames'));
+        return view('admin.subscriptions', compact('subscriptions','q','status','planId','from','to','plans','level1Games','level1And2Games','otherGames'));
     }
 
     // فعال‌سازی دستی: شروع=الان، پایان=الان+duration_months
@@ -201,7 +202,7 @@ SmsHelper::sendMessage(
             return back()->with('error', 'یکی از بازی‌های انتخابی در سیستم یافت نشد.')->withInput();
         }
 
-        $level1Valid = $games->whereIn('id', $level1Ids)->every(fn($g) => (int) $g->level === 1);
+        $level1Valid = $games->whereIn('id', $level1Ids)->every(fn($g) => in_array((int) $g->level, [1, 2], true));
         $otherValid  = $games->whereIn('id', $otherIds)->every(fn($g) => (int) $g->level !== 1);
 
         if (!$level1Valid || !$otherValid) {
@@ -240,6 +241,49 @@ SmsHelper::sendMessage(
         return back()->with('success','جزئیات اکانت ذخیره شد.');
     }
 
+    public function updateTime(Request $request, Subscription $subscription)
+    {
+        $isActive = $subscription->status === 'active' && $subscription->ends_at;
+        $isWaiting = $subscription->status === 'waiting';
+
+        if (!$isActive && !$isWaiting) {
+            return back()->with('error', 'امکان مدیریت زمان برای این اشتراک فعال نیست.');
+        }
+
+        $data = $request->validate([
+            'adjust_days' => ['required', 'integer', 'between:-3650,3650'],
+            'send_sms' => ['nullable', 'boolean'],
+            'sms_message' => ['nullable', 'string', 'max:1000', 'required_if:send_sms,1'],
+        ]);
+
+        if ($isActive) {
+            $newEndsAt = $subscription->ends_at->copy()->addDays((int) $data['adjust_days']);
+            $subscription->update([
+                'ends_at' => $newEndsAt,
+            ]);
+        } else {
+            $basePurchasedAt = $subscription->purchased_at ?? $subscription->created_at ?? now();
+            $newPurchasedAt = $basePurchasedAt->copy()->addDays((int) $data['adjust_days']);
+            $subscription->update([
+                'purchased_at' => $newPurchasedAt,
+            ]);
+        }
+
+        if ((bool) ($data['send_sms'] ?? false)) {
+            $mobile = $subscription->user->phone ?? null;
+            $message = trim((string) ($data['sms_message'] ?? ''));
+            if ($mobile && $message !== '') {
+                SmsHelper::sendMessage($mobile, $message, [
+                    'user_id' => $subscription->user_id,
+                    'subscription_id' => $subscription->id,
+                    'purpose' => 'admin_subscription_time_update',
+                    'gateway' => 'admin_panel',
+                ]);
+            }
+        }
+
+        return back()->with('success', 'زمان اشتراک با موفقیت به‌روزرسانی شد.');
+    }
     // نمایش جزئیات/رسید
     public function show(Subscription $subscription)
     {
