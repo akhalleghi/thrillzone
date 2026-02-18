@@ -192,6 +192,8 @@ Route::prefix('admin')->name('admin.')->group(function () {
             ->name('subscriptions.account_details');
         Route::post('/subscriptions/{subscription}/time', [SubscriptionController::class, 'updateTime'])
             ->name('subscriptions.time');
+        Route::post('/subscriptions/{subscription}/swap-time', [SubscriptionController::class, 'updateSwapTime'])
+            ->name('subscriptions.swap_time');
 
         // نمایش رسید/جزئیات
         Route::get('/subscriptions/{subscription}', [SubscriptionController::class, 'show'])

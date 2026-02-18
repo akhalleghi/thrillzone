@@ -197,6 +197,7 @@
             $accountModalId = 'accountModal-' . $s->id;
             $gamesModalId = 'gamesModal-' . $s->id;
             $timeModalId = 'timeModal-' . $s->id;
+            $swapTimeModalId = 'swapTimeModal-' . $s->id;
           @endphp
           <tr>
             <td>{{ $subscriptions->firstItem() + $i }}</td>
@@ -317,6 +318,17 @@
                       </button>
                     </li>
                   @endif
+                  @if($s->status==='active' && ($s->next_swap_at || (int) ($s->swap_every_days ?? 0) > 0))
+                    <li>
+                      <button type="button"
+                              class="dropdown-item d-flex align-items-center gap-2"
+                              data-bs-toggle="modal"
+                              data-bs-target="#{{ $swapTimeModalId }}">
+                        <i class="bi bi-arrow-repeat"></i>
+                        <span>مدیریت زمان تعویض</span>
+                      </button>
+                    </li>
+                  @endif
                   @if($s->status==='waiting')
                     <li>
                       <form method="POST" action="{{ route('admin.subscriptions.activate',$s) }}">
@@ -358,6 +370,7 @@
       $accountModalId = 'accountModal-' . $s->id;
       $gamesModalId = 'gamesModal-' . $s->id;
       $timeModalId = 'timeModal-' . $s->id;
+      $swapTimeModalId = 'swapTimeModal-' . $s->id;
     @endphp
     <div class="sub-card mb-3">
       {{-- هدر کارت --}}
@@ -466,6 +479,14 @@
                   data-bs-toggle="modal"
                   data-bs-target="#{{ $timeModalId }}">
             <i class="bi bi-clock-history"></i> مدیریت زمان
+          </button>
+        @endif
+        @if($s->status==='active' && ($s->next_swap_at || (int) ($s->swap_every_days ?? 0) > 0))
+          <button type="button"
+                  class="btn btn-sm btn-outline-warning me-1 mb-1"
+                  data-bs-toggle="modal"
+                  data-bs-target="#{{ $swapTimeModalId }}">
+            <i class="bi bi-arrow-repeat"></i> مدیریت زمان تعویض
           </button>
         @endif
         {{-- <a href="{{ route('admin.subscriptions.show',$s) }}" class="btn btn-sm btn-outline-info me-1">
@@ -659,6 +680,77 @@
               <div class="form-check mt-3">
                 <input class="form-check-input time-send-sms-toggle" type="checkbox" value="1" name="send_sms" id="sendSms-{{ $timeSubscription->id }}">
                 <label class="form-check-label" for="sendSms-{{ $timeSubscription->id }}">
+                  ارسال پیامک
+                </label>
+              </div>
+              <div class="mt-2 d-none time-sms-wrapper">
+                <label class="form-label">متن پیامک</label>
+                <textarea name="sms_message" class="form-control time-sms-message" rows="4" maxlength="1000" placeholder="متن دلخواه پیامک را وارد کنید."></textarea>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">انصراف</button>
+              <button type="submit" class="btn btn-primary">ذخیره تغییرات</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  @endif
+@endforeach
+
+@foreach($subscriptions as $swapSubscription)
+  @php
+    $swapTimeModalId = 'swapTimeModal-' . $swapSubscription->id;
+    $swapBaseAt = $swapSubscription->next_swap_at
+      ?? (((int) ($swapSubscription->swap_every_days ?? 0) > 0) ? now()->addDays((int) $swapSubscription->swap_every_days) : null);
+    $swapBaseAtIso = $swapBaseAt?->toIso8601String();
+    $swapBaseAtLabel = $swapBaseAt ? Jalalian::fromCarbon($swapBaseAt)->format('Y/m/d H:i') : '—';
+    $swapRemainingDays = $swapBaseAt ? max(0, now()->diffInDays($swapBaseAt, false)) : null;
+  @endphp
+  @if($swapSubscription->status === 'active' && ($swapSubscription->next_swap_at || (int) ($swapSubscription->swap_every_days ?? 0) > 0))
+    <div class="modal fade time-manage-modal" id="{{ $swapTimeModalId }}" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">مدیریت زمان تعویض بازی</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="بستن"></button>
+          </div>
+          <form method="POST" action="{{ route('admin.subscriptions.swap_time', $swapSubscription) }}" class="time-manage-form">
+            @csrf
+            <div class="modal-body">
+              <div class="row g-2">
+                <div class="col-6">
+                  <div class="time-manage-summary">
+                    <div class="label">زمان تعویض فعلی</div>
+                    <div class="value">{{ $swapBaseAtLabel }}</div>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="time-manage-summary">
+                    <div class="label">روز باقی‌مانده تا تعویض</div>
+                    <div class="value">{{ $swapRemainingDays !== null ? $swapRemainingDays : '0' }}</div>
+                  </div>
+                </div>
+              </div>
+              <div class="mt-3">
+                <label class="form-label">تغییر زمان تعویض (روز)</label>
+                <input type="number" class="form-control time-adjust-days" name="adjust_days" min="-3650" max="3650" step="1" value="0" required data-base-end="{{ $swapBaseAtIso }}">
+              </div>
+              <div class="time-manage-quick mt-2">
+                <button type="button" class="btn btn-sm btn-outline-secondary" data-add-days="1">+1</button>
+                <button type="button" class="btn btn-sm btn-outline-secondary" data-add-days="7">+7</button>
+                <button type="button" class="btn btn-sm btn-outline-secondary" data-add-days="30">+30</button>
+                <button type="button" class="btn btn-sm btn-outline-secondary" data-add-days="-1">-1</button>
+                <button type="button" class="btn btn-sm btn-outline-secondary" data-add-days="-7">-7</button>
+              </div>
+              <div class="time-manage-preview mt-3">
+                <div class="label">زمان نهایی تعویض پیش از ذخیره</div>
+                <div class="value time-final-preview">{{ $swapBaseAtLabel }}</div>
+              </div>
+              <div class="form-check mt-3">
+                <input class="form-check-input time-send-sms-toggle" type="checkbox" value="1" name="send_sms" id="swapSendSms-{{ $swapSubscription->id }}">
+                <label class="form-check-label" for="swapSendSms-{{ $swapSubscription->id }}">
                   ارسال پیامک
                 </label>
               </div>

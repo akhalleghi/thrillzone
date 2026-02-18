@@ -285,6 +285,54 @@ SmsHelper::sendMessage(
         return back()->with('success', 'زمان اشتراک با موفقیت به‌روزرسانی شد.');
     }
     // نمایش جزئیات/رسید
+    public function updateSwapTime(Request $request, Subscription $subscription)
+    {
+        if ($subscription->status !== 'active') {
+            return back()->with('error', 'امکان مدیریت زمان تعویض فقط برای اشتراک فعال وجود دارد.');
+        }
+
+        if (!$subscription->next_swap_at && !(int) ($subscription->swap_every_days ?? 0)) {
+            return back()->with('error', 'برای این اشتراک زمان تعویض فعالی تعریف نشده است.');
+        }
+
+        $data = $request->validate([
+            'adjust_days' => ['required', 'integer', 'between:-3650,3650'],
+            'send_sms' => ['nullable', 'boolean'],
+            'sms_message' => ['nullable', 'string', 'max:1000', 'required_if:send_sms,1'],
+        ]);
+
+        $currentSwapAt = $subscription->next_swap_at
+            ? $subscription->next_swap_at->copy()
+            : now()->addDays((int) ($subscription->swap_every_days ?? 0));
+
+        // اگر زمان تعویض گذشته باشد، اعمال تغییر روز را از «الان» شروع می‌کنیم
+        // تا با افزودن روز، دوباره شمارش معکوس نمایش داده شود.
+        $baseSwapAt = $currentSwapAt->lessThanOrEqualTo(now())
+            ? now()
+            : $currentSwapAt;
+
+        $newSwapAt = $baseSwapAt->addDays((int) $data['adjust_days']);
+
+        $subscription->update([
+            'next_swap_at' => $newSwapAt,
+        ]);
+
+        if ((bool) ($data['send_sms'] ?? false)) {
+            $mobile = $subscription->user->phone ?? null;
+            $message = trim((string) ($data['sms_message'] ?? ''));
+            if ($mobile && $message !== '') {
+                SmsHelper::sendMessage($mobile, $message, [
+                    'user_id' => $subscription->user_id,
+                    'subscription_id' => $subscription->id,
+                    'purpose' => 'admin_subscription_swap_time_update',
+                    'gateway' => 'admin_panel',
+                ]);
+            }
+        }
+
+        return back()->with('success', 'زمان تعویض با موفقیت به‌روزرسانی شد.');
+    }
+
     public function show(Subscription $subscription)
     {
         return view('admin.subscriptions.show', compact('subscription'));
