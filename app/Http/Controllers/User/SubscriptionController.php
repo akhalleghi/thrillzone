@@ -35,7 +35,7 @@ class SubscriptionController extends Controller
 
         $otherGames = Game::query()
             ->where('status', 'active')
-            ->where('level', '!=', 1)
+            ->where('level', 2)
             ->orderBy('name')
             ->get(['id', 'name', 'cover', 'level']);
 
@@ -168,8 +168,12 @@ class SubscriptionController extends Controller
             return back()->with('error', 'برخی از بازی‌های انتخاب‌شده یافت نشدند.')->withInput();
         }
 
-        $level1Valid = $games->whereIn('id', $level1GameIds)->every(fn ($g) => (int) $g->level === 1);
-        $otherValid  = $games->whereIn('id', $otherGameIds)->every(fn ($g) => (int) $g->level !== 1);
+        $level1Valid = $games
+            ->whereIn('id', $level1GameIds)
+            ->every(fn ($g) => in_array((int) $g->level, [1, 2], true));
+        $otherValid  = $games
+            ->whereIn('id', $otherGameIds)
+            ->every(fn ($g) => (int) $g->level === 2);
 
         if (!$level1Valid || !$otherValid) {
             return back()->with('error', 'سطح بازی‌های انتخاب‌شده با محدودیت پلن سازگار نیست.')->withInput();
